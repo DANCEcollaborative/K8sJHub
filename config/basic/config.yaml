@@ -1,0 +1,21 @@
+hub:
+  config:
+    JupyterHub:
+      authenticator_class: dummy
+      singleuser:
+        lifecycleHooks:
+          postStart:
+            exec:
+              command: ["/bin/sh", "-c"]
+              args:
+                - pip install jupyter-collaboration
+singleuser:
+  storage:
+    type: none
+    extraVolumes:
+      - name: pv-azurefile
+        persistentVolumeClaim:
+          claimName: pvc-azurefile
+    extraVolumeMounts:
+      - name: pv-azurefile
+        mountPath: /home/jovyan/shared

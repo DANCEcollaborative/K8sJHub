@@ -1,0 +1,12 @@
+hub:
+  config:
+    JupyterHub:
+      authenticator_class: ltiauthenticator.lti13.auth.LTI13Authenticator
+    LTI13Authenticator:
+      username_key: "email"
+      issuer: "https://canvas.instructure.com"
+      authorize_url: "https://canvas.instructure.com/api/lti/authorize_redirect"
+      client_id:
+        - "<CLIENT_ID>"
+      jwks_endpoint: "https://canvas.instructure.com/api/lti/security/jwks"
+      uri_scheme: "https"
