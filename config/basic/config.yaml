@@ -1,5 +1,8 @@
 hub:
   config:
+    Authenticator:
+      admin_users:
+        - user1
     JupyterHub:
       authenticator_class: dummy
       # authenticator_class: ltiauthenticator.lti13.auth.LTI13Authenticator
