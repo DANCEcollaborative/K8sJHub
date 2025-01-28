@@ -8,8 +8,8 @@ spec:
   accessModes:
     - ReadWriteMany
   azureFile:
-    secretName: k8s-jhub-secret
-    shareName: k8s-jhub-share-2
+    secretName: k8sj-secret
+    shareName: k8sj-share-2
     readOnly: false
   mountOptions:
     - dir_mode=0777
