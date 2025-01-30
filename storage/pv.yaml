@@ -18,4 +18,4 @@ spec:
     - gid=10000
     - mfsymlinks
     - nobrl
-  storageClassName: default
+  storageClassName: cs2100320006192c10c

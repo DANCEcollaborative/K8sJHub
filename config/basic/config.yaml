@@ -23,8 +23,8 @@ hub:
                 - pip install jupyter-collaboration
 singleuser:
   image:
-    name: jupyterhub
-    tag: latest
+    name: quay.io/jupyterhub/k8s-network-tools
+    tag: 4.1.1-0.dev.git.6911.h470c6909
   cmd: null
   storage:
     type: none

@@ -8,5 +8,5 @@ spec:
   resources:
     requests:
       storage: 100Gi
-  storageClassName: default
+  storageClassName: cs2100320006192c10c
   volumeName: pv-azurefile
