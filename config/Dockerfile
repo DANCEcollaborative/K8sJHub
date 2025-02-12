@@ -1,8 +1,6 @@
 FROM jupyter/minimal-notebook:latest
 
-RUN pip install jupyter-collaboration jupyterlab-chat
-
-RUN jupyter labextension install jupyterlab-chat && \
-    jupyter lab build
+RUN pip install jupyter-collaboration 
+RUN pip install jupyterlab-chat
 
 RUN fix-permissions $HOME
