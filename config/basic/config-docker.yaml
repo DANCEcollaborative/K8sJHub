@@ -1,0 +1,12 @@
+hub:
+  config:
+    JupyterHub:
+      authenticator_class: dummy
+singleuser:
+  image:
+    name: k8shubacr.azurecr.io/k8s-hub-image
+    tag: latest
+  extraEnv:
+    JUPYTER_ENABLE_LAB_RTC: "1"
+    NO_PROXY: "collab.lti.cs.cmu.edu,52.255.216.201,localhost,127.0.0.1"
+    no_proxy: "collab.lti.cs.cmu.edu,52.255.216.201,localhost,127.0.0.1"
