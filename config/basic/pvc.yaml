@@ -2,7 +2,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: jupyterhub-shared-pvc
-  namespace: k8s-hub-namespace
+  namespace: k8s-ns
 spec:
   accessModes:
     - ReadWriteMany

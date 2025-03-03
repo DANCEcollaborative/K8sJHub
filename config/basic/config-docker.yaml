@@ -7,9 +7,9 @@ hub:
       c.LabApp.collaborative = True
 singleuser:
   image:
-    name: k8shubacr.azurecr.io/jupyterhub-rtc
+    name: k8sjacr.azurecr.io/jupyterhub-rtc
     tag: latest
-  cmd: ["start-notebook.sh",]
+  cmd: ["start-notebook.py"]
   memory:
     limit: 2G
     guarantee: 1G
@@ -26,5 +26,5 @@ singleuser:
         mountPath: /home/jovyan/shared
   extraEnv:
     JUPYTER_ENABLE_LAB_RTC: "1"
-    NO_PROXY: "collab.lti.cs.cmu.edu,52.255.216.201,localhost,127.0.0.1"
-    no_proxy: "collab.lti.cs.cmu.edu,52.255.216.201,localhost,127.0.0.1"
+    NO_PROXY: "collab.lti.cs.cmu.edu,52.149.131.64,135.234.248.176,localhost,127.0.0.1"
+    no_proxy: "collab.lti.cs.cmu.edu,52.149.131.64,135.234.248.176,localhost,127.0.0.1"
