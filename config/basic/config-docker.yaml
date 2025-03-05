@@ -9,7 +9,7 @@ singleuser:
   image:
     name: k8sjacr.azurecr.io/jupyterhub-rtc
     tag: latest
-  cmd: ["start-notebook.py"]
+  cmd: ["start-notebook.py", "--collaborative=rtc"]
   memory:
     limit: 2G
     guarantee: 1G
