@@ -1,11 +1,31 @@
-FROM jupyter/base-notebook
+FROM jupyter/base-notebook:latest
+RUN pip3 install jupyterlab==4.3.5 jupyterhub==5.2.1
 
-# Install JupyterLab and RTC dependencies
-RUN pip install --no-cache-dir --upgrade \
-    jupyterlab==4.1 \
-    jupyter-collaboration \
-    jupyterhub
+# Install any additional packages or customizations here
+# RUN pip install --no-cache-dir jupyter-collaboration
 
-RUN echo "c.LabApp.collaborative = True" >> /etc/jupyterhub/jupyter_config.py
+# Uninstall unneeded extensions.
+# RUN jupyter labextension uninstall @jupyter/docprovider-extension
 
-RUN fix-permissions $HOME
+# Set permissions
+# RUN fix-permissions $HOME
+
+
+
+# Install JupyterLab and collaborative extensions
+# RUN pip install jupyterlab jupyterlab-link-share
+# RUN pip install --no-cache-dir jupyterlab jupyter-collaboration jupyterlab-link-share
+RUN pip install --no-cache-dir jupyter-collaboration jupyterlab-link-share
+
+# Enable JupyterLab extensions
+# RUN jupyter labextension install @jupyterlab/extension-manager
+
+# Set permissions for the jovyan user
+RUN mkdir -p /home/jovyan/shared && \
+    chown -R jovyan:users /home/jovyan/shared
+
+# Set the working directory
+WORKDIR /home/jovyan
+
+# Set the default command
+# CMD ["jupyterhub-singleuser"]
