@@ -1,0 +1,16 @@
+{
+  "name": "k8sj-jupyterlab-extension",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "jupyter labextension build"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^4.3.5",
+  "@jupyterlab/application": "^4.3.5",
+  "@jupyterlab/apputils": "^4.3.5",
+  "@jupyterlab/settingregistry": "^4.3.5",
+  "@lumino/widgets": "^2.2.0"
+  }
+}
+

@@ -1,30 +1,46 @@
+singleuser:
+  image:
+    name: k8sjacr.azurecr.io/jupyter-chat
+    tag: latest
+    pullPolicy: Always
+  storage:
+    type: dynamic
+    extraVolumes:
+      - name: shared-data
+        persistentVolumeClaim:
+          claimName: shared-data-pvc
+    extraVolumeMounts:
+      - name: shared-data
+        mountPath: /home/jovyan/shared
+  lifecycleHooks:
+    postStart:
+      exec:
+        command:
+          - bash
+          - -c
+          - |
+            source /etc/profile.d/start-chat.sh
+
 hub:
   config:
     JupyterHub:
-      authenticator_class: dummy
-  extraConfig:
-    rtc-config: |
-      c.LabApp.collaborative = True
-singleuser:
-  image:
-    name: k8sjacr.azurecr.io/jupyterhub-rtc-3
-    tag: latest
-  cmd: ["start-notebook.py", "--collaborative=rtc"]
-  memory:
-    limit: 2G
-    guarantee: 1G
-  cpu:
-    limit: 2
-    guarantee: 0.5
-  storage:
-    extraVolumes:
-      - name: jupyterhub-shared
-        persistentVolumeClaim:
-          claimName: jupyterhub-shared-pvc
-    extraVolumeMounts:
-      - name: jupyterhub-shared
-        mountPath: /home/jovyan/shared
-  extraEnv:
-    JUPYTER_ENABLE_LAB_RTC: "1"
-    NO_PROXY: "collab.lti.cs.cmu.edu,52.149.131.64,135.234.248.176,localhost,127.0.0.1"
-    no_proxy: "collab.lti.cs.cmu.edu,52.149.131.64,135.234.248.176,localhost,127.0.0.1"
+      admin_users:
+        - admin
+
+---
+# templates/pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: shared-data-pvc
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+
+#   extraEnv:
+#     JUPYTER_ENABLE_LAB_RTC: "1"
+#     NO_PROXY: "collab.lti.cs.cmu.edu,52.149.131.64,135.234.248.176,localhost,127.0.0.1"
+#     no_proxy: "collab.lti.cs.cmu.edu,52.149.131.64,135.234.248.176,localhost,127.0.0.1"

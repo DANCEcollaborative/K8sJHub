@@ -1,0 +1,37 @@
+FROM jupyter/base-notebook:latest
+
+RUN pip install --no-cache-dir \
+    jupyterlab==4.3.5 \
+    jupyterhub==5.2.1 \
+    jupyter-collaboration \
+    jupyterlab-link-share
+
+# Copy backend and frontend code
+COPY backend /home/jovyan/backend
+COPY frontend /home/jovyan/frontend
+
+USER root
+
+RUN apt-get update && apt-get install -y nodejs npm \
+    && npm install -g yarn
+    
+# Fix permissions
+RUN chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
+
+USER ${NB_UID}
+
+# Set up frontend
+WORKDIR /home/jovyan/frontend
+RUN yarn install && yarn build
+
+# Set working directory
+WORKDIR /home/jovyan
+
+RUN jupyter labextension install @jupyterlab-examples/chat
+
+# Start the NodeJS server on container startup
+RUN echo 'node /home/jovyan/backend/server.js &' >> /etc/profile.d/start-chat.sh \
+    && chmod +x /etc/profile.d/start-chat.sh
+
+RUN mkdir -p /home/jovyan/shared && \
+    chown -R jovyan:users /home/jovyan/shared

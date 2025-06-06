@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  jupyter-chat:
+    build:
+      context: .
+      dockerfile: Dockerfile.chat
+    container_name: jupyter-chat
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./shared:/home/jovyan/shared
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    user: "1000:100"
