@@ -1,5 +1,8 @@
 FROM jupyter/base-notebook:latest
 
+ARG CACHEBUST=1
+
+# Install core Python packages
 RUN pip install --no-cache-dir \
     jupyterlab==4.3.5 \
     jupyterhub==5.2.1 \
@@ -12,26 +15,50 @@ COPY frontend /home/jovyan/frontend
 
 USER root
 
-RUN apt-get update && apt-get install -y nodejs npm \
-    && npm install -g yarn
-    
-# Fix permissions
+# Install Node.js and Yarn (needed to build frontend)
+RUN apt-get update && apt-get install -y nodejs npm && npm install -g yarn
+
+# Fix permissions for jovyan user
 RUN chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
 
 USER ${NB_UID}
 
-# Set up frontend
+# Build frontend JupyterLab extension
 WORKDIR /home/jovyan/frontend
-RUN yarn install && yarn build
+RUN yarn install
+RUN yarn run build || cat /tmp/jupyterlab-debug-*.log || echo "No debug log found"
 
-# Set working directory
+
+
+# Install JupyterLab example chat extension
+# RUN git clone https://github.com/jupyterlab/extension-examples.git /tmp/extension-examples \
+#     && cd /tmp/extension-examples/chat \
+#     && pip install . \
+#     && rm -rf /tmp/extension-examples
+
+# Install JupyterLab chat -- https://github.com/jupyterlab/jupyter-chat
+# RUN git clone https://github.com/jupyterlab/jupyter-chat.git /tmp/extension-jupyter-chat \
+#     && cd /tmp/extension-jupyter-chat \
+#     && pip install . \
+#     && rm -rf /tmp/extension-jupyter-chat
+    
+# Install JupyterLab chat -- https://github.com/jupyterlab/jupyter-chat -- INSTALLS
+# DO I NEED https://github.com/brichet/jupyterlab-ws-chat INSTEAD? 
+RUN pip install jupyterlab-chat
+ 
+ 
+    
+
+# Return to home directory
 WORKDIR /home/jovyan
 
-RUN jupyter labextension install @jupyterlab-examples/chat
-
-# Start the NodeJS server on container startup
+# Set up backend startup script
+USER root
 RUN echo 'node /home/jovyan/backend/server.js &' >> /etc/profile.d/start-chat.sh \
     && chmod +x /etc/profile.d/start-chat.sh
 
+# Prepare shared directory
 RUN mkdir -p /home/jovyan/shared && \
     chown -R jovyan:users /home/jovyan/shared
+
+USER ${NB_UID}

@@ -1,16 +1,23 @@
 {
   "name": "k8sj-jupyterlab-extension",
   "version": "0.1.0",
+  "description": "JupyterLab chat extension",
+  "main": "lib/index.js",
   "private": true,
   "scripts": {
-    "build": "jupyter labextension build"
+  	"build": "tsc && jupyter labextension build"
+  },
+  "dependencies": {
+    "@jupyterlab/builder": "^4.4.3"
   },
   "devDependencies": {
-    "@jupyterlab/builder": "^4.3.5",
-  "@jupyterlab/application": "^4.3.5",
-  "@jupyterlab/apputils": "^4.3.5",
-  "@jupyterlab/settingregistry": "^4.3.5",
-  "@lumino/widgets": "^2.2.0"
+    "@jupyterlab/application": "4.3.5",
+    "@jupyterlab/apputils": "^4.3.5",
+    "@jupyterlab/settingregistry": "^4.3.5",
+    "@lumino/widgets": "^2.2.0",
+    "typescript": "^5.0.0"
+  },
+  "jupyterlab": {
+    "outputDir": "labextension"
   }
 }
-

@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.chat
+      args:
+        CACHEBUST: ${CACHEBUST_ARG:-1}
     container_name: jupyter-chat
     ports:
       - "8888:8888"
@@ -12,3 +14,4 @@ services:
     environment:
       - JUPYTER_ENABLE_LAB=yes
     user: "1000:100"
+    command: start.sh jupyter lab
