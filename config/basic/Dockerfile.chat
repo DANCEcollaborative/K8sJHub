@@ -2,64 +2,47 @@ FROM jupyter/base-notebook:latest
 
 ARG CACHEBUST=1
 
-# Copy backend and frontend code
+# Copy backend/frontend early so caches work
 COPY backend /home/jovyan/backend
 COPY frontend /home/jovyan/frontend
 
-# Install core Python packages
+# Ensure core JupyterLab packages are up-to-date
 RUN pip install --no-cache-dir \
     jupyterlab==4.3.5 \
     jupyterhub==5.2.1 \
     jupyter-collaboration \
-    jupyterlab-link-share
+    jupyterlab-link-share \
+    jupyterlab_pygments \
+  && pip uninstall -y jupyterlab-link-share || true \
+  && pip install jupyterlab-link-share==0.2.6 || pip install --upgrade jupyterlab-link-share
 
 USER root
-
-# Install Node.js and Yarn (needed to build frontend)
-RUN apt-get update && apt-get install -y nodejs npm && npm install -g yarn
-
-# Fix permissions for jovyan user
-RUN chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
+RUN apt-get update \
+ && apt-get install -y nodejs npm \
+ && npm install -g yarn \
+ && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
 
 USER ${NB_UID}
-
-# Build frontend JupyterLab extension
 WORKDIR /home/jovyan/frontend
-RUN yarn install
-RUN yarn run build || cat /tmp/jupyterlab-debug-*.log || echo "No debug log found"
 
+# Build local extension
+RUN yarn install \
+ && yarn run build \
+ || cat /tmp/jupyterlab-debug-*.log
 
-
-# Install JupyterLab example chat extension
-# RUN git clone https://github.com/jupyterlab/extension-examples.git /tmp/extension-examples \
-#     && cd /tmp/extension-examples/chat \
-#     && pip install . \
-#     && rm -rf /tmp/extension-examples
-
-# Install JupyterLab chat -- https://github.com/jupyterlab/jupyter-chat
-# RUN git clone https://github.com/jupyterlab/jupyter-chat.git /tmp/extension-jupyter-chat \
-#     && cd /tmp/extension-jupyter-chat \
-#     && pip install . \
-#     && rm -rf /tmp/extension-jupyter-chat
-    
-# Install JupyterLab chat -- https://github.com/jupyterlab/jupyter-chat -- INSTALLS
-# DO I NEED https://github.com/brichet/jupyterlab-ws-chat INSTEAD? 
+# Install chat extension from pip (prebuilt for Lab v4)
 RUN pip install jupyterlab-chat
-# RUN pip install jupyterlab_ws_chat
- 
- 
-    
 
-# Return to home directory
 WORKDIR /home/jovyan
-
-# Set up backend startup script
 USER root
-RUN echo 'node /home/jovyan/backend/server.js &' >> /etc/profile.d/start-chat.sh \
-    && chmod +x /etc/profile.d/start-chat.sh
 
-# Prepare shared directory
-RUN mkdir -p /home/jovyan/shared && \
-    chown -R jovyan:users /home/jovyan/shared
+# Back-end startup
+RUN echo 'node /home/jovyan/backend/server.js &' \
+  >> /etc/profile.d/start-chat.sh \
+  && chmod +x /etc/profile.d/start-chat.sh
+
+# Shared volume
+RUN mkdir -p /home/jovyan/shared \
+  && chown -R jovyan:users /home/jovyan/shared
 
 USER ${NB_UID}

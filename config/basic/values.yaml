@@ -5,9 +5,10 @@ hub:
   extraConfig:
     rtc-config: |
       c.LabApp.collaborative = True
+
 singleuser:
   image:
-    name: k8sjacr.azurecr.io/jupyterhub-rtc-6
+    name: k8sjacr.azurecr.io/jupyterhub-rtc-7
     tag: latest
   cmd: ["start-notebook.py", "--collaborative=rtc"]
   memory:
@@ -25,20 +26,11 @@ singleuser:
       - name: jupyterhub-shared
         mountPath: /home/jovyan/shared
   defaultUrl: "/lab"
-  extraFiles:
-    start-chat:
-      mountPath: /etc/profile.d/start-chat.sh
-      stringData: |
-        #!/bin/bash
-        node /srv/chat-backend/server.js &
-
-  lifecycleHooks:
-    postStart:
-      exec:
-        command: ["/bin/bash", "/etc/profile.d/start-chat.sh"]
-
   extraEnv:
     JUPYTER_ENABLE_LAB_RTC: "1"
-    NO_PROXY: "collab.lti.cs.cmu.edu,52.149.131.64,135.234.248.176,localhost,127.0.0.1"
-    no_proxy: "collab.lti.cs.cmu.edu,52.149.131.64,135.234.248.176,localhost,127.0.0.1"
     JUPYTERHUB_SINGLEUSER_APP: jupyter_server.serverapp.ServerApp
+  lifecycleHooks:
+#     postStart:
+#       exec:
+#         command: ["/bin/bash", "/home/jovyan/backend/server.js"]
+# #         command: ["/bin/bash", "/etc/profile.d/start-chat.sh"]
