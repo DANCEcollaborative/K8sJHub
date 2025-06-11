@@ -7,7 +7,7 @@ hub:
       c.LabApp.collaborative = True
 singleuser:
   image:
-    name: k8sjacr.azurecr.io/jupyterhub-rtc-5
+    name: k8sjacr.azurecr.io/jupyterhub-rtc-6
     tag: latest
   cmd: ["start-notebook.py", "--collaborative=rtc"]
   memory:

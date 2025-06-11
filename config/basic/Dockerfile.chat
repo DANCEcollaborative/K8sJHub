@@ -2,16 +2,16 @@ FROM jupyter/base-notebook:latest
 
 ARG CACHEBUST=1
 
+# Copy backend and frontend code
+COPY backend /home/jovyan/backend
+COPY frontend /home/jovyan/frontend
+
 # Install core Python packages
 RUN pip install --no-cache-dir \
     jupyterlab==4.3.5 \
     jupyterhub==5.2.1 \
     jupyter-collaboration \
     jupyterlab-link-share
-
-# Copy backend and frontend code
-COPY backend /home/jovyan/backend
-COPY frontend /home/jovyan/frontend
 
 USER root
 
@@ -45,6 +45,7 @@ RUN yarn run build || cat /tmp/jupyterlab-debug-*.log || echo "No debug log foun
 # Install JupyterLab chat -- https://github.com/jupyterlab/jupyter-chat -- INSTALLS
 # DO I NEED https://github.com/brichet/jupyterlab-ws-chat INSTEAD? 
 RUN pip install jupyterlab-chat
+# RUN pip install jupyterlab_ws_chat
  
  
     
