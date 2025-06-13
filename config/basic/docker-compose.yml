@@ -13,5 +13,6 @@ services:
       - ./shared:/home/jovyan/shared
     environment:
       - JUPYTER_ENABLE_LAB=yes
+      - CHAT_WS_URL=https://bazaar.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=room500&id=1&username=Charles&html=chat_mm
     user: "1000:100"
     command: start.sh jupyter lab
