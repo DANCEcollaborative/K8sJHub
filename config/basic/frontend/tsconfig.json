@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
-    "rootDir": "src",
     "target": "ES2017",
     "module": "ESNext",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "jsx": "react",
+    "moduleResolution": "Node",
+    "outDir": "lib",
+    "rootDir": "src",
     "strict": true,
-    "skipLibCheck": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "sourceMap": true
   },
   "include": ["src"]
 }

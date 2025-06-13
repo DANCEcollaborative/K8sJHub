@@ -17,29 +17,44 @@ RUN pip install --no-cache-dir \
   && pip install jupyterlab-link-share==0.2.6 || pip install --upgrade jupyterlab-link-share
 
 USER root
+# RUN apt-get update \
+#  && apt-get install -y nodejs npm \
+#  && npm install -g yarn \
+#  && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
+ 
 RUN apt-get update \
  && apt-get install -y nodejs npm \
- && npm install -g yarn \
+ && corepack enable \
+ && corepack prepare yarn@stable --activate \
  && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
+
 
 USER ${NB_UID}
 WORKDIR /home/jovyan/frontend
 
-# Build local extension
-RUN yarn install \
- && yarn run build \
+# Install extension dependencies including socket.io-client
+RUN yarn install && yarn add socket.io-client
+
+# Build the extension
+RUN yarn run build \
  || cat /tmp/jupyterlab-debug-*.log
 
+# Install the extension into JupyterLab
+# RUN jupyter labextension install . --no-build && jupyter lab build
+RUN pip install .
+
+
 # Install chat extension from pip (prebuilt for Lab v4)
-RUN pip install jupyterlab-chat
+# RUN pip install jupyterlab-chat
+# RUN pip install jupyter-ws-chat 
 
 WORKDIR /home/jovyan
 USER root
 
 # Back-end startup
-RUN echo 'node /home/jovyan/backend/server.js &' \
-  >> /etc/profile.d/start-chat.sh \
-  && chmod +x /etc/profile.d/start-chat.sh
+# RUN echo 'node /home/jovyan/backend/server.js &' \
+#   >> /etc/profile.d/start-chat.sh \
+#   && chmod +x /etc/profile.d/start-chat.sh
 
 # Shared volume
 RUN mkdir -p /home/jovyan/shared \
