@@ -8,7 +8,7 @@ COPY frontend /home/jovyan/frontend
 
 # Ensure core JupyterLab packages are up-to-date
 RUN pip install --no-cache-dir \
-    jupyterlab==4.3.5 \
+    jupyterlab==4.4.3 \
     jupyterhub==5.2.1 \
     jupyter-collaboration \
     jupyterlab-link-share \
