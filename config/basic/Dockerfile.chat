@@ -3,7 +3,7 @@ FROM jupyter/base-notebook:latest
 ARG CACHEBUST=1
 
 # Copy backend/frontend early so caches work
-COPY backend /home/jovyan/backend
+# COPY backend /home/jovyan/backend
 COPY frontend /home/jovyan/frontend
 
 # Ensure core JupyterLab packages are up-to-date
@@ -11,50 +11,38 @@ RUN pip install --no-cache-dir \
     jupyterlab==4.4.3 \
     jupyterhub==5.2.1 \
     jupyter-collaboration \
-    jupyterlab-link-share \
-    jupyterlab_pygments \
-  && pip uninstall -y jupyterlab-link-share || true \
-  && pip install jupyterlab-link-share==0.2.6 || pip install --upgrade jupyterlab-link-share
+#     jupyterlab-link-share \
+#     jupyterlab_pygments \
+  	&& pip uninstall -y jupyterlab-link-share || true \
+  	&& pip install --upgrade jupyterlab-link-share jupyterlab_pygments
 
 USER root
-# RUN apt-get update \
-#  && apt-get install -y nodejs npm \
-#  && npm install -g yarn \
-#  && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
- 
 RUN apt-get update \
- && apt-get install -y nodejs npm \
+ && apt-get install -y nodejs npm curl \
  && corepack enable \
  && corepack prepare yarn@stable --activate \
  && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
 
-
 USER ${NB_UID}
 WORKDIR /home/jovyan/frontend
+
+# tsconfig.json is already included in the frontend directory copied earlier
+# Create tsconfig.json for TypeScript output
+# RUN echo '{\n  "compilerOptions": {\n    "target": "ES2017",\n    "module": "ESNext",\n    "moduleResolution": "Node",\n    "outDir": "lib",\n    "rootDir": "src",\n    "strict": true,\n    "esModuleInterop": true,\n    "skipLibCheck": true,\n    "forceConsistentCasingInFileNames": true,\n    "declaration": true,\n    "sourceMap": true\n  },\n  "include": ["src"]\n}' > tsconfig.json
+
 
 # Install extension dependencies including socket.io-client
 RUN yarn install && yarn add socket.io-client
 
 # Build the extension
-RUN yarn run build \
- || cat /tmp/jupyterlab-debug-*.log
+RUN yarn run build || cat /tmp/jupyterlab-debug-*.log
 
-# Install the extension into JupyterLab
-# RUN jupyter labextension install . --no-build && jupyter lab build
-RUN pip install .
-
-
-# Install chat extension from pip (prebuilt for Lab v4)
-# RUN pip install jupyterlab-chat
-# RUN pip install jupyter-ws-chat 
-
+# Use prebuilt extension packaging (skip deprecated labextension install)
 WORKDIR /home/jovyan
 USER root
 
-# Back-end startup
-# RUN echo 'node /home/jovyan/backend/server.js &' \
-#   >> /etc/profile.d/start-chat.sh \
-#   && chmod +x /etc/profile.d/start-chat.sh
+# Install the prebuilt frontend extension via pip
+RUN pip install ./frontend
 
 # Shared volume
 RUN mkdir -p /home/jovyan/shared \

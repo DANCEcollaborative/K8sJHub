@@ -1,5 +1,5 @@
 {
-  "name": "@jupyterlab-examples/chat",
+  "name": "jlab-ws-chat-extension",
   "version": "0.1.0",
   "description": "JupyterLab chat extension using socket.io",
   "main": "lib/index.js",
@@ -16,7 +16,7 @@
     "@jupyterlab/apputils": "^4.4.3",
     "@jupyterlab/settingregistry": "^4.4.3",
     "@lumino/widgets": "^2.2.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.3.3"
   },
   "jupyterlab": {
     "extension": true,
