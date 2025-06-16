@@ -12,8 +12,7 @@ RUN pip install --no-cache-dir \
     jupyterhub==5.2.1 \
     jupyter-collaboration \
 #     jupyterlab-link-share \
-#     jupyterlab_pygments \
-  	&& pip uninstall -y jupyterlab-link-share || true \
+#   	&& pip uninstall -y jupyterlab-link-share || true \
   	&& pip install --upgrade jupyterlab-link-share jupyterlab_pygments
 
 USER root
