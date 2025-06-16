@@ -1,20 +1,21 @@
 FROM jupyter/base-notebook:latest
 
-ARG CACHEBUST=1
+# ARG CACHEBUST=1
 
 # Copy backend/frontend early so caches work
 COPY backend /home/jovyan/backend
 COPY frontend /home/jovyan/frontend
 
 # Ensure core JupyterLab packages are up-to-date
-RUN pip install --no-cache-dir \
+RUN pip install --no-cache-dir --upgrade \
     jupyterlab==4.4.3 \
     jupyterhub==5.2.1 \
     jupyter-collaboration \
     jupyterlab-link-share \
-    jupyterlab_pygments \
-  && pip uninstall -y jupyterlab-link-share || true \
-  && pip install jupyterlab-link-share==0.2.6 || pip install --upgrade jupyterlab-link-share
+    jupyterlab_pygments
+#     jupyterlab_pygments \
+#   && pip uninstall -y jupyterlab-link-share || true \
+#   && pip install jupyterlab-link-share==0.2.6 || pip install --upgrade jupyterlab-link-share
 
 USER root
 # RUN apt-get update \
@@ -29,7 +30,6 @@ RUN apt-get update \
  && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
 
 
-USER ${NB_UID}
 WORKDIR /home/jovyan/frontend
 
 # Install extension dependencies including socket.io-client
@@ -46,15 +46,18 @@ RUN pip install .
 
 # Install chat extension from pip (prebuilt for Lab v4)
 # RUN pip install jupyterlab-chat
-# RUN pip install jupyter-ws-chat 
+RUN pip install jupyterlab_ws_chat 
+
+
+# USER ${NB_UID}
 
 WORKDIR /home/jovyan
-USER root
+# USER root
 
 # Back-end startup
-# RUN echo 'node /home/jovyan/backend/server.js &' \
-#   >> /etc/profile.d/start-chat.sh \
-#   && chmod +x /etc/profile.d/start-chat.sh
+RUN echo 'node /home/jovyan/backend/server.js &' \
+  >> /etc/profile.d/start-chat.sh \
+  && chmod +x /etc/profile.d/start-chat.sh
 
 # Shared volume
 RUN mkdir -p /home/jovyan/shared \
