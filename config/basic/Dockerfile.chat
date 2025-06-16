@@ -1,7 +1,5 @@
 FROM jupyter/base-notebook:latest
 
-# ARG CACHEBUST=1
-
 # Copy backend/frontend early so caches work
 COPY backend /home/jovyan/backend
 COPY frontend /home/jovyan/frontend
@@ -13,22 +11,14 @@ RUN pip install --no-cache-dir --upgrade \
     jupyter-collaboration \
     jupyterlab-link-share \
     jupyterlab_pygments
-#     jupyterlab_pygments \
-#   && pip uninstall -y jupyterlab-link-share || true \
-#   && pip install jupyterlab-link-share==0.2.6 || pip install --upgrade jupyterlab-link-share
-
-USER root
-# RUN apt-get update \
-#  && apt-get install -y nodejs npm \
-#  && npm install -g yarn \
-#  && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
  
+USER root
+
 RUN apt-get update \
- && apt-get install -y nodejs npm \
+ && apt-get install -y nodejs npm curl \
  && corepack enable \
  && corepack prepare yarn@stable --activate \
  && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
-
 
 WORKDIR /home/jovyan/frontend
 
@@ -40,19 +30,13 @@ RUN yarn run build \
  || cat /tmp/jupyterlab-debug-*.log
 
 # Install the extension into JupyterLab
-# RUN jupyter labextension install . --no-build && jupyter lab build
 RUN pip install .
 
 
 # Install chat extension from pip (prebuilt for Lab v4)
-# RUN pip install jupyterlab-chat
 RUN pip install jupyterlab_ws_chat 
 
-
-# USER ${NB_UID}
-
 WORKDIR /home/jovyan
-# USER root
 
 # Back-end startup
 RUN echo 'node /home/jovyan/backend/server.js &' \
