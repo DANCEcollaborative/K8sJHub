@@ -9,6 +9,7 @@ services:
     container_name: jupyter-chat
     ports:
       - "8888:8888"
+      - "3001:3001"
     volumes:
       - ./shared:/home/jovyan/shared
     environment:

@@ -1,5 +1,5 @@
 {
-  "name": "@jupyterlab-examples/chat",
+  "name": "k8s_jupyterlab_ws_chat",
   "version": "0.1.0",
   "description": "JupyterLab chat extension using socket.io",
   "main": "lib/index.js",
@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@jupyterlab/builder": "^4.4.3",
-    "socket.io-client": "^4.7.5"
+    "socket.io-client": "^4.7.5",
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "@jupyterlab/application": "4.4.3",

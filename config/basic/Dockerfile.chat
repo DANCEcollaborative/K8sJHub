@@ -1,8 +1,32 @@
 FROM jupyter/base-notebook:latest
 
-# Copy backend/frontend early so caches work
+USER root
+
+RUN apt-get update \
+ && apt-get install -y nodejs npm curl \
+ && corepack enable \
+ && corepack prepare yarn@stable --activate 
+#  && corepack prepare yarn@stable --activate \
+#  && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
+
+# COPY backend/package.json backend/yarn.lock* /home/jovyan/backend/
+# WORKDIR /home/jovyan/backend
+# RUN yarn install
+# COPY backend /home/jovyan/backend
+
 COPY backend /home/jovyan/backend
+WORKDIR /home/jovyan/backend
+RUN yarn install
+
+
+# Now frontend
 COPY frontend /home/jovyan/frontend
+WORKDIR /home/jovyan/frontend
+RUN yarn install
+
+# Build extension
+RUN yarn run build || cat /tmp/jupyterlab-debug-*.log
+RUN pip install .
 
 # Ensure core JupyterLab packages are up-to-date
 RUN pip install --no-cache-dir --upgrade \
@@ -10,38 +34,18 @@ RUN pip install --no-cache-dir --upgrade \
     jupyterhub==5.2.1 \
     jupyter-collaboration \
     jupyterlab-link-share \
-    jupyterlab_pygments
+    jupyterlab_pygments \
+    jupyterlab_ws_chat
  
-USER root
+# Enable chat server on container start
+RUN echo 'node /home/jovyan/backend/server.js &' >> /etc/profile.d/start-chat.sh \
+ && chmod +x /etc/profile.d/start-chat.sh
+USER ${NB_UID}
 
-RUN apt-get update \
- && apt-get install -y nodejs npm curl \
- && corepack enable \
- && corepack prepare yarn@stable --activate \
- && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
-
-WORKDIR /home/jovyan/frontend
-
-# Install extension dependencies including socket.io-client
-RUN yarn install && yarn add socket.io-client
-
-# Build the extension
-RUN yarn run build \
- || cat /tmp/jupyterlab-debug-*.log
-
-# Install the extension into JupyterLab
-RUN pip install .
-
-
-# Install chat extension from pip (prebuilt for Lab v4)
-RUN pip install jupyterlab_ws_chat 
+# Install chat extension from pip
+# RUN pip install jupyterlab_ws_chat 
 
 WORKDIR /home/jovyan
-
-# Back-end startup
-RUN echo 'node /home/jovyan/backend/server.js &' \
-  >> /etc/profile.d/start-chat.sh \
-  && chmod +x /etc/profile.d/start-chat.sh
 
 # Shared volume
 RUN mkdir -p /home/jovyan/shared \
