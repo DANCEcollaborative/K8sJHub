@@ -1,16 +1,11 @@
-FROM node:20
+FROM node:20-alpine
 
-# Create app directory
 WORKDIR /home/node/app
 
-# Install dependencies
-COPY backend/package*.json ./
+COPY backend/package.json backend/yarn.lock* ./
 RUN yarn install
 
-# Copy source code
-COPY backend/ .
+COPY backend .
 
-# Expose port used by chat server
 EXPOSE 3001
-
 CMD ["node", "server.js"]

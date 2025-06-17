@@ -14,7 +14,7 @@ services:
       - ./shared:/home/jovyan/shared
     environment:
       - JUPYTER_ENABLE_LAB=yes
-      - CHAT_WS_URL=http://chat-backend:3001  # use internal Docker network address
+      - CHAT_WS_URL=http://chat-backend:3001
     user: "1000:100"
     command: start-notebook.py --collaborative --ServerApp.token='' --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin='*'
     depends_on:
@@ -23,13 +23,12 @@ services:
   chat-backend:
     build:
       context: .
-      dockerfile: Dockerfile.backend  # <- You will need this (see below)
+      dockerfile: Dockerfile.backend
     container_name: chat-backend
     ports:
-      - "3001:3001"  # expose for debugging if needed
+      - "3001:3001"
+    # No bind mount to backend during container startup to avoid overwriting node_modules
     working_dir: /home/node/app
     command: node server.js
-    volumes:
-      - ./backend:/home/node/app
     environment:
       - NODE_ENV=development
