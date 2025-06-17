@@ -2,33 +2,24 @@ FROM jupyter/base-notebook:latest
 
 USER root
 
+# Install Node.js + Yarn (for building the JupyterLab extension)
 RUN apt-get update \
- && apt-get install -y nodejs npm curl \
+ && apt-get install -y curl \
+ && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+ && apt-get install -y nodejs \
  && corepack enable \
- && corepack prepare yarn@stable --activate 
-#  && corepack prepare yarn@stable --activate \
-#  && chown -R ${NB_UID}:${NB_GID} /home/jovyan/frontend
+ && corepack prepare yarn@stable --activate
 
-# COPY backend/package.json backend/yarn.lock* /home/jovyan/backend/
-# WORKDIR /home/jovyan/backend
-# RUN yarn install
-# COPY backend /home/jovyan/backend
-
-COPY backend /home/jovyan/backend
-WORKDIR /home/jovyan/backend
-RUN yarn install
-
-
-# Now frontend
+# Copy and install frontend (JupyterLab extension)
 COPY frontend /home/jovyan/frontend
 WORKDIR /home/jovyan/frontend
 RUN yarn install
-
-# Build extension
 RUN yarn run build || cat /tmp/jupyterlab-debug-*.log
+
+# Optionally install the extension into JupyterLab if it exports a Python package too
 RUN pip install .
 
-# Ensure core JupyterLab packages are up-to-date
+# Upgrade core JupyterLab & install collaboration tools
 RUN pip install --no-cache-dir --upgrade \
     jupyterlab==4.4.3 \
     jupyterhub==5.2.1 \
@@ -36,19 +27,10 @@ RUN pip install --no-cache-dir --upgrade \
     jupyterlab-link-share \
     jupyterlab_pygments \
     jupyterlab_ws_chat
- 
-# Enable chat server on container start
-RUN echo 'node /home/jovyan/backend/server.js &' >> /etc/profile.d/start-chat.sh \
- && chmod +x /etc/profile.d/start-chat.sh
-USER ${NB_UID}
 
-# Install chat extension from pip
-# RUN pip install jupyterlab_ws_chat 
-
-WORKDIR /home/jovyan
-
-# Shared volume
+# Shared volume setup
 RUN mkdir -p /home/jovyan/shared \
-  && chown -R jovyan:users /home/jovyan/shared
+ && chown -R jovyan:users /home/jovyan/shared
 
 USER ${NB_UID}
+WORKDIR /home/jovyan

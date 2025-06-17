@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   jupyter-chat:
     build:
@@ -9,11 +10,26 @@ services:
     container_name: jupyter-chat
     ports:
       - "8888:8888"
-      - "3001:3001"
     volumes:
       - ./shared:/home/jovyan/shared
     environment:
       - JUPYTER_ENABLE_LAB=yes
-      - CHAT_WS_URL=https://bazaar.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=room500&id=1&username=Charles&html=chat_mm
+      - CHAT_WS_URL=http://chat-backend:3001  # use internal Docker network address
     user: "1000:100"
-    command: start.sh jupyter lab
+    command: start-notebook.py --collaborative --ServerApp.token='' --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin='*'
+    depends_on:
+      - chat-backend
+
+  chat-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend  # <- You will need this (see below)
+    container_name: chat-backend
+    ports:
+      - "3001:3001"  # expose for debugging if needed
+    working_dir: /home/node/app
+    command: node server.js
+    volumes:
+      - ./backend:/home/node/app
+    environment:
+      - NODE_ENV=development
