@@ -1,26 +1,25 @@
 {
-  "name": "k8s_jupyterlab_ws_chat",
+  "name": "jlab-ws-chat-extension",
   "version": "0.1.0",
-  "description": "JupyterLab chat extension using socket.io",
+  "description": "External chat extension for JupyterLab using Socket.IO",
   "main": "lib/index.js",
-  "private": true,
   "scripts": {
-  	"build": "tsc && jupyter labextension build"
+    "build": "tsc && jupyter labextension build"
   },
   "dependencies": {
-    "@jupyterlab/builder": "^4.4.3",
-    "socket.io-client": "^4.7.5",
-    "express": "^4.19.2"
+    "@jupyterlab/application": "^4.4.3",
+    "@jupyterlab/apputils": "^4.4.3",
+    "@lumino/widgets": "^2.2.0",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
-    "@jupyterlab/application": "4.4.3",
-    "@jupyterlab/apputils": "^4.4.3",
-    "@jupyterlab/settingregistry": "^4.4.3",
-    "@lumino/widgets": "^2.2.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "@jupyterlab/builder": "^4.0.7",
+    "@types/node": "^20.11.30",
+    "@types/socket.io-client": "^1.4.35"
   },
   "jupyterlab": {
     "extension": true,
-    "outputDir": "labextension"
+    "outputDir": "../jlab_ws_chat_extension/static"
   }
 }

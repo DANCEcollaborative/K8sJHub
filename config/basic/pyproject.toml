@@ -31,7 +31,8 @@ data_files = [
   ["share/jupyter/labextensions/jlab-ws-chat-extension", "jlab_ws_chat_extension/static", "**"],
   ["share/jupyter/labextensions/jlab-ws-chat-extension", ".", "install.json"]
 ]
-# 
-# [tool.jupyter-packaging.build-frontend]
-# name = "jlab-ws-chat-extension""
-# path = "frontend"
+
+[tool.jupyter-packaging.build-frontend]
+name = "jlab-ws-chat-extension"
+path = "frontend"
+build_cmd = "build"

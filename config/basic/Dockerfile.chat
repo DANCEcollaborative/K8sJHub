@@ -2,35 +2,49 @@ FROM jupyter/base-notebook:latest
 
 USER root
 
-# Install Node.js + Yarn (for building the JupyterLab extension)
-RUN apt-get update \
- && apt-get install -y curl \
- && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
- && apt-get install -y nodejs \
- && corepack enable \
- && corepack prepare yarn@stable --activate
+# Install Node.js and Yarn via Corepack
+RUN apt-get update && apt-get install -y curl nodejs npm && \
+    corepack enable && \
+    corepack prepare yarn@3.6.4 --activate
 
-# Copy and install frontend (JupyterLab extension)
+# Copy frontend and Python backend source
 COPY frontend /home/jovyan/frontend
+COPY jlab_ws_chat_extension /home/jovyan/jlab_ws_chat_extension
+COPY pyproject.toml README.md /home/jovyan/
+
+# Set working directory for extension build
 WORKDIR /home/jovyan/frontend
-RUN yarn install
-RUN yarn run build || cat /tmp/jupyterlab-debug-*.log
 
-# Optionally install the extension into JupyterLab if it exports a Python package too
-RUN pip install .
+# Use node-modules linker and install deps, then build
+RUN echo "nodeLinker: node-modules" > .yarnrc.yml && \
+    yarn cache clean && \
+    yarn install && \
+    yarn build
 
-# Upgrade core JupyterLab & install collaboration tools
+# Install extension into JupyterLab (editable mode)
+WORKDIR /home/jovyan
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -e .
+
+# Install JupyterLab and RTC dependencies
 RUN pip install --no-cache-dir --upgrade \
     jupyterlab==4.4.3 \
     jupyterhub==5.2.1 \
     jupyter-collaboration \
     jupyterlab-link-share \
-    jupyterlab_pygments \
-    jupyterlab_ws_chat
+    jupyter-server-ydoc \
+    jupyter-ydoc
 
-# Shared volume setup
-RUN mkdir -p /home/jovyan/shared \
- && chown -R jovyan:users /home/jovyan/shared
+# Enable required server extensions
+RUN jupyter server extension enable jupyter_collaboration && \
+    jupyter server extension enable jupyter_server_ydoc
+
+# Setup default mount point
+RUN mkdir -p /home/jovyan/shared && chown -R jovyan:users /home/jovyan/shared
+
+# Expose custom chat WebSocket URL via ENV
+ENV CHAT_WS_URL=${CHAT_WS_URL:-http://localhost:3001}
 
 USER ${NB_UID}
+
 WORKDIR /home/jovyan
