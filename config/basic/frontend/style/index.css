@@ -1,0 +1,10 @@
+.jp-ChatWidget {
+  padding: 1rem;
+  font-family: var(--jp-ui-font-family);
+  font-size: var(--jp-ui-font-size1);
+  color: var(--jp-ui-font-color1);
+  background-color: var(--jp-layout-color1);
+  height: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+}
