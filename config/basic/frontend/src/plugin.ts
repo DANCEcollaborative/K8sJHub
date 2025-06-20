@@ -23,18 +23,39 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const CHAT_WS_URL = (window as any).CHAT_WS_URL || 'http://localhost:3001';
     const socket = io(CHAT_WS_URL);
 
+    const chatNode = document.createElement('div');
+    chatNode.className = 'jp-ChatWidget';
+
+    const messages = document.createElement('div');
+    messages.className = 'jp-ChatMessages';
+    chatNode.appendChild(messages);
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.placeholder = 'Type a message...';
+    input.className = 'jp-ChatInput';
+    chatNode.appendChild(input);
+
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' && input.value.trim()) {
+        socket.emit('message', input.value);
+        input.value = '';
+      }
+    });
+
     socket.on('connect', () => {
       console.log('Connected to chat server at', CHAT_WS_URL);
     });
 
     socket.on('message', (msg: string) => {
-      console.log('Chat message:', msg);
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'jp-ChatMessage';
+      msgDiv.textContent = msg;
+      messages.appendChild(msgDiv);
+      messages.scrollTop = messages.scrollHeight;
     });
 
-    const content = new Widget();
-    content.node.className = 'jp-ChatWidget';
-    content.node.textContent = 'Chat extension loaded. See console for messages.';
-
+    const content = new Widget({ node: chatNode });
     const widget = new MainAreaWidget({ content });
     widget.id = 'external-chat-panel';
     widget.title.label = 'Chat';
@@ -51,9 +72,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       }
     });
 
-	console.log('****** Registering command ******');
     palette.addItem({ command: commandID, category: 'Chat' });
-    console.log('****** Adding launcher item ******');
     launcher.add({ command: commandID, category: 'Chat' });
   }
 };

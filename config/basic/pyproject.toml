@@ -9,24 +9,18 @@ description = "WebSocket chat panel for JupyterLab"
 authors = [{ name = "Chas Murray", email = "rcmurray@andrew.cmu.edu" }]
 license = "MIT"
 readme = "README.md"
-# requires-python = ">=3.8"
 dependencies = []
 
-[project.urls]
-"Homepage" = "https://github.com/DANCEcollaborative/K8sJHub"
-
 [tool.hatch.build.targets.wheel]
-# include = ["jlab-ws-chat-extension""]
 artifacts = [
   "jlab_ws_chat_extension/static"
 ]
 
 [tool.jupyter-packaging.options]
-# build = "yarn"
-# skip_if_exists = ["frontend/labextension"]
-# build_cmd = "build"
-# path = "frontend"
-ensured-targets = ["jlab_ws_chat_extension/static/plugin.js"]
+builder = "jupyterlab.build"
+build_cmd = "build"
+path = "frontend"
+ensured-targets = ["jlab_ws_chat_extension/static/remoteEntry.*.js"]
 data_files = [
   ["share/jupyter/labextensions/jlab-ws-chat-extension", "jlab_ws_chat_extension/static", "**"],
   ["share/jupyter/labextensions/jlab-ws-chat-extension", ".", "install.json"]
@@ -35,4 +29,3 @@ data_files = [
 [tool.jupyter-packaging.build-frontend]
 name = "jlab-ws-chat-extension"
 path = "frontend"
-build_cmd = "build"

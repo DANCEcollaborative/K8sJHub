@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
-    "lib": ["es2020", "dom"],
-    "module": "esnext",
-    "target": "es2020",
+    "target": "ES2020",
+    "module": "ESNext",
     "moduleResolution": "node",
-    "types": ["node"],
+    "lib": ["ES2020", "DOM"],
+    "jsx": "react",
+    "outDir": "lib",
+    "strict": true,
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "outDir": "lib" 
+    "types": ["node"]
   },
-  "include": ["src/**/*"]
+  "include": ["src"]
 }

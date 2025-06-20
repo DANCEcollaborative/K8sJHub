@@ -1,32 +1,15 @@
 FROM jupyter/base-notebook:latest
 
+# Step 1: Root setup — install Node.js 20 and Yarn
 USER root
 
-# Install Node.js and Yarn via Corepack
-RUN apt-get update && apt-get install -y curl nodejs npm && \
-    corepack enable && \
-    corepack prepare yarn@3.6.4 --activate
+RUN apt-get update && apt-get install -y curl gnupg && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g yarn && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Copy frontend and Python backend source
-COPY frontend /home/jovyan/frontend
-COPY jlab_ws_chat_extension /home/jovyan/jlab_ws_chat_extension
-COPY pyproject.toml README.md /home/jovyan/
-
-# Set working directory for extension build
-WORKDIR /home/jovyan/frontend
-
-# Use node-modules linker and install deps, then build
-RUN echo "nodeLinker: node-modules" > .yarnrc.yml && \
-    yarn cache clean && \
-    yarn install && \
-    yarn build
-
-# Install extension into JupyterLab (editable mode)
-WORKDIR /home/jovyan
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -e .
-
-# Install JupyterLab and RTC dependencies
+# Step 2: Install JupyterLab + required packages
 RUN pip install --no-cache-dir --upgrade \
     jupyterlab==4.4.3 \
     jupyterhub==5.2.1 \
@@ -35,16 +18,41 @@ RUN pip install --no-cache-dir --upgrade \
     jupyter-server-ydoc \
     jupyter-ydoc
 
-# Enable required server extensions
-RUN jupyter server extension enable jupyter_collaboration && \
-    jupyter server extension enable jupyter_server_ydoc
+# Step 3: Copy frontend and build extension
+USER jovyan
+WORKDIR /home/jovyan/frontend
 
-# Setup default mount point
+COPY frontend/package.json frontend/yarn.lock ./
+COPY frontend/tsconfig.json ./
+COPY frontend/src ./src
+COPY frontend/style ./style
+
+# optional: include webpack config if needed
+COPY frontend/webpack.config.cjs ./webpack.config.cjs
+
+# Configure Yarn and build extension
+RUN echo "nodeLinker: node-modules" > .yarnrc.yml && \
+    yarn install && \
+    yarn build
+
+# Step 4: Copy Python backend and install extension package
+WORKDIR /home/jovyan
+
+COPY pyproject.toml .
+COPY frontend/install.json ./install.json
+COPY README.md .
+COPY jlab_ws_chat_extension ./jlab_ws_chat_extension
+
+RUN pip install --no-cache-dir --user .
+
+# Step 5: Build final JupyterLab assets
+ENV JUPYTERLAB_DIR=/home/jovyan/.local/share/jupyter/lab
+
+RUN jupyter lab build --dev-build=False --minimize=False
+
+# Step 6: Final prep
+WORKDIR /home/jovyan
 RUN mkdir -p /home/jovyan/shared && chown -R jovyan:users /home/jovyan/shared
 
-# Expose custom chat WebSocket URL via ENV
+# Reaffirm environment variable for chat URL at runtime
 ENV CHAT_WS_URL=${CHAT_WS_URL:-http://localhost:3001}
-
-USER ${NB_UID}
-
-WORKDIR /home/jovyan
