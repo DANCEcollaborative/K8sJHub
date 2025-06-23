@@ -1,5 +1,7 @@
 {
-  "schema_version": 1,
   "name": "jlab-ws-chat-extension",
-  "static": true
+  "schemaVersion": 1,
+  "jupyterlab": {
+    "extension": true
+  }
 }

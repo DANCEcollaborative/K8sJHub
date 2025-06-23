@@ -42,10 +42,13 @@ COPY pyproject.toml .
 COPY frontend/install.json ./jlab_ws_chat_extension/labextension/install.json
 COPY README.md .
 COPY jlab_ws_chat_extension ./jlab_ws_chat_extension
+COPY jlab_ws_chat_extension.json /etc/jupyter/jupyter_server_config.d/jlab_ws_chat_extension.json
+
 
 USER jovyan
 # RUN pip install ./jlab_ws_chat_extension
-RUN pip install .
+# RUN pip install . 
+RUN pip install . --verbose
 
 
 # Step 5: Build final JupyterLab assets
@@ -56,6 +59,10 @@ RUN jupyter lab build --dev-build=False --minimize=False
 # Step 6: Final prep
 WORKDIR /home/jovyan
 RUN mkdir -p /home/jovyan/shared && chown -R jovyan:users /home/jovyan/shared
+
+# Copy labextension assets to where JupyterLab expects them
+RUN mkdir -p ~/.local/share/jupyter/labextensions/jlab-ws-chat-extension && \
+    cp -r /home/jovyan/jlab_ws_chat_extension/labextension/* ~/.local/share/jupyter/labextensions/jlab-ws-chat-extension/
 
 # USER ${NB_UID}  # Switch to non-root user
 

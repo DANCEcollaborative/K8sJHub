@@ -3,7 +3,7 @@ requires = ["hatchling", "jupyterlab>=4"]
 build-backend = "hatchling.build"
 
 [project]
-name = "jlab-ws-chat-extension"
+name = "jlab_ws_chat_extension"
 version = "0.1.0"
 description = "WebSocket chat panel for JupyterLab"
 authors = [{ name = "Chas Murray", email = "rcmurray@andrew.cmu.edu" }]
@@ -12,21 +12,32 @@ readme = "README.md"
 dependencies = []
 
 [tool.hatch.build.targets.wheel]
-include = ["jlab_ws_chat_extension/**", "jlab_ws_chat_extension/labextension/**"]
-
-[tool.jupyter-packaging.options]
-builder = "jupyterlab.build"
-build_cmd = "build"
-path = "frontend"
-ensured-targets = ["jlab_ws_chat_extension/static/remoteEntry.*.js"]
-data_files = [
-  ["share/jupyter/labextensions/jlab_ws_chat_extension", "jlab_ws_chat_extension/labextension", "**"],
-  ["etc/jupyter/jupyter_server_config.d", ".", "jlab_ws_chat_extension.json"],
+include = [
+  "jlab_ws_chat_extension/**",
+  "jlab_ws_chat_extension/labextension/**",
+  "jlab_ws_chat_extension.json"
 ]
 
 [project.entry-points."jupyterlab.extension"]
 jlab-ws-chat = "jlab_ws_chat_extension.plugin:plugin"
 
+[tool.jupyter-packaging.options]
+builder = "jupyterlab.build"
+build_cmd = "build"
+path = "frontend"
+ensured-targets = ["jlab_ws_chat_extension/remoteEntry.*.js"]
+data_files = [
+  [
+    "share/jupyter/labextensions/jlab-ws-chat-extension",
+    "jlab_ws_chat_extension/labextension",
+    "**"
+  ],
+  [
+    "etc/jupyter/jupyter_server_config.d",
+    ".",
+    "jlab_ws_chat_extension.json"
+  ]
+]
 [tool.jupyter-packaging.build-frontend]
-name = "jlab-ws-chat-extension"
+name = "jlab_ws_chat_extension"
 path = "frontend"

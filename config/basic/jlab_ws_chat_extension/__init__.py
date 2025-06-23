@@ -1,7 +1,2 @@
-__version__ = "0.1.0"
-
-def _jupyter_labextension_paths():
-    return [{
-        "name": "jlab-ws-chat-extension",
-        "src": "static"
-    }]
+def _load_jupyter_server_extension(server_app):
+    server_app.log.info("[jlab_ws_chat_extension] Server extension loaded.")
