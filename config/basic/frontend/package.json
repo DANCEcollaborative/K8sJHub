@@ -30,6 +30,6 @@
   },
   "jupyterlab": {
     "extension": true,
-    "outputDir": "../jlab_ws_chat_extension/static"
+    "outputDir": "../jlab_ws_chat_extension/labextension"
   }
 }

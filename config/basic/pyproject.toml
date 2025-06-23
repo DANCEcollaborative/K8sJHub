@@ -12,9 +12,7 @@ readme = "README.md"
 dependencies = []
 
 [tool.hatch.build.targets.wheel]
-artifacts = [
-  "jlab_ws_chat_extension/static"
-]
+include = ["jlab_ws_chat_extension/**", "jlab_ws_chat_extension/labextension/**"]
 
 [tool.jupyter-packaging.options]
 builder = "jupyterlab.build"
@@ -22,9 +20,12 @@ build_cmd = "build"
 path = "frontend"
 ensured-targets = ["jlab_ws_chat_extension/static/remoteEntry.*.js"]
 data_files = [
-  ["share/jupyter/labextensions/jlab-ws-chat-extension", "jlab_ws_chat_extension/static", "**"],
-  ["share/jupyter/labextensions/jlab-ws-chat-extension", ".", "install.json"]
+  ["share/jupyter/labextensions/jlab_ws_chat_extension", "jlab_ws_chat_extension/labextension", "**"],
+  ["etc/jupyter/jupyter_server_config.d", ".", "jlab_ws_chat_extension.json"],
 ]
+
+[project.entry-points."jupyterlab.extension"]
+jlab-ws-chat = "jlab_ws_chat_extension.plugin:plugin"
 
 [tool.jupyter-packaging.build-frontend]
 name = "jlab-ws-chat-extension"

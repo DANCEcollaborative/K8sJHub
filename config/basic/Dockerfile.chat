@@ -9,6 +9,9 @@ RUN apt-get update && apt-get install -y curl gnupg && \
     npm install -g yarn && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Ensure jovyan can write build output
+RUN chown -R jovyan:users /home/jovyan
+
 # Step 2: Install JupyterLab + required packages
 RUN pip install --no-cache-dir --upgrade \
     jupyterlab==4.4.3 \
@@ -19,13 +22,9 @@ RUN pip install --no-cache-dir --upgrade \
     jupyter-ydoc
 
 # Step 3: Copy frontend and build extension
-USER jovyan
+# USER jovyan
+COPY frontend /home/jovyan/frontend
 WORKDIR /home/jovyan/frontend
-
-COPY frontend/package.json frontend/yarn.lock ./
-COPY frontend/tsconfig.json ./
-COPY frontend/src ./src
-COPY frontend/style ./style
 
 # optional: include webpack config if needed
 COPY frontend/webpack.config.cjs ./webpack.config.cjs
@@ -39,11 +38,15 @@ RUN echo "nodeLinker: node-modules" > .yarnrc.yml && \
 WORKDIR /home/jovyan
 
 COPY pyproject.toml .
-COPY frontend/install.json ./install.json
+# COPY frontend/install.json ./install.json
+COPY frontend/install.json ./jlab_ws_chat_extension/labextension/install.json
 COPY README.md .
 COPY jlab_ws_chat_extension ./jlab_ws_chat_extension
 
-RUN pip install --no-cache-dir --user .
+USER jovyan
+# RUN pip install ./jlab_ws_chat_extension
+RUN pip install .
+
 
 # Step 5: Build final JupyterLab assets
 ENV JUPYTERLAB_DIR=/home/jovyan/.local/share/jupyter/lab
@@ -53,6 +56,8 @@ RUN jupyter lab build --dev-build=False --minimize=False
 # Step 6: Final prep
 WORKDIR /home/jovyan
 RUN mkdir -p /home/jovyan/shared && chown -R jovyan:users /home/jovyan/shared
+
+# USER ${NB_UID}  # Switch to non-root user
 
 # Reaffirm environment variable for chat URL at runtime
 ENV CHAT_WS_URL=${CHAT_WS_URL:-http://localhost:3001}

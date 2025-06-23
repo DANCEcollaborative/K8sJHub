@@ -6,9 +6,9 @@ const { dependencies } = require('./package.json');
 module.exports = {
   entry: './src/index.ts',
   output: {
-    filename: 'index.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: 'auto'
+    path: path.resolve(__dirname, '../jlab_ws_chat_extension/labextension'),
+    publicPath: '',
+    clean: true,
   },
   resolve: {
     extensions: ['.ts', '.js']
