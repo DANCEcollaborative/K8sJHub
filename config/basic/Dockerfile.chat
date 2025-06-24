@@ -23,16 +23,17 @@ COPY frontend/webpack.config.cjs /home/jovyan/frontend/webpack.config.cjs
 WORKDIR /home/jovyan/frontend
 RUN echo "nodeLinker: node-modules" > .yarnrc.yml && \
     yarn install && \
-    yarn build
+    yarn build --stats-error-details
 
 ### Step 4: Fix frontend output for JupyterLab (package.json and index.js)
 # Assumes build output is in ../jlab_ws_chat_extension/labextension/
 WORKDIR /home/jovyan
 RUN mkdir -p jlab_ws_chat_extension/labextension && \
     cp -r frontend/install.json jlab_ws_chat_extension/labextension/install.json && \
-    cp frontend/package.json jlab_ws_chat_extension/labextension/package.json && \
-    mkdir -p jlab_ws_chat_extension/labextension/lib && \
-    cp jlab_ws_chat_extension/labextension/remoteEntry.js jlab_ws_chat_extension/labextension/lib/index.js
+    cp frontend/package.json jlab_ws_chat_extension/labextension/package.json 
+#     cp frontend/package.json jlab_ws_chat_extension/labextension/package.json && \
+#     mkdir -p jlab_ws_chat_extension/labextension/lib && \
+#     cp jlab_ws_chat_extension/labextension/remoteEntry.js jlab_ws_chat_extension/labextension/lib/index.js
 
 ### Step 5: Copy backend and install extension with pip
 COPY pyproject.toml README.md jlab_ws_chat_extension.json ./

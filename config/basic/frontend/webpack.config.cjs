@@ -1,12 +1,11 @@
 const path = require('path');
-const { ModuleFederationPlugin } = require('webpack').container;
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
-const { dependencies } = require('./package.json');
 
 module.exports = {
   entry: './src/index.ts',
   output: {
-    path: path.resolve(__dirname, '../jlab_ws_chat_extension/labextension'),
+    filename: 'index.js',
+    path: path.resolve(__dirname, '../jlab_ws_chat_extension/labextension/lib'),
+    libraryTarget: 'umd',
     publicPath: '',
     clean: true,
   },
@@ -30,21 +29,5 @@ module.exports = {
       }
     ]
   },
-  plugins: [
-    new ModuleFederationPlugin({
-      name: 'jlab_ws_chat_extension',
-      filename: 'remoteEntry.js',
-      exposes: {
-        './plugin': './src/index'
-      },
-      shared: {
-        ...dependencies,
-        '@jupyterlab/application': { singleton: true, requiredVersion: false },
-        '@jupyterlab/apputils': { singleton: true, requiredVersion: false },
-        '@lumino/widgets': { singleton: true, requiredVersion: false }
-      }
-    }),
-    new WebpackManifestPlugin()
-  ],
   mode: 'production'
 };

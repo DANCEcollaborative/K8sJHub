@@ -9,7 +9,7 @@ import { Widget } from '@lumino/widgets';
 import io from 'socket.io-client';
 
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'external-chat-extension',
+  id: 'jlab-ws-chat-extension:plugin',
   autoStart: true,
   requires: [ILayoutRestorer],
   activate: (app: JupyterFrontEnd, restorer: ILayoutRestorer) => {
@@ -17,6 +17,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const socket = io(wsURL);
 
     const chatWidget = new Widget();
+    console.log('>>>>>>>> JupyterLab extension jlab-ws-chat-extension is activated! <<<<<<<<<<');
     chatWidget.node.innerHTML = `
       <div style="padding: 1em;">
         <h3>Chat Widget</h3>
