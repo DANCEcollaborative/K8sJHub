@@ -21,19 +21,17 @@ RUN pip install --no-cache-dir --upgrade \
 COPY frontend /home/jovyan/frontend
 COPY frontend/webpack.config.cjs /home/jovyan/frontend/webpack.config.cjs
 WORKDIR /home/jovyan/frontend
-RUN echo "nodeLinker: node-modules" > .yarnrc.yml && \
+RUN rm -rf node_modules yarn.lock && \
+    echo "nodeLinker: node-modules" > .yarnrc.yml && \
     yarn install && \
     yarn build --stats-error-details
 
-### Step 4: Fix frontend output for JupyterLab (package.json and index.js)
+### Step 4: Fix frontend output for JupyterLab (package.json and install.json)
 # Assumes build output is in ../jlab_ws_chat_extension/labextension/
 WORKDIR /home/jovyan
 RUN mkdir -p jlab_ws_chat_extension/labextension && \
     cp -r frontend/install.json jlab_ws_chat_extension/labextension/install.json && \
-    cp frontend/package.json jlab_ws_chat_extension/labextension/package.json 
-#     cp frontend/package.json jlab_ws_chat_extension/labextension/package.json && \
-#     mkdir -p jlab_ws_chat_extension/labextension/lib && \
-#     cp jlab_ws_chat_extension/labextension/remoteEntry.js jlab_ws_chat_extension/labextension/lib/index.js
+    cp frontend/package.json jlab_ws_chat_extension/labextension/package.json
 
 ### Step 5: Copy backend and install extension with pip
 COPY pyproject.toml README.md jlab_ws_chat_extension.json ./
@@ -43,10 +41,14 @@ RUN pip install .
 ### Step 6: Install frontend into JupyterLab
 RUN jupyter labextension install ./jlab_ws_chat_extension/labextension --no-build
 
-### Step 7: Final build
+### Step 7: Copy install.json to JupyterLab extensions folder
+RUN mkdir -p /opt/conda/share/jupyter/labextensions/jlab-ws-chat-extension && \
+    cp frontend/install.json /opt/conda/share/jupyter/labextensions/jlab-ws-chat-extension/install.json
+
+### Step 8: Final build
 RUN jupyter lab build --dev-build=False --minimize=False
 
-### Step 8: Final setup
+### Step 9: Final setup
 RUN mkdir -p /home/jovyan/shared && chown -R jovyan:users /home/jovyan/shared
 ENV CHAT_WS_URL=${CHAT_WS_URL:-http://localhost:3001}
 
