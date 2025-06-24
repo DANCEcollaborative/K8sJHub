@@ -1,18 +1,14 @@
 FROM jupyter/base-notebook:latest
 
-# Step 1: Root setup — install Node.js 20 and Yarn
+### Step 1: Install Node.js 20 and Yarn
 USER root
-
 RUN apt-get update && apt-get install -y curl gnupg && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     npm install -g yarn && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Ensure jovyan can write build output
-RUN chown -R jovyan:users /home/jovyan
-
-# Step 2: Install JupyterLab + required packages
+### Step 2: Install JupyterLab and dependencies
 RUN pip install --no-cache-dir --upgrade \
     jupyterlab==4.4.3 \
     jupyterhub==5.2.1 \
@@ -21,50 +17,37 @@ RUN pip install --no-cache-dir --upgrade \
     jupyter-server-ydoc \
     jupyter-ydoc
 
-# Step 3: Copy frontend and build extension
-# USER jovyan
+### Step 3: Copy frontend and build it
 COPY frontend /home/jovyan/frontend
+COPY frontend/webpack.config.cjs /home/jovyan/frontend/webpack.config.cjs
 WORKDIR /home/jovyan/frontend
-
-# optional: include webpack config if needed
-COPY frontend/webpack.config.cjs ./webpack.config.cjs
-
-# Configure Yarn and build extension
 RUN echo "nodeLinker: node-modules" > .yarnrc.yml && \
     yarn install && \
     yarn build
 
-# Step 4: Copy Python backend and install extension package
+### Step 4: Fix frontend output for JupyterLab (package.json and index.js)
+# Assumes build output is in ../jlab_ws_chat_extension/labextension/
 WORKDIR /home/jovyan
+RUN mkdir -p jlab_ws_chat_extension/labextension && \
+    cp -r frontend/install.json jlab_ws_chat_extension/labextension/install.json && \
+    cp frontend/package.json jlab_ws_chat_extension/labextension/package.json && \
+    mkdir -p jlab_ws_chat_extension/labextension/lib && \
+    cp jlab_ws_chat_extension/labextension/remoteEntry.js jlab_ws_chat_extension/labextension/lib/index.js
 
-COPY pyproject.toml .
-# COPY frontend/install.json ./install.json
-COPY frontend/install.json ./jlab_ws_chat_extension/labextension/install.json
-COPY README.md .
+### Step 5: Copy backend and install extension with pip
+COPY pyproject.toml README.md jlab_ws_chat_extension.json ./
 COPY jlab_ws_chat_extension ./jlab_ws_chat_extension
-COPY jlab_ws_chat_extension.json /etc/jupyter/jupyter_server_config.d/jlab_ws_chat_extension.json
+RUN pip install .
 
+### Step 6: Install frontend into JupyterLab
+RUN jupyter labextension install ./jlab_ws_chat_extension/labextension --no-build
 
-USER jovyan
-# RUN pip install ./jlab_ws_chat_extension
-# RUN pip install . 
-RUN pip install . --verbose
-
-
-# Step 5: Build final JupyterLab assets
-ENV JUPYTERLAB_DIR=/home/jovyan/.local/share/jupyter/lab
-
+### Step 7: Final build
 RUN jupyter lab build --dev-build=False --minimize=False
 
-# Step 6: Final prep
-WORKDIR /home/jovyan
+### Step 8: Final setup
 RUN mkdir -p /home/jovyan/shared && chown -R jovyan:users /home/jovyan/shared
-
-# Copy labextension assets to where JupyterLab expects them
-RUN mkdir -p ~/.local/share/jupyter/labextensions/jlab-ws-chat-extension && \
-    cp -r /home/jovyan/jlab_ws_chat_extension/labextension/* ~/.local/share/jupyter/labextensions/jlab-ws-chat-extension/
-
-# USER ${NB_UID}  # Switch to non-root user
-
-# Reaffirm environment variable for chat URL at runtime
 ENV CHAT_WS_URL=${CHAT_WS_URL:-http://localhost:3001}
+
+USER jovyan
+WORKDIR /home/jovyan
