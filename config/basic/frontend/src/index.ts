@@ -24,11 +24,13 @@ const plugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
 //   optional: [ILauncher],
 //   requires: [ICommandPalette, ILayoutRestorer],
-  requires: [ILayoutRestorer],
-  optional: [ICommandPalette, ILauncher],
+//   requires: [ILayoutRestorer],
+//   optional: [ICommandPalette, ILauncher],
+  requires: [ICommandPalette],
+  optional: [ILauncher, ILayoutRestorer],
   activate: (
     app: JupyterFrontEnd,
-    restorer: ILayoutRestorer,
+    restorer: ILayoutRestorer | null,
     palette: ICommandPalette | null,
     launcher: ILauncher | null
   ) => {
@@ -91,7 +93,11 @@ const plugin: JupyterFrontEndPlugin<void> = {
     widget.title.closable = true;
 
     // Register the widget for layout restoration
-    restorer.add(widget, widget.id);
+//     restorer.add(widget, widget.id);
+    if (restorer) {
+	  restorer.add(widget, widget.id);
+	}
+
 
     // Command ID
     const commandID = 'jlab-ws-chat:open';

@@ -1,24 +1,18 @@
 {
   "name": "jlab-ws-chat-extension",
   "version": "0.1.0",
-  "description": "WebSocket chat extension for JupyterLab using Socket.IO",
   "main": "lib/index.js",
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "../jlab_ws_chat_extension/labextension"
+  },
+  "description": "WebSocket chat extension for JupyterLab using Socket.IO",
   "scripts": {
     "build": "webpack --config webpack.config.cjs",
     "build:ts": "tsc",
     "watch": "webpack --watch --config webpack.config.cjs"
   },
   "dependencies": {
-    "@jupyterlab/application": "^4.4.3",
-    "@jupyterlab/apputils": "^4.4.3",
-    "@jupyterlab/coreutils": "^6.4.3",
-    "@jupyterlab/ui-components": "^4.4.3",
-    "@jupyterlab/launcher": "^4.4.3",  
-    "@jupyterlab/translation": "^4.4.3",
-    "@jupyterlab/docregistry": "^4.4.3",
-    "@jupyterlab/rendermime": "^4.4.3",
-    "@jupyterlab/mainmenu": "^4.4.3",
-    "@jupyterlab/services": "^7.4.3",  
     "@lumino/widgets": "^2.7.1",
     "@lumino/signaling": "^2.1.4",
     "@lumino/algorithm": "^2.0.3",
@@ -27,19 +21,10 @@
     "@lumino/properties": "^2.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "socket.io-client": "^4.7.5"
-  },
-  "peerDependencies": {
+    "socket.io-client": "^4.7.5",
     "@jupyterlab/application": "^4.4.3",
     "@jupyterlab/apputils": "^4.4.3",
-    "@jupyterlab/launcher": "^4.4.3",
-    "@jupyterlab/ui-components": "^4.4.3",
-    "@jupyterlab/coreutils": "^6.4.3",
-    "@jupyterlab/translation": "^4.4.3",
-    "@jupyterlab/docregistry": "^4.4.3",
-    "@jupyterlab/rendermime": "^4.4.3",
-    "@jupyterlab/mainmenu": "^4.4.3",
-    "@jupyterlab/services": "^7.4.3"
+    "@jupyterlab/launcher": "^4.4.3"
   },
   "devDependencies": {
     "webpack": "^5",
@@ -48,9 +33,5 @@
     "typescript": "^5",
     "@jupyterlab/builder": "^4.4.3",
     "@types/socket.io-client": "^1.4.36"  
-  },
-  "jupyterlab": {
-    "extension": true,
-    "outputDir": "../jlab_ws_chat_extension/labextension"
   }
 }

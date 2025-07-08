@@ -1,6 +1,7 @@
 const path = require('path');
 
 module.exports = {
+  mode: 'production',
   entry: './src/index.ts',
   output: {
     filename: 'index.js',
@@ -29,5 +30,17 @@ module.exports = {
       }
     ]
   },
-  mode: 'production'
+  devtool: 'source-map',
+  externals: [
+  '@jupyterlab/application',
+  '@jupyterlab/apputils',
+  '@jupyterlab/ui-components',
+  '@jupyterlab/launcher',
+  '@lumino/widgets',
+  '@lumino/signaling',
+  '@lumino/algorithm',
+  '@lumino/messaging',
+  '@lumino/properties',
+  '@lumino/disposable'
+  ]
 };

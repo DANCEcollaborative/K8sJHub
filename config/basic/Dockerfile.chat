@@ -32,6 +32,9 @@ WORKDIR /home/jovyan
 RUN mkdir -p jlab_ws_chat_extension/labextension && \
     cp -r frontend/install.json jlab_ws_chat_extension/labextension/install.json && \
     cp frontend/package.json jlab_ws_chat_extension/labextension/package.json
+# RUN cp frontend/package.json jlab_ws_chat_extension/labextension/package.json && \
+#     sed -i '/"main":/d' jlab_ws_chat_extension/labextension/package.json && \
+#     echo '{"main": "lib/index.js"}' >> jlab_ws_chat_extension/labextension/package.json
 
 ### Step 5: Copy backend and install extension with pip
 COPY pyproject.toml README.md jlab_ws_chat_extension.json ./
@@ -46,7 +49,9 @@ RUN mkdir -p /opt/conda/share/jupyter/labextensions/jlab-ws-chat-extension && \
     cp frontend/install.json /opt/conda/share/jupyter/labextensions/jlab-ws-chat-extension/install.json
 
 ### Step 8: Final build
-RUN jupyter lab build --dev-build=False --minimize=False
+# RUN jupyter lab build --dev-build=False --minimize=False
+RUN jupyter lab build --dev-build=False --minimize=False || (cat /tmp/jupyterlab-debug-*.log && exit 1)
+RUN cat /tmp/jupyterlab-debug-*.log || echo "No debug log found"
 
 ### Step 9: Final setup
 RUN mkdir -p /home/jovyan/shared && chown -R jovyan:users /home/jovyan/shared
