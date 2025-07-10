@@ -28,15 +28,16 @@ RUN rm -rf node_modules package-lock.json && \
 WORKDIR /home/jovyan
 RUN mkdir -p jlab_ws_chat_extension/labextension && \
     cp frontend/install.json jlab_ws_chat_extension/labextension/install.json && \
-    cp frontend/package.json jlab_ws_chat_extension/labextension/package.json 
-    
-# Step 5: Install the Python package
+    cp frontend/package.json jlab_ws_chat_extension/labextension/package.json
+#     cp frontend/package.json jlab_ws_chat_extension/labextension/package.json && \
+#     cp -r frontend/lib jlab_ws_chat_extension/labextension/lib
+
+# Step 5: Copy and install Python backend
 COPY pyproject.toml README.md ./
 COPY jlab_ws_chat_extension ./jlab_ws_chat_extension
 RUN pip install .
 
-# Step 6: Final JupyterLab build
-RUN rm -rf /opt/conda/share/jupyter/labextensions/jlab-ws-chat-extension
+# Step 6: Final JupyterLab rebuild
 RUN jupyter lab clean && jupyter lab build --dev-build=False --minimize=False || (cat /tmp/jupyterlab-debug-*.log && exit 1)
 RUN cat /tmp/jupyterlab-debug-*.log || echo "No debug log found"
 

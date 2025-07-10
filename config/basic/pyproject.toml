@@ -12,17 +12,18 @@ readme = "README.md"
 dependencies = []
 
 [project.entry-points."jupyter_server.extension"]
-jlab-ws-chat-extension = "jlab_ws_chat_extension"
+jlab-ws-chat-extension = "jlab_ws_chat_extension.plugin:plugin"
 
 [tool.hatch.build.targets.wheel]
 include = [
-  "jlab_ws_chat_extension/**"
+  "jlab_ws_chat_extension/**",
+  "jlab_ws_chat_extension.json"
 ]
 
 [tool.jupyter-packaging.metadata]
 name = "jlab-ws-chat-extension"
 prebuilt = true
-extension = true
+# extension = true
 
 [tool.jupyter-packaging.options]
 ensured-targets = ["jlab_ws_chat_extension/labextension/lib/index.js"]
