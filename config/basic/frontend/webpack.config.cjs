@@ -32,15 +32,18 @@ module.exports = {
   },
   devtool: 'source-map',
   externals: [
-  '@jupyterlab/application',
-  '@jupyterlab/apputils',
-  '@jupyterlab/ui-components',
-  '@jupyterlab/launcher',
-  '@lumino/widgets',
-  '@lumino/signaling',
-  '@lumino/algorithm',
-  '@lumino/messaging',
-  '@lumino/properties',
-  '@lumino/disposable'
+    '@jupyterlab/application',
+    '@jupyterlab/apputils',
+    '@jupyterlab/launcher',
+    '@jupyterlab/ui-components',
+    '@jupyterlab/coreutils',
+    '@jupyterlab/services',
+    '@jupyterlab/rendermime',
+    '@lumino/widgets',
+    '@lumino/signaling',
+    '@lumino/algorithm',
+    '@lumino/messaging',
+    '@lumino/properties',
+    '@lumino/disposable'
   ]
 };
