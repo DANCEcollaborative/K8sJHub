@@ -11,7 +11,7 @@ license = "MIT"
 readme = "README.md"
 dependencies = []
 
-[project.entry-points."jupyterlab.extension"]
+[project.entry-points."jupyter_server.extension"]
 jlab-ws-chat-extension = "jlab_ws_chat_extension"
 
 [tool.hatch.build.targets.wheel]
@@ -22,6 +22,7 @@ include = [
 [tool.jupyter-packaging.metadata]
 name = "jlab-ws-chat-extension"
 prebuilt = true
+extension = true
 
 [tool.jupyter-packaging.options]
 ensured-targets = ["jlab_ws_chat_extension/labextension/lib/index.js"]
@@ -30,6 +31,11 @@ data_files = [
     "share/jupyter/labextensions/jlab-ws-chat-extension",
     "jlab_ws_chat_extension/labextension",
     "**"
+  ],
+  [
+    "etc/jupyter/jupyter_server_config.d",
+    ".",
+    "jlab_ws_chat_extension.json"
   ]
 ]
 

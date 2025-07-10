@@ -1,10 +1,6 @@
 {
-  "schema_version": 1,
-  "data": {
-    "disabled": false,
-    "name": "jlab-ws-chat-extension",
-    "jupyterlab": {
-      "extension": true,
-    }
-  }
+  "name": "jlab-ws-chat-extension",
+  "section": "main",
+  "disabled": false,
+  "load": "lib/index.js"
 }
