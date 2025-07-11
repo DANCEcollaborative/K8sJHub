@@ -11,12 +11,13 @@ license = "MIT"
 readme = "README.md"
 dependencies = []
 
-[project.entry-points."jupyter_server.extension"]
-jlab-ws-chat-extension = "jlab_ws_chat_extension.plugin:plugin"
+[project.entry-points."jupyterlab.extension"]
+jlab-ws-chat-extension = "jlab_ws_chat_extension"
 
 [tool.hatch.build.targets.wheel]
 include = [
   "jlab_ws_chat_extension/**",
+  "jlab_ws_chat_extension/labextension/**",
   "jlab_ws_chat_extension.json"
 ]
 

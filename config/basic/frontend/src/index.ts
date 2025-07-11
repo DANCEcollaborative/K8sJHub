@@ -6,8 +6,7 @@ import {
 
 import {
   ICommandPalette,
-  MainAreaWidget,
-  WidgetTracker
+  MainAreaWidget
 } from '@jupyterlab/apputils';
 
 import { ILauncher } from '@jupyterlab/launcher';
@@ -15,17 +14,17 @@ import { Widget } from '@lumino/widgets';
 import io from 'socket.io-client';
 
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'jlab-ws-chat-extension:plugin',
+  id: 'jlab-ws-chat-extension',
   autoStart: true,
   requires: [ICommandPalette],
   optional: [ILauncher, ILayoutRestorer],
   activate: (
     app: JupyterFrontEnd,
-    palette: ICommandPalette | null,
+    palette: ICommandPalette,
     launcher: ILauncher | null,
     restorer: ILayoutRestorer | null
   ) => {
-    console.log('✅ jlab-ws-chat-extension is activated');
+    console.log('✅ jlab-ws-chat-extension is loaded.');
 
     const { commands, shell } = app;
     const wsURL = (window as any).CHAT_WS_URL || 'http://localhost:3001';
