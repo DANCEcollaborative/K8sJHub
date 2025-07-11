@@ -5,10 +5,10 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'lib'), 
+    path: path.resolve(__dirname, '../jlab_ws_chat_extension/labextension/lib'),
     libraryTarget: 'umd',
     publicPath: '',
-    clean: true,
+    clean: true
   },
   resolve: {
     extensions: ['.ts', '.js']
@@ -22,7 +22,7 @@ module.exports = {
       },
       {
         test: /\.svg$/,
-        type: 'asset/resource',
+        type: 'asset/resource'
       },
       {
         test: /\.css$/,
