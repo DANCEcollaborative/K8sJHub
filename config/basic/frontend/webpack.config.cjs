@@ -5,7 +5,7 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, '../jlab_ws_chat_extension/labextension/lib'),
+    path: path.resolve(__dirname, 'lib'),
     libraryTarget: 'umd',
     publicPath: '',
     clean: true

@@ -1,6 +1,9 @@
 {
   "name": "jlab-ws-chat-extension",
-  "section": "main",
-  "disabled": false,
-  "load": "lib/index.js"
+  "labextensions": [
+    {
+      "name": "jlab-ws-chat-extension",
+      "src": "labextension"
+    }
+  ]
 }
