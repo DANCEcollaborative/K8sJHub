@@ -9,8 +9,12 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "types": ["node"],
-    "forceConsistentCasingInFileNames": true
+    "baseUrl": ".",
+    "paths": {
+      "@lumino/widgets": ["node_modules/@jupyterlab/rendermime-interfaces/node_modules/@lumino/widgets"]
+      }
   },
   "include": ["src"]
 }

@@ -15,19 +15,9 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: /\.ts$/,
-        use: 'ts-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.svg$/,
-        type: 'asset/resource'
-      },
-      {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader']
-      }
+      { test: /\.ts$/, use: 'ts-loader', exclude: /node_modules/ },
+      { test: /\.css$/, use: ['style-loader','css-loader'] },
+      { test: /\.svg$/, type: 'asset/resource' }
     ]
   },
   devtool: 'source-map',
@@ -35,10 +25,6 @@ module.exports = {
     '@jupyterlab/application',
     '@jupyterlab/apputils',
     '@jupyterlab/launcher',
-    '@jupyterlab/ui-components',
-    '@jupyterlab/coreutils',
-    '@jupyterlab/services',
-    '@jupyterlab/rendermime',
     '@lumino/widgets',
     '@lumino/signaling',
     '@lumino/algorithm',

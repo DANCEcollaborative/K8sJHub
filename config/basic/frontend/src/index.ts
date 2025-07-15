@@ -94,12 +94,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
     mainWidget.title.label = 'Chat';
     mainWidget.title.closable = true;
 
-    const sidebarWidget = new MainAreaWidget({ content: sidebarContent });
-    sidebarWidget.id = 'jlab-ws-chat-sidebar';
-    sidebarWidget.title.iconClass = 'jp-ChatIcon jp-SideBar-tabIcon';
-    sidebarWidget.title.caption = 'Chat Sidebar';
+    // Plain sidebar Lumino widget (not MainAreaWidget)
+    sidebarContent.id = 'jlab-ws-chat-sidebar';
+    sidebarContent.title.caption = 'Chat Sidebar';
+    (sidebarContent.title as any).iconClass = 'jp-ChatIcon jp-SideBar-tabIcon';
 
-    shell.add(sidebarWidget, 'left', { rank: 800 });
+    shell.add(sidebarContent, 'left', { rank: 800 });
 
     const commandID = 'jlab-ws-chat:open-main';
 
@@ -114,17 +114,14 @@ const plugin: JupyterFrontEndPlugin<void> = {
       }
     });
 
-    if (palette) {
-      palette.addItem({ command: commandID, category: 'Chat' });
-    }
+    palette.addItem({ command: commandID, category: 'Chat' });
 
     if (launcher) {
       launcher.add({ command: commandID, category: 'Other', rank: 1 });
     }
 
     if (restorer) {
-      restorer.add(mainWidget, mainWidget.id);
-      restorer.add(sidebarWidget, sidebarWidget.id);
+      restorer.add(mainWidget as any, mainWidget.id);
     }
   }
 };

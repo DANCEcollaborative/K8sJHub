@@ -5,30 +5,27 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "webpack --config webpack.config.cjs",
-    "build:ts": "tsc",
-    "watch": "webpack --watch --config webpack.config.cjs"
+    "watch": "webpack --watch --config webpack.config.cjs",
+    "install-json": "node build-install-json.mjs"
   },
   "jupyterlab": {
     "extension": true,
     "prebuiltExtension": true
   },
   "dependencies": {
-    "@jupyterlab/application": "^4.4.3",
-    "@jupyterlab/apputils": "^4.4.3",
-    "@jupyterlab/launcher": "^4.4.3",
-    "@lumino/widgets": "^2.7.1",
-    "@lumino/signaling": "^2.1.4",
-    "@lumino/algorithm": "^2.0.3",
-    "@lumino/messaging": "^2.0.3",
-    "@lumino/disposable": "^2.1.4",
-    "@lumino/properties": "^2.0.3",
+    "@jupyterlab/application": "4.4.3",
+    "@jupyterlab/apputils": "4.4.3",
+    "@jupyterlab/launcher": "4.4.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
+    "@jupyterlab/extension-builder": "^0.12.0",
+    "@types/socket.io-client": "^1.4.36",
     "ts-loader": "^9.4.4",
     "typescript": "^5.4.5",
     "webpack": "^5.91.0",
-    "webpack-cli": "^4.10.0",
-    "@types/socket.io-client": "^1.4.36"
+    "webpack-cli": "^4.10.0"
   }
 }
