@@ -1,12 +1,8 @@
-// frontend/build-install-json.mjs
-import extensionBuilder from '@jupyterlab/extension-builder';
-import { writeFile } from 'fs/promises';
+import pkg from '@jupyterlab/extension-builder';
 
-const { buildInstallInfo } = extensionBuilder;
+const { buildInstallInfo } = pkg;
 
-const installData = await buildInstallInfo({
-  pkgPath: process.cwd()
+buildInstallInfo({
+  lib: 'lib',
+  output: '../jlab_ws_chat_extension/labextension'
 });
-
-await writeFile('install.json', JSON.stringify(installData, null, 2));
-console.log('✅ install.json generated from package.json');

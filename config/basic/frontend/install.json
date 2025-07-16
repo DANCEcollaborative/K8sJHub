@@ -1,9 +1,11 @@
 {
+  "schemaVersion": 1,
   "name": "jlab-ws-chat-extension",
-  "labextensions": [
-    {
-      "name": "jlab-ws-chat-extension",
-      "src": "labextension"
-    }
-  ]
+  "jupyterlab": {
+    "extension": true,
+    "prebuiltExtension": true
+  },
+  "dependencies": [],
+  "devDependencies": [],
+  "buildConfig": {}
 }

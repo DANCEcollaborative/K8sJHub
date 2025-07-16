@@ -7,26 +7,27 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.cjs",
+    "build": "tsc && webpack --config webpack.config.cjs",
+    "prebuild": "jlpm run build",
     "watch": "webpack --watch --config webpack.config.cjs",
     "install-json": "node build-install-json.mjs"
   },
   "jupyterlab": {
     "extension": true,
     "prebuiltExtension": true,
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "outputDir": "lib"
   },
-  "packageManager": "npm",
   "dependencies": {
     "@jupyterlab/application": "4.4.3",
     "@jupyterlab/apputils": "4.4.3",
     "@jupyterlab/launcher": "4.4.3",
-    "@lumino/widgets": "1.37.1",
     "@lumino/algorithm": "1.9.0",
     "@lumino/disposable": "1.7.2",
     "@lumino/messaging": "1.6.0",
     "@lumino/properties": "1.5.2",
     "@lumino/signaling": "1.9.0",
+    "@lumino/widgets": "1.37.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "socket.io-client": "^4.7.5"

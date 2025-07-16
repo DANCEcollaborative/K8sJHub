@@ -9,7 +9,8 @@ description = "WebSocket chat panel for JupyterLab"
 authors = [{ name = "Chas Murray", email = "rcmurray@andrew.cmu.edu" }]
 license = "MIT"
 readme = "README.md"
-dependencies = []
+requires-python = ">=3.8"
+dependencies = ["jupyterlab>=4.0.0"]
 
 [project.entry-points."jupyterlab.extension"]
 jlab-ws-chat-extension = "jlab_ws_chat_extension"
@@ -28,6 +29,9 @@ include = [
 
 [tool.hatch.build.targets.wheel.shared-data]
 "jlab_ws_chat_extension/labextension" = "share/jupyter/labextensions/jlab-ws-chat-extension"
+
+[tool.jupyter-packaging]
+prebuilt = true
 
 [tool.jupyter-packaging.metadata]
 name = "jlab-ws-chat-extension"
