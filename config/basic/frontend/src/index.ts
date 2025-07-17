@@ -13,6 +13,15 @@ import { ILauncher } from '@jupyterlab/launcher';
 import { Widget } from '@lumino/widgets';
 import io from 'socket.io-client';
 
+import { LabIcon } from '@jupyterlab/ui-components';
+import mySvg from './lock.svg';
+
+export const chatIcon = new LabIcon({
+  name: 'jlab-ws-chat:chat',
+  svgstr: mySvg
+});
+
+
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jlab-ws-chat-extension',
   autoStart: true,
@@ -92,6 +101,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const mainWidget = new MainAreaWidget({ content: mainContent });
     mainWidget.id = 'jlab-ws-chat-main';
     mainWidget.title.label = 'Chat';
+    mainWidget.title.icon = chatIcon;
     mainWidget.title.closable = true;
 
     // Plain sidebar Lumino widget (not MainAreaWidget)

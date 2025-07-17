@@ -28,6 +28,10 @@ WORKDIR /home/jovyan/frontend
 RUN rm -rf node_modules package-lock.json lib && \
     yarn install && \
     yarn build
+# >>> SHOULD THE ABOVE BE ...
+# RUN rm -rf node_modules yarn.lock && \
+#     jlpm install && \
+#     jlpm build
 
 
 ##############################
@@ -48,8 +52,9 @@ RUN pip install .
 ##############################
 # Step 6: Rebuild JupyterLab (final prebuilt step)
 ##############################
-RUN jupyter lab clean && jupyter lab build --dev-build=False --minimize=False || \
-    (cat /tmp/jupyterlab-debug-*.log && exit 1)
+# RUN jupyter lab clean && jupyter lab build --dev-build=False --minimize=False || \
+#     (cat /tmp/jupyterlab-debug-*.log && exit 1)
+RUN jupyter lab clean && jupyter lab build --dev-build=False --minimize=False --debug --log-level=debug
 RUN cat /tmp/jupyterlab-debug-*.log || echo "No debug log found"
 
 ##############################

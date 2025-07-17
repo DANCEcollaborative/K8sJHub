@@ -16,5 +16,12 @@
       "@lumino/widgets": ["node_modules/@jupyterlab/rendermime-interfaces/node_modules/@lumino/widgets"]
       }
   },
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": "."
+  },
   "include": ["src"]
 }
