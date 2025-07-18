@@ -12,6 +12,9 @@ readme = "README.md"
 requires-python = ">=3.8"
 dependencies = ["jupyterlab>=4.0.0"]
 
+[tool.setuptools]
+include-package-data = true
+
 [tool.setuptools.package-data]
 "jlab_ws_chat_extension" = ["labextension/**"]
 
@@ -19,21 +22,19 @@ dependencies = ["jupyterlab>=4.0.0"]
 jlab-ws-chat-extension = "jlab_ws_chat_extension"
 
 [tool.hatch.build]
-include = [
-    "jlab-ws-chat-extension/**",
-]
+include = ["jlab_ws_chat_extension/**"]
 
 [tool.hatch.build.targets.wheel]
 include = [
-  "jlab-ws-chat-extension/**",
-  "jlab-ws-chat-extension/labextension/**",
+  "jlab_ws_chat_extension/**",
+  "jlab_ws_chat_extension/labextension/**",
   "jlab-ws-chat-extension.json",
   "frontend/package.json",
   "frontend/lib/**"
 ]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jlab-ws-chat-extension/labextension" = "share/jupyter/labextensions/jlab-ws-chat-extension"
+"jlab_ws_chat_extension/labextension" = "share/jupyter/labextensions/jlab-ws-chat-extension"
 
 [tool.jupyter-packaging]
 prebuilt = true
@@ -43,11 +44,11 @@ name = "jlab-ws-chat-extension"
 prebuilt = true
 
 [tool.jupyter-packaging.options]
-ensured-targets = ["jlab-ws-chat-extension/labextension/lib/index.js"]
+ensured-targets = ["jlab_ws_chat_extension/labextension/lib/index.js"]
 data_files = [
   [
     "share/jupyter/labextensions/jlab-ws-chat-extension",
-    "jlab-ws-chat-extension/labextension",
+    "jlab_ws_chat_extension/labextension",
     "**"
   ],
   [
@@ -63,4 +64,4 @@ path = "frontend"
 install = true
 build_cmd = "jlpm build"
 source_dir = "frontend"
-output_dir = "jlab-ws-chat-extension/labextension"
+output_dir = "jlab_ws_chat_extension/labextension"
