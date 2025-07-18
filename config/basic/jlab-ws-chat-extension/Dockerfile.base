@@ -15,11 +15,3 @@ RUN pip install --no-cache-dir --upgrade \
     jupyterlab-link-share \
     jupyter-server-ydoc \
     jupyter-ydoc
-
-# Step 3: Copy frontend and build it with npm
-# COPY frontend /home/jovyan/frontend
-# COPY frontend/webpack.config.cjs /home/jovyan/frontend/webpack.config.cjs
-# WORKDIR /home/jovyan/frontend
-# RUN rm -rf node_modules package-lock.json && \
-#     npm install && \
-#     npm run build

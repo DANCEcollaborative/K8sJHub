@@ -4,7 +4,7 @@
     "*": {
       "hits": {
         "installCount": {
-          "node-modules": 8
+          "node-modules": 10
         }
       },
       "values": {
@@ -13,7 +13,8 @@
         ],
         "commandName": [
           "install",
-          "<none>"
+          "<none>",
+          "-v"
         ],
         "workspaceCount": [
           "1"

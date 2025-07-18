@@ -21,44 +21,34 @@ RUN pip install --no-cache-dir --upgrade \
     jupyter-ydoc
 
 ##############################
-# Step 3: Copy frontend & build it
+# Step 3: Copy frontend and build it
 ##############################
 COPY frontend /home/jovyan/frontend
 WORKDIR /home/jovyan/frontend
-RUN rm -rf node_modules package-lock.json lib && \
-    yarn install && \
-    yarn build
-# >>> SHOULD THE ABOVE BE ...
+# RUN rm -rf node_modules package-lock.json lib && \
 # RUN rm -rf node_modules yarn.lock && \
-#     jlpm install && \
-#     jlpm build
+RUN jlpm install && jlpm build
+RUN rm -rf node_modules yarn.lock package-lock.json && \
+	jlpm install && jlpm build
 
 
 ##############################
 # Step 4: Prepare labextension structure
 ##############################
 WORKDIR /home/jovyan
-COPY frontend/install.json jlab_ws_chat_extension/labextension/install.json
-COPY frontend/package.json jlab_ws_chat_extension/labextension/package.json
-# COPY frontend/lib jlab_ws_chat_extension/labextension/lib
+RUN mkdir -p jlab_ws_chat_extension/labextension
+COPY frontend/package.json jlab_ws_chat_extension/labextension
+COPY frontend/install.json jlab_ws_chat_extension/labextension
+COPY frontend/lib jlab_ws_chat_extension/labextension
 
 ##############################
-# Step 5: Copy and install Python backend
+# Step 5: Python installation
 ##############################
-COPY pyproject.toml README.md ./
-COPY jlab_ws_chat_extension ./jlab_ws_chat_extension
+COPY pyproject.toml MANIFEST.in README.md ./
 RUN pip install .
 
 ##############################
-# Step 6: Rebuild JupyterLab (final prebuilt step)
-##############################
-# RUN jupyter lab clean && jupyter lab build --dev-build=False --minimize=False || \
-#     (cat /tmp/jupyterlab-debug-*.log && exit 1)
-RUN jupyter lab clean && jupyter lab build --dev-build=False --minimize=False --debug --log-level=debug
-RUN cat /tmp/jupyterlab-debug-*.log || echo "No debug log found"
-
-##############################
-# Step 7: Chat environment setup
+# Step 6: Chat environment setup
 ##############################
 RUN mkdir -p /home/jovyan/shared && chown -R jovyan:users /home/jovyan/shared
 ENV CHAT_WS_URL=${CHAT_WS_URL:-http://localhost:3001}
