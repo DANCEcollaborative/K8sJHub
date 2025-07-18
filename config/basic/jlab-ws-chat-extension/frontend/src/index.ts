@@ -21,9 +21,8 @@ export const chatIcon = new LabIcon({
   svgstr: mySvg
 });
 
-
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'jlab-ws-chat-extension',
+  id: 'jlab-ws-chat-extension:plugin',
   autoStart: true,
   requires: [ICommandPalette],
   optional: [ILauncher, ILayoutRestorer],
@@ -36,7 +35,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     console.log('✅ jlab-ws-chat-extension is loaded.');
 
     const { commands, shell } = app;
-    const wsURL = (window as any).CHAT_WS_URL || 'http://localhost:3001';
+    const wsURL = (window as any).CHAT_WS_URL || '';
     const socket = io(wsURL);
 
     // -------------------------------
@@ -53,6 +52,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
         <button id="mainSendBtn">Send</button>
       </div>
     `;
+
     let mainRoom = '';
     const mainLog = mainContent.node.querySelector('#mainChatLog')!;
     mainContent.node.querySelector('#mainJoinBtn')?.addEventListener('click', () => {
@@ -64,6 +64,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
         mainLog.innerHTML += `<div><em>Joined room: ${room}</em></div>`;
       }
     });
+
     mainContent.node.querySelector('#mainSendBtn')?.addEventListener('click', () => {
       const input = mainContent.node.querySelector('#mainChatInput') as HTMLInputElement;
       const msg = input.value;
@@ -104,7 +105,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
     mainWidget.title.icon = chatIcon;
     mainWidget.title.closable = true;
 
-    // Plain sidebar Lumino widget (not MainAreaWidget)
     sidebarContent.id = 'jlab-ws-chat-sidebar';
     sidebarContent.title.caption = 'Chat Sidebar';
     (sidebarContent.title as any).iconClass = 'jp-ChatIcon jp-SideBar-tabIcon';
