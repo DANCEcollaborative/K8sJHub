@@ -27,7 +27,7 @@ COPY frontend /home/jovyan/frontend
 WORKDIR /home/jovyan/frontend
 # RUN rm -rf node_modules package-lock.json lib && \
 # RUN rm -rf node_modules yarn.lock && \
-RUN jlpm install && jlpm build
+# RUN jlpm install && jlpm build
 RUN rm -rf node_modules yarn.lock package-lock.json && \
 	jlpm install && jlpm build
 

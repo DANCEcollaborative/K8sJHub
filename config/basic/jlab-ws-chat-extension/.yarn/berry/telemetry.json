@@ -4,7 +4,7 @@
     "*": {
       "hits": {
         "installCount": {
-          "node-modules": 10
+          "node-modules": 13
         }
       },
       "values": {
@@ -20,7 +20,8 @@
           "1"
         ],
         "dependencyCount": [
-          "18"
+          "18",
+          "19"
         ]
       },
       "enumerators": {
