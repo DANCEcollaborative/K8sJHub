@@ -3930,15 +3930,15 @@ __metadata:
     webpack: ^5.91.0
     webpack-cli: ^4.10.0
   peerDependencies:
-    "@jupyterlab/application": ">=4.4.3 <4.5.0"
-    "@jupyterlab/apputils": ">=4.4.3 <4.5.5"
-    "@jupyterlab/launcher": ">=4.4.3 <4.5.0"
-    "@lumino/algorithm": ">=1.9.0 <2.0.0"
-    "@lumino/disposable": ">=1.7.2 <2.0.0"
-    "@lumino/messaging": ">=1.6.0 <2.0.0"
-    "@lumino/properties": ">=1.5.2 <2.0.0"
-    "@lumino/signaling": ">=1.9.0 <2.0.0"
-    "@lumino/widgets": ">=2.7.1 <3.0.0"
+    "@jupyterlab/application": 4.4.3 - 4.4.9
+    "@jupyterlab/apputils": 4.4.3 - 4.5.4
+    "@jupyterlab/launcher": 4.4.3 - 4.4.9
+    "@lumino/algorithm": 1.9.0 - 1.9.9
+    "@lumino/disposable": 1.7.2 - 1.9.9
+    "@lumino/messaging": 1.6.0 - 1.9.9
+    "@lumino/properties": 1.5.2 - 1.9.9
+    "@lumino/signaling": 1.9.0 - 1.9.9
+    "@lumino/widgets": 2.7.1 - 2.9.9
   languageName: unknown
   linkType: soft
 
