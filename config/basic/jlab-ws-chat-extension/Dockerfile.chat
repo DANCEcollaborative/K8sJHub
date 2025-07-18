@@ -38,15 +38,15 @@ RUN rm -rf node_modules package-lock.json lib && \
 # Step 4: Prepare labextension structure
 ##############################
 WORKDIR /home/jovyan
-COPY frontend/install.json jlab-ws-chat-extension/labextension/install.json
-COPY frontend/package.json jlab-ws-chat-extension/labextension/package.json
-# COPY frontend/lib jlab-ws-chat-extension/labextension/lib
+COPY frontend/install.json jlab_ws_chat_extension/labextension/install.json
+COPY frontend/package.json jlab_ws_chat_extension/labextension/package.json
+# COPY frontend/lib jlab_ws_chat_extension/labextension/lib
 
 ##############################
 # Step 5: Copy and install Python backend
 ##############################
 COPY pyproject.toml README.md ./
-COPY jlab-ws-chat-extension ./jlab-ws-chat-extension
+COPY jlab_ws_chat_extension ./jlab_ws_chat_extension
 RUN pip install .
 
 ##############################

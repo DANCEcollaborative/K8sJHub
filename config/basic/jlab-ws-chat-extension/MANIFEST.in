@@ -1,0 +1,2 @@
+include README.md
+recursive-include jlab_ws_chat_extension/labextension *

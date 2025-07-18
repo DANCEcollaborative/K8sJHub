@@ -1,0 +1,32 @@
+{
+  "lastUpdate": 1752847947334,
+  "blocks": {
+    "*": {
+      "hits": {
+        "installCount": {
+          "node-modules": 1
+        }
+      },
+      "values": {
+        "version": [
+          "3.5.0"
+        ],
+        "commandName": [
+          "install",
+          "<none>"
+        ],
+        "workspaceCount": [
+          "1"
+        ],
+        "dependencyCount": [
+          "18"
+        ]
+      },
+      "enumerators": {
+        "projectCount": [
+          "86ace248824b950d1e7dd0fdb3bbad7ed9b282d23b61c6fe7fb797bfe29a07c44737520c180f3239bb5583504dae51beda615cc342d9ca311d9c073f7b2cd882"
+        ]
+      }
+    }
+  }
+}

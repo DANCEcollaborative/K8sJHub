@@ -1,0 +1,32 @@
+.jp-ChatWidget {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 10px;
+  background: var(--jp-layout-color1);
+  font-family: var(--jp-ui-font-family);
+}
+
+.jp-ChatMessages {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid var(--jp-border-color2);
+  padding: 8px;
+  margin-bottom: 10px;
+  background: var(--jp-layout-color2);
+}
+
+.jp-ChatMessage {
+  margin-bottom: 5px;
+  padding: 4px;
+  border-radius: 4px;
+  background: var(--jp-brand-color-light3);
+  word-wrap: break-word;
+}
+
+.jp-ChatInput {
+  padding: 8px;
+  border: 1px solid var(--jp-border-color2);
+  border-radius: 4px;
+  font-size: 1em;
+}
