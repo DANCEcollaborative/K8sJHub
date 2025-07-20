@@ -1,9 +1,10 @@
 {
   "schemaVersion": 1,
   "name": "jlab-ws-chat-extension",
+  "version": "0.1.0",
   "packageName": "jlab-ws-chat-extension",
   "jupyterlab": {
-    "extension": true,
+    "extension": "lib/index",
     "prebuiltExtension": true
   },
   "packageManager": "jlpm"

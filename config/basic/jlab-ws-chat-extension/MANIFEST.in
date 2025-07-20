@@ -1,2 +1,4 @@
 include README.md
-recursive-include jlab_ws_chat_extension/labextension *
+include jlab_ws_chat_extension/labextension/package.json
+include jlab_ws_chat_extension/labextension/install.json
+recursive-include jlab_ws_chat_extension/labextension/lib *

@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
+    "module": "NodeNext",
     "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "lib": ["ES2020", "DOM"],
     "jsx": "react",
     "outDir": "lib",
@@ -10,18 +10,13 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true, 
+    "moduleDetection": "force",
     "types": ["node"],
     "baseUrl": ".",
     "paths": {
       "@lumino/widgets": ["node_modules/@jupyterlab/rendermime-interfaces/node_modules/@lumino/widgets"]
       }
-  },
-  "compilerOptions": {
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true,
-    "baseUrl": "."
-  },
+	},
   "include": ["src"]
 }

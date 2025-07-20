@@ -6,18 +6,23 @@ module.exports = {
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'lib'),
-    libraryTarget: 'umd',
+    library: {
+      type: 'module'
+    },
     publicPath: '',
     clean: true
   },
+  experiments: {
+    outputModule: true
+  },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.tsx', '.js']
   },
   module: {
     rules: [
       { test: /\.ts$/, use: 'ts-loader', exclude: /node_modules/ },
       { test: /\.css$/, use: ['style-loader','css-loader'] },
-      { test: /\.svg$/, type: 'asset/resource' }
+      { test: /\.svg$/, use: 'raw-loader' }
     ]
   },
   devtool: 'source-map',

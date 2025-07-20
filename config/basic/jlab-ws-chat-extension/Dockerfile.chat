@@ -39,7 +39,7 @@ WORKDIR /home/jovyan
 RUN mkdir -p jlab_ws_chat_extension/labextension
 COPY frontend/package.json jlab_ws_chat_extension/labextension
 COPY frontend/install.json jlab_ws_chat_extension/labextension
-COPY frontend/lib jlab_ws_chat_extension/labextension
+COPY frontend/lib/* jlab_ws_chat_extension/labextension/lib
 
 ##############################
 # Step 5: Python installation
