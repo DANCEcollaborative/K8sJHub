@@ -10,13 +10,11 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "allowSyntheticDefaultImports": true, 
+    "allowSyntheticDefaultImports": true,
     "moduleDetection": "force",
     "types": ["node"],
-    "baseUrl": ".",
-    "paths": {
-      "@lumino/widgets": ["node_modules/@jupyterlab/rendermime-interfaces/node_modules/@lumino/widgets"]
-      }
-	},
+    "baseUrl": "."
+    // REMOVED: "paths": { "@lumino/widgets": ["node_modules/@jupyterlab/rendermime-interfaces/node_modules/@lumino/widgets"] }
+  },
   "include": ["src"]
 }

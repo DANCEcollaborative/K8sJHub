@@ -4,7 +4,8 @@
     "*": {
       "hits": {
         "installCount": {
-          "node-modules": 18
+          "node-modules": 22,
+          "pnp": 1
         }
       },
       "values": {
@@ -15,7 +16,10 @@
           "install",
           "<none>",
           "-v",
-          "add"
+          "add",
+          "run",
+          "why",
+          "cache clean"
         ],
         "workspaceCount": [
           "1"
@@ -23,12 +27,17 @@
         "dependencyCount": [
           "18",
           "19",
-          "20"
+          "20",
+          "1",
+          "16",
+          "15",
+          "21"
         ]
       },
       "enumerators": {
         "projectCount": [
-          "86ace248824b950d1e7dd0fdb3bbad7ed9b282d23b61c6fe7fb797bfe29a07c44737520c180f3239bb5583504dae51beda615cc342d9ca311d9c073f7b2cd882"
+          "86ace248824b950d1e7dd0fdb3bbad7ed9b282d23b61c6fe7fb797bfe29a07c44737520c180f3239bb5583504dae51beda615cc342d9ca311d9c073f7b2cd882",
+          "867679a709312c93e135d98f5e123dce232515ebb4fdffa8e1313060603de7b8a6d0bfb6fa01af0c815797f5e543e93fa2a12d0d885ce09fa3d03c633d29c9e8"
         ]
       }
     }
