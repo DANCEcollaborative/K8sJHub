@@ -136,4 +136,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
   }
 };
 
+// console.log("Exporting plugins:", src);
+
 export default [plugin];

@@ -1,7 +1,9 @@
 {
   "name": "jlab-ws-chat-extension",
   "version": "0.1.0",
-  "description": "WebSocket chat extension for JupyterLab using Socket.IO",
+  "description": "WebSocket chat extension for JupyterLab using Socket.IO",,
+  "main": "lib/index.js"
+  "type": "module",
   "scripts": {
     "build": "tsc && webpack --config webpack.config.cjs",
     "prebuild": "jlpm run build",
@@ -9,9 +11,10 @@
     "install-json": "node build-install-json.mjs"
   },
   "jupyterlab": {
-    "extension": "lib/index",
+    "extension": true,
     "prebuiltExtension": true,
     "outputDir": "lib"
+    "themePath": "style/index.css"
   },
   "packageManager": "jlpm",
   "resolutions": {
@@ -60,7 +63,6 @@
     "webpack": "^5.91.0",
     "webpack-cli": "^4.10.0"
   },
-  "type": "module",
   "files": [
     "lib",
     "style",

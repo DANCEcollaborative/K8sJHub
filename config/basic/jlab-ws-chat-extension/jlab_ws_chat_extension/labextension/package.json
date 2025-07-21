@@ -9,7 +9,7 @@
     "install-json": "node build-install-json.mjs"
   },
   "jupyterlab": {
-    "extension": "lib/index",
+    "extension": true,
     "prebuiltExtension": true,
     "outputDir": "lib"
   },
