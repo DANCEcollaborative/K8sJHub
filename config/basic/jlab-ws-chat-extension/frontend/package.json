@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "WebSocket chat extension for JupyterLab using Socket.IO",
   "main": "lib/index.js",
+  "style": "style/index.css",
   "type": "module",
   "scripts": {
     "build": "tsc && webpack --config webpack.config.cjs",
@@ -14,7 +15,8 @@
     "extension": true,
     "prebuiltExtension": true,
     "outputDir": "lib",
-    "themePath": "style/index.css"
+    "themePath": "style/index.css",
+    "schema": "1"
   },
   "packageManager": "jlpm",
   "resolutions": {

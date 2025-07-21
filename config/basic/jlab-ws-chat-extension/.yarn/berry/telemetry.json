@@ -4,7 +4,7 @@
     "*": {
       "hits": {
         "installCount": {
-          "node-modules": 22,
+          "node-modules": 24,
           "pnp": 1
         }
       },

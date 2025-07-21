@@ -25,9 +25,6 @@ RUN pip install --no-cache-dir --upgrade \
 ##############################
 COPY frontend /home/jovyan/frontend
 WORKDIR /home/jovyan/frontend
-# RUN rm -rf node_modules package-lock.json lib && \
-# RUN rm -rf node_modules yarn.lock && \
-# RUN jlpm install && jlpm build
 RUN rm -rf node_modules yarn.lock lib && \
 	jlpm install && jlpm run build
 
