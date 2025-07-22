@@ -24,3 +24,25 @@ exit
 pip install .
 jupyter labextension list
 exit
+ls -al
+rm -rf node_modules yarn.lock package-lock.json
+pwd
+jlpm install 
+jlpm build
+jlpm add @jupyterlab/launcher socket.io-client
+history
+rm -rf node_modules yarn.lock package-lock.json
+jlpm add @jupyterlab/launcher socket.io-client
+jlpm install
+jlpm run build
+more *lock*
+ls -al *lock*
+rm -rf node_modules yarn.lock
+jlpm install
+jlpm add @jupyterlab/launcher socket.io-client
+jlpm install
+jlpm run build
+ls -al src
+exit
+pwd
+exit
