@@ -21,10 +21,10 @@ RUN pip install --no-cache-dir --upgrade \
     jupyter-ydoc
     
 # Set a working directory inside the container
-WORKDIR /home/jovyan/frontend
+# WORKDIR /home/jovyan/frontend
 
 # Install copier, which is used to generate the extension from a template
-RUN pip install copier
+# RUN pip install copier
 
 # Generate the JupyterLab extension using the official template
 # We'll name our extension 'my-simple-extension'
@@ -33,16 +33,22 @@ RUN pip install copier
 # The --data name=my-simple-extension flag sets the project name
 # RUN copier copy --trust-template --data name=jlab-chat-ext https://github.com/jupyterlab/extension-template.git jlab-chat-ext
 
-# Navigate into the newly created extension directory
-# WORKDIR /home/jovyan/jlab-chat-ext
-# 
+
+##############################
+# Step 3: Copy frontend and build it
+##############################
+COPY frontend /home/jovyan/frontend
+WORKDIR /home/jovyan/frontend
+
 # Install the extension's dependencies and then install the extension itself
 # The 'jlpm' command is JupyterLab's wrapper around yarn/npm for managing frontend packages
 # 'jlpm install' installs Node.js dependencies
 # 'jlpm build' compiles the TypeScript/JavaScript code for the extension
 # 'pip install .' installs the Python part of the extension (if any) and links the frontend part
 # RUN jlpm add @jupyterlab/launcher socket.io-client
-# RUN jlpm install && jlpm build && pip install .
+RUN rm -rf node_modules yarn.lock
+RUN jlpm install && jlpm add typescript webpack webpack-cli && \
+	jlpm build && pip install .
 
 # Expose the default JupyterLab port
 EXPOSE 8888
