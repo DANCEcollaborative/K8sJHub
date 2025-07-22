@@ -1,0 +1,10 @@
+__MACOSX/
+*.DS_Store
+.git
+__pycache__
+node_modules
+.cache
+.yarn
+*.log
+*.pyc
+jpserver*
