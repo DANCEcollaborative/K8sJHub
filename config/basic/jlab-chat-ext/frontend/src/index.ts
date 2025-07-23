@@ -14,7 +14,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
   autoStart: true,
   optional: [ISettingRegistry],
   activate: (app: JupyterFrontEnd, settingRegistry: ISettingRegistry | null) => {
-    console.log('JupyterLab extension jlab-chat-ext is activated!');
+    console.log('JupyterLab extension jlab-chat-ext is activated, says Chas!');
 
     if (settingRegistry) {
       settingRegistry

@@ -12,13 +12,13 @@ RUN apt-get update && apt-get install -y curl gnupg git && \
 ##############################
 # Step 2: Install JupyterLab & core extensions
 ##############################
-RUN pip install --no-cache-dir --upgrade \
-    jupyterlab==4.4.3 \
-    jupyterhub==5.2.1 \
-    jupyter-collaboration \
-    jupyterlab-link-share \
-    jupyter-server-ydoc \
-    jupyter-ydoc
+# RUN pip install --no-cache-dir --upgrade \
+#     jupyterlab==4.4.3 \
+#     jupyterhub==5.2.1 \
+#     jupyter-collaboration \
+#     jupyterlab-link-share \
+#     jupyter-server-ydoc \
+#     jupyter-ydoc
     
 # Set a working directory inside the container
 # WORKDIR /home/jovyan/frontend

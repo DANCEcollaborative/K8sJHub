@@ -46,3 +46,8 @@ ls -al src
 exit
 pwd
 exit
+ls -al
+cd ..
+ls -al
+jupyter lab --version
+exit
