@@ -12,6 +12,12 @@ RUN apt-get update && apt-get install -y curl gnupg git && \
 ##############################
 # Step 2: Install JupyterLab & core extensions
 ##############################
+RUN pip install --no-cache-dir --upgrade \
+    jupyter-collaboration \
+    jupyterlab-link-share \
+    jupyter-server-ydoc \
+    jupyter-ydoc
+
 # RUN pip install --no-cache-dir --upgrade \
 #     jupyterlab==4.4.3 \
 #     jupyterhub==5.2.1 \
@@ -49,6 +55,8 @@ WORKDIR /home/jovyan/frontend
 RUN rm -rf node_modules yarn.lock
 RUN jlpm install && jlpm add typescript webpack webpack-cli && \
 	jlpm build && pip install .
+
+WORKDIR /home/jovyan
 
 # Expose the default JupyterLab port
 EXPOSE 8888

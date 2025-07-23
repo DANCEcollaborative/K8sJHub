@@ -51,3 +51,7 @@ cd ..
 ls -al
 jupyter lab --version
 exit
+jupyter lab --version
+exit
+jupyter labextension list
+exit
