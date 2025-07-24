@@ -55,3 +55,7 @@ jupyter lab --version
 exit
 jupyter labextension list
 exit
+jupyter lab --version
+exit
+jupyter labextension list
+exit
