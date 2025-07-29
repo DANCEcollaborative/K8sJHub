@@ -1,0 +1,61 @@
+[build-system]
+# Pin the exact versions to match your Dockerfile
+requires = ["hatchling==1.27.0", "hatch-jupyter-builder==0.9.1"]
+build-backend = "hatchling.build"
+
+[project]
+name = "jlab-chat-ext"
+version = "0.1.0"
+description = "A JupyterLab extension for chat."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+authors = [
+    { name = "Chas Murray", email = "rcmurray@andrew.cmu.edu" },
+]
+classifiers = [
+    "Framework :: Jupyter",
+    "Framework :: Jupyter :: JupyterLab",
+    "Framework :: Jupyter :: JupyterLab :: 4",
+    "Framework :: Jupyter :: JupyterLab :: Extensions",
+    "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+    "License :: OSI Approved :: BSD License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = [
+    "jupyter_server"
+]
+
+[project.urls]
+Homepage = "https://github.com/DANCEcollaborative/jlab-chat-ext"
+Repository = "https://github.com/DANCEcollaborative/jlab-chat-ext"
+
+# This section configures the builder
+[tool.hatch.build.targets.sdist]
+exclude = [".github", "binder"]
+
+[tool.hatch.build.targets.wheel]
+# This tells the builder to include the pre-built frontend assets
+# The path is relative to the project root.
+packages = ["src/jlab_chat_ext"]
+
+[tool.hatch.build.hooks.jupyter-builder]
+# This tells the hook to run the command `jlpm build`
+build_cmd = "jlpm build"
+# This tells the hook to run the command inside the `frontend` directory
+source_dir = "frontend"
+# The command to run to build your frontend assets
+# build-dir = "frontend/dist"
+
+# This section maps the built assets to where JupyterLab expects them
+[tool.jupyter-labextension]
+# The output folder of the frontend build, relative to the package source.
+# So, it will be packaged into `src/jlab_chat_ext/labextension`
+output_dir = "src/jlab_chat_ext/labextension"

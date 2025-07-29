@@ -90,9 +90,7 @@ RUN echo "--- Running jupyter lab build ---" && \
     jupyter lab build --dev-build=False --minimize=True --debug && \
     echo "--- jupyter lab build finished ---" && \
     # Clean the build cache to reduce image size
-    jupyter lab clean && \
-    jlpm cache clean && \
-    npm cache clean --force
+    jupyter lab clean
 
 # Set back to the default workdir before running the final CMD
 WORKDIR /home/${NB_USER}
