@@ -23,8 +23,26 @@ RUN pip install --no-cache-dir --upgrade \
 ##############################
 # Step 3: Copy frontend and build it
 ##############################
-COPY frontend /home/jovyan/frontend
+
 WORKDIR /home/jovyan/frontend
+COPY frontend/package.json frontend/yarn.lock frontend/.yarnrc.yml ./
+
+# Copy manifests and lockfile
+COPY frontend/package.json frontend/yarn.lock frontend/.yarnrc.yml ./
+
+# Install frontend dependencies. This layer is cached if manifests don't change.
+RUN jlpm install --immutable-cache
+
+# Copy the rest of the frontend source code
+COPY frontend/ ./
+
+# Now, handle the Python part and the final build
+WORKDIR /home/jovyan/jlab-chat-ext
+
+# Copy the entire extension directory (now including the built frontend)
+COPY . 
+
+COPY frontend /home/jovyan/frontend
 RUN rm -rf node_modules yarn.lock lib && \
 	jlpm install && jlpm run build
 

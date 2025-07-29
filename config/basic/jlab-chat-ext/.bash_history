@@ -59,3 +59,39 @@ jupyter lab --version
 exit
 jupyter labextension list
 exit
+cat /opt/conda/share/jupyter/lab/static/package.json | grep -E '"(react|@lumino|@jupyterlab)"'
+more /opt/conda/share/jupyter/lab/static/package.json
+cat /opt/conda/share/jupyter/lab/static/package.json > opt-conda-share-jupyter-lab-static-package.json
+ls -al
+more opt-conda-share-jupyter-lab-static-package.json 
+exit
+pwd
+cd frontend
+ls -al
+ls -al ..
+ls -al
+more yarn.lock
+ls -al /opt/conda/share/jupyter/lab
+ls -al
+cat yarn.lock > yarn.lock.txt
+exit
+which jlpm
+pwd
+ls -al
+pwd
+docker compose down
+exit
+ls -al
+pwd
+cd ..
+ls -al
+pwd
+cd jlab-chat-ext/
+ls -al
+exit
+ls -al
+pwd
+cd ..
+ls -al
+EXIT
+exit
