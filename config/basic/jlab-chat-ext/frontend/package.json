@@ -13,7 +13,7 @@
     },
     "jupyterlab": {
         "extension": true,
-        "outputDir": "jlab_chat_ext/labextension",
+        "outputDir": "../jlab_chat_ext/labextension",
         "schemaDir": "schema"
     },
     "license": "BSD-3-Clause",
@@ -35,7 +35,7 @@
         "url": "https://github.com/DANCEcollaborative/jlab-chat-ext.git"
     },
     "scripts": {
-        "build": "tsc",
+        "build": "jupyter labextension build .",
         "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:labextension",
         "build:labextension": "jupyter labextension build .",
         "build:labextension:dev": "jupyter labextension build --development True .",

@@ -1,18 +1,14 @@
 [build-system]
-# Pin the exact versions to match your Dockerfile
-requires = [
-    "hatchling==1.27.0",
-    "hatch-jupyter-builder==0.9.1",
-    "jupyterlab>=4"
-]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61", "jupyter_packaging>=0.10"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "jlab-chat-ext"
 version = "0.1.0"
 description = "A JupyterLab extension for chat."
 readme = "README.md"
-license = { file = "LICENSE" }
+# Use license-files to resolve the deprecation warning
+license-files = ["LICENSE"]
 requires-python = ">=3.8"
 authors = [
     { name = "Chas Murray", email = "rcmurray@andrew.cmu.edu" },
@@ -23,48 +19,25 @@ classifiers = [
     "Framework :: Jupyter :: JupyterLab :: 4",
     "Framework :: Jupyter :: JupyterLab :: Extensions",
     "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
-    "License :: OSI Approved :: BSD License",
-    "Programming Language :: Python",
+    # The "License" classifier is deprecated, so we remove it.
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
-    "jupyter_server"
+    "jupyter_server",
 ]
 
 [project.urls]
 Homepage = "https://github.com/DANCEcollaborative/jlab-chat-ext"
 Repository = "https://github.com/DANCEcollaborative/jlab-chat-ext"
 
-# This section configures the builder
-[tool.hatch.build.targets.sdist]
-exclude = [".github", "binder"]
+[tool.jupyter-packaging]
+options = { "managed-dependencies" = true }
+source-dir = "frontend"
+dest-dir = "jlab_chat_ext/labextension"
 
-[tool.hatch.build.targets.wheel]
-# This tells the builder to include the pre-built frontend assets
-# The path is relative to the project root.
-packages = ["jlab_chat_ext"]
-
-[tool.hatch.build.hooks.jupyter-builder]
-# Point to our custom function in build.py
-build-function = "build.build_frontend"
-# We still need to tell the hook where to find the output files
-# The path is relative to the project root.
-build_dir = "frontend/lib"
-
-# # This tells the hook to run the command `jlpm build`
-# build_cmd = "jlpm build"
-# # This tells the hook to run the command inside the `frontend` directory
-# source_dir = "frontend"
-# build-dir = "lib"
-
-# This section maps the built assets to where JupyterLab expects them
-[tool.jupyter-labextension]
-# The output folder of the frontend build, relative to the package source.
-# So, it will be packaged into XXX `src/jlab_chat_ext/labextension` XXX
-output_dir = "jlab_chat_ext/labextension"
+# NEW section to solve the main error
+[tool.setuptools.packages.find]
+# We only want to find packages in the current directory
+where = ["."]
+# And we only want to include "jlab_chat_ext"
+include = ["jlab_chat_ext"]
