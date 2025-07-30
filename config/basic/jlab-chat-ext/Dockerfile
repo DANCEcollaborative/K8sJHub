@@ -53,25 +53,19 @@ COPY --chown=jovyan:users . /home/jovyan/jlab-chat-ext
 # Note: jupyter/base-notebook uses group 'users' (GID 100), so --chown=jovyan:users is good practice.
 
 ##############################
-# Step 5: Manually Build Frontend Assets using Hatch
+# Step 5: Build the Python Wheel
 ##############################
-# The hatch command will now invoke our custom build.py script,
-# which handles both installing dependencies and building the frontend.
-WORKDIR /home/jovyan/jlab-chat-ext
-RUN echo "--- Running hatch build (frontend hook) ---" && \
-    hatch build --hooks-only  && \
-    echo "--- hatch build (frontend hook) finished ---"
-    
+# This command runs the full build process defined in pyproject.toml.
+# It compiles the frontend assets and packages everything into a self-contained
+# .whl file in the `dist/` directory. We use --no-deps for a cleaner build.
+RUN pip wheel . --no-deps -w dist
+
 ##############################
-# Step 6: Install Python package in editable mode
+# Step 6: Install the Python Wheel
 ##############################
-# Now that the frontend assets are pre-built by the hatch hook,
-# the `pip install -e .` should simply install the Python package,
-# without needing to trigger the build hook again (as the assets already exist).
-# This might avoid the 'prepare_metadata_for_build_editable' issue if it was tied to the hook.
-RUN echo "--- Running pip install -e . (Python package only) ---" && \
-    pip install --no-cache-dir -e . && \
-    echo "--- pip install -e . finished ---"
+# Now, we install the extension from that self-contained .whl file.
+# This is a standard, non-editable installation.
+RUN pip install --no-cache-dir --no-deps dist/*.whl
 
 ##############################
 # Step 7: Build the JupyterLab application

@@ -1,27 +1,26 @@
-version: '3.8' 
+version: '3.8'
 
 services:
   jupyterlab:
     build:
-      context: . 
+      context: .
       dockerfile: Dockerfile
     container_name: jlab-chat-ext
-    stdin_open: true 
-    tty: true  
+    stdin_open: true
+    tty: true
     ports:
       - "8888:8888"
-#     volumes:
-#       - .:/home/jovyan/jlab-chat-ext
-#       - ./shared:/home/jovyan/jlab-chat-ext/shared
-    command: bash
+    # The volume mount that was overwriting your code has been removed.
+    # We only mount the 'shared' directory if needed.
+    volumes:
+      - ./shared:/home/jovyan/shared
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - CHAT_WS_URL=https://bazaar.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=505&id=1&username=Robbie&html=chat_mm
+    # The command is now correctly formatted.
     command: >
       start-notebook.py
       --collaborative
       --ServerApp.token=''
       --ServerApp.disable_check_xsrf=True
       --ServerApp.allow_origin='*'
-#     # Optional: Keep the container running even if JupyterLab exits (useful for debugging)
-#     restart: unless-stopped
