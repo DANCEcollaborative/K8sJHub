@@ -1,6 +1,10 @@
 [build-system]
 # Pin the exact versions to match your Dockerfile
-requires = ["hatchling==1.27.0", "hatch-jupyter-builder==0.9.1"]
+requires = [
+    "hatchling==1.27.0",
+    "hatch-jupyter-builder==0.9.1",
+    "jupyterlab>=4"
+]
 build-backend = "hatchling.build"
 
 [project]
@@ -44,18 +48,23 @@ exclude = [".github", "binder"]
 [tool.hatch.build.targets.wheel]
 # This tells the builder to include the pre-built frontend assets
 # The path is relative to the project root.
-packages = ["src/jlab_chat_ext"]
+packages = ["jlab_chat_ext"]
 
 [tool.hatch.build.hooks.jupyter-builder]
-# This tells the hook to run the command `jlpm build`
-build_cmd = "jlpm build"
-# This tells the hook to run the command inside the `frontend` directory
-source_dir = "frontend"
-# The command to run to build your frontend assets
-# build-dir = "frontend/dist"
+# Point to our custom function in build.py
+build-function = "build.build_frontend"
+# We still need to tell the hook where to find the output files
+# The path is relative to the project root.
+build_dir = "frontend/lib"
+
+# # This tells the hook to run the command `jlpm build`
+# build_cmd = "jlpm build"
+# # This tells the hook to run the command inside the `frontend` directory
+# source_dir = "frontend"
+# build-dir = "lib"
 
 # This section maps the built assets to where JupyterLab expects them
 [tool.jupyter-labextension]
 # The output folder of the frontend build, relative to the package source.
-# So, it will be packaged into `src/jlab_chat_ext/labextension`
-output_dir = "src/jlab_chat_ext/labextension"
+# So, it will be packaged into XXX `src/jlab_chat_ext/labextension` XXX
+output_dir = "jlab_chat_ext/labextension"

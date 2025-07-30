@@ -10,9 +10,9 @@ services:
     tty: true  
     ports:
       - "8888:8888"
-    volumes:
-      - .:/home/jovyan
-      - ./shared:/home/jovyan/shared
+#     volumes:
+#       - .:/home/jovyan/jlab-chat-ext
+#       - ./shared:/home/jovyan/jlab-chat-ext/shared
     command: bash
     environment:
       - JUPYTER_ENABLE_LAB=yes

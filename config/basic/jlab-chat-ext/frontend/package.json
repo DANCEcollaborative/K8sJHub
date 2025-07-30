@@ -11,6 +11,11 @@
     "bugs": {
         "url": "https://github.com/DANCEcollaborative/jlab-chat-ext/issues"
     },
+    "jupyterlab": {
+        "extension": true,
+        "outputDir": "jlab_chat_ext/labextension",
+        "schemaDir": "schema"
+    },
     "license": "BSD-3-Clause",
     "author": {
         "name": "Chas Murray",
@@ -30,7 +35,7 @@
         "url": "https://github.com/DANCEcollaborative/jlab-chat-ext.git"
     },
     "scripts": {
-        "build": "jlpm build:lib && jlpm build:labextension:dev",
+        "build": "tsc",
         "build:prod": "jlpm clean && jlpm build:lib:prod && jlpm build:labextension",
         "build:labextension": "jupyter labextension build .",
         "build:labextension:dev": "jupyter labextension build --development True .",
@@ -428,11 +433,6 @@
     "styleModule": "style/index.js",
     "publishConfig": {
         "access": "public"
-    },
-    "jupyterlab": {
-        "extension": true,
-        "outputDir": "jlab_chat_ext/labextension",
-        "schemaDir": "schema"
     },
     "eslintIgnore": [
         "node_modules",

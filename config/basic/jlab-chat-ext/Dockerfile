@@ -43,32 +43,25 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel && \
 # Step 4: Set up Python project & Copy Files
 ##############################
 # Set the main working directory for your Python project.
+RUN mkdir /home/jovyan/jlab-chat-ext
 WORKDIR /home/jovyan/jlab-chat-ext
 
 # Copy ALL project files into the container.
 # This must happen before installing build dependencies if they rely on setup.py/pyproject.toml
 # and before the build command for the frontend.
-COPY --chown=jovyan:users . /home/jovyan/jlab-chat-ext/
+COPY --chown=jovyan:users . /home/jovyan/jlab-chat-ext
 # Note: jupyter/base-notebook uses group 'users' (GID 100), so --chown=jovyan:users is good practice.
 
 ##############################
 # Step 5: Manually Build Frontend Assets using Hatch
 ##############################
-# First, install frontend dependencies in the 'frontend' directory.
-# This prepares the environment for the 'jlpm build' command that hatch will execute.
-WORKDIR /home/jovyan/jlab-chat-ext/frontend
-RUN jlpm install --inline-builds
-
-# Now, go back to the Python project root and trigger the frontend build using hatch.
-# The 'hatch build' command will recognize the 'jupyter-builder' hook from pyproject.toml
-# and execute `jlpm build` in the `frontend` directory (which we just prepared).
-# --hook-only ensures it only runs the hooks, not the full sdist/wheel build.
-# The `PYTHONPATH` explicitly points to the installed hatch packages in case of weird isolation.
+# The hatch command will now invoke our custom build.py script,
+# which handles both installing dependencies and building the frontend.
 WORKDIR /home/jovyan/jlab-chat-ext
 RUN echo "--- Running hatch build (frontend hook) ---" && \
     hatch build --hooks-only  && \
     echo "--- hatch build (frontend hook) finished ---"
-
+    
 ##############################
 # Step 6: Install Python package in editable mode
 ##############################
@@ -88,9 +81,10 @@ RUN echo "--- Running pip install -e . (Python package only) ---" && \
 # --dev-build=False and --minimize=True are suitable for production images.
 RUN echo "--- Running jupyter lab build ---" && \
     jupyter lab build --dev-build=False --minimize=True --debug && \
-    echo "--- jupyter lab build finished ---" && \
-    # Clean the build cache to reduce image size
-    jupyter lab clean
+    echo "--- jupyter lab build finished ---"
+#     echo "--- jupyter lab build finished ---" && \       ### >>> TEMP NOT CLEANING FOR DEBUGGING
+#     # Clean the build cache to reduce image size
+#     jupyter lab clean
 
 # Set back to the default workdir before running the final CMD
 WORKDIR /home/${NB_USER}
