@@ -51,6 +51,8 @@ RUN rm -rf node_modules yarn.lock
 RUN jlpm install && jlpm add typescript webpack webpack-cli && \
 	jlpm build && pip install .
 
+WORKDIR /home/jovyan
+
 # Expose the default JupyterLab port
 EXPOSE 8888
 

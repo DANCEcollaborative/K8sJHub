@@ -51,3 +51,9 @@ cd ..
 ls -al
 jupyter lab --version
 exit
+ls -al
+ls -al ..
+cd 
+pwd
+ls -al
+exit

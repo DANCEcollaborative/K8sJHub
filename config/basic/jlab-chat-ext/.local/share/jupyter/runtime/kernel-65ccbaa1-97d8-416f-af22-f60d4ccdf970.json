@@ -1,0 +1,13 @@
+{
+  "shell_port": 58379,
+  "iopub_port": 39589,
+  "stdin_port": 55115,
+  "control_port": 43399,
+  "hb_port": 38843,
+  "ip": "127.0.0.1",
+  "key": "4b1cfe31-ee57b0f82034d5be9961516d",
+  "transport": "tcp",
+  "signature_scheme": "hmac-sha256",
+  "kernel_name": "python3",
+  "jupyter_session": "/home/jovyan/shared/Safari-created.ipynb"
+}
