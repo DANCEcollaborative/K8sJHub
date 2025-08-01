@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y curl gnupg git && \
 ##############################
 # Step 2: Install JupyterLab & core extensions
 ##############################
-# RUN pip install --no-cache-dir --upgrade \
+RUN pip install --no-cache-dir --upgrade \
+	jupyter-collaboration
 #     jupyterlab==4.4.3 \
 #     jupyterhub==5.2.1 \
 #     jupyter-collaboration \
