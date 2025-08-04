@@ -33,13 +33,14 @@ const plugin: JupyterFrontEndPlugin<void> = {
     launcher: ILauncher | null,
     restorer: ILayoutRestorer | null
   ) => {
-    console.log('✅ jlab-chat-ext is RE-loaded!');
+    console.log('✅ jlab-chat-ext is loaded!');
 
     const { commands, shell } = app;
     console.log('✅ About to attempt connection to CHAT_WS_URL');
     const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
-    console.log('✅ Attempted connection to CHAT_WS_URL');
+    console.log('✅ wsURL === ' + wsURL + ' ===');
     const socket = io(wsURL);
+    console.log('✅ Attempted connection to wsURL');
 
     // -------------------------------
     // Main Area Chat Widget

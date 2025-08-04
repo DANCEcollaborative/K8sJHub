@@ -4,7 +4,7 @@
 start-notebook.py --collaborative --ServerApp.token='' --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin='*' 
 
 # Exit the script if any command fails
-# set -e
+set -e
 
 # Run the first command in the background (&)
 echo "Starting file watcher..."
