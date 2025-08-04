@@ -33,7 +33,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     launcher: ILauncher | null,
     restorer: ILayoutRestorer | null
   ) => {
-    console.log('✅ jlab-chat-ext is loaded!');
+    console.log('✅ jlab-chat-ext is RE-loaded!');
 
     const { commands, shell } = app;
     console.log('✅ About to attempt connection to CHAT_WS_URL');
@@ -59,7 +59,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const mainLog = mainContent.node.querySelector('#mainChatLog')!;
     mainContent.node.querySelector('#mainJoinBtn')?.addEventListener('click', () => {
       const room = (mainContent.node.querySelector('#mainRoomInput') as HTMLInputElement).value;
-    	console.log('✅ Room is === ' + room + ' ===');
+    	console.log('✅ Room is now === ' + room + ' ===');
       if (room) {
         if (mainRoom) socket.emit('leave', mainRoom);
     	  console.log('✅ Emitting join');
@@ -71,11 +71,16 @@ const plugin: JupyterFrontEndPlugin<void> = {
     });
     mainContent.node.querySelector('#mainSendBtn')?.addEventListener('click', () => {
       const input = mainContent.node.querySelector('#mainChatInput') as HTMLInputElement;
-      const msg = input.value;
-      if (msg && mainRoom) {
-        socket.emit('chat message', { room: mainRoom, message: msg });
-        input.value = '';
-      }
+      const msg = input.value;    
+    	console.log('✅ Chat message: === ' + msg + ' ===');
+//       if (msg && mainRoom) {
+//         socket.emit('chat message', { room: mainRoom, message: msg });
+//         input.value = '';
+//       }
+      // TEMP: Emit regardless of room
+      socket.emit('chat message', { room: mainRoom, message: msg });  
+    	console.log('✅ Attempted to emit chat message: === ' + msg + ' ===');
+      input.value = '';
     });
 
     // -------------------------------

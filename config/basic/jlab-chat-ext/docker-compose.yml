@@ -18,11 +18,12 @@ services:
     environment:
       - JUPYTER_ENABLE_LAB=yes
       - CHAT_WS_URL=https://bree.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=505&id=1&username=Robbie&html=chat_mm
-    command: >
-      start-notebook.py
-      --ServerApp.token=''
-      --ServerApp.disable_check_xsrf=True
-      --ServerApp.allow_origin='*'
+    command: ./start-dev.sh
+#     command: >
+#       start-notebook.py
+#       --ServerApp.token=''
+#       --ServerApp.disable_check_xsrf=True
+#       --ServerApp.allow_origin='*' 
 #     command: >
 #       start-notebook.py
 #       --collaborative

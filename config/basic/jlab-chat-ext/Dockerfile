@@ -26,6 +26,10 @@ RUN jlpm install && jlpm add typescript webpack webpack-cli && \
 
 WORKDIR /home/jovyan
 
+# Copy and make the startup script executable inside the image
+COPY start-dev.sh .
+RUN chmod +x ./start-dev.sh
+
 # Expose the default JupyterLab port
 EXPOSE 8888
 
