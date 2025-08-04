@@ -17,13 +17,13 @@ import { LabIcon } from '@jupyterlab/ui-components';
 import mySvg from './lock.svg';
 
 export const chatIcon = new LabIcon({
-  name: 'jlab-ws-chat:chat',
+  name: 'jlab-chat-ext:chat',
   svgstr: mySvg
 });
 
 
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: 'jlab-ws-chat-extension',
+  id: 'jlab-chat-ext',
   autoStart: true,
   requires: [ICommandPalette],
   optional: [ILauncher, ILayoutRestorer],
@@ -33,10 +33,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
     launcher: ILauncher | null,
     restorer: ILayoutRestorer | null
   ) => {
-    console.log('✅ jlab-ws-chat-extension is loaded -- the real Chat extension!');
+    console.log('✅ jlab-chat-ext is loaded!');
 
     const { commands, shell } = app;
-    const wsURL = (window as any).CHAT_WS_URL || 'http://localhost:3001';
+    console.log('✅ About to attempt connection to CHAT_WS_URL');
+    const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
+    console.log('✅ Attempted connection to CHAT_WS_URL');
     const socket = io(wsURL);
 
     // -------------------------------
@@ -57,10 +59,13 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const mainLog = mainContent.node.querySelector('#mainChatLog')!;
     mainContent.node.querySelector('#mainJoinBtn')?.addEventListener('click', () => {
       const room = (mainContent.node.querySelector('#mainRoomInput') as HTMLInputElement).value;
+    	console.log('✅ Room is === ' + room + ' ===');
       if (room) {
         if (mainRoom) socket.emit('leave', mainRoom);
+    	  console.log('✅ Emitting join');
         socket.emit('join', room);
         mainRoom = room;
+    	  console.log('✅ Room is joined ?');
         mainLog.innerHTML += `<div><em>Joined room: ${room}</em></div>`;
       }
     });
@@ -90,28 +95,35 @@ const plugin: JupyterFrontEndPlugin<void> = {
       sidebarLog.innerHTML += `<div><em>Connected</em></div>`;
     });
 
-    socket.on('chat message', (msg: string) => {
-      mainLog.innerHTML += `<div>${msg}</div>`;
-      mainLog.scrollTop = mainLog.scrollHeight;
-
-      sidebarLog.innerHTML += `<div>${msg}</div>`;
-      sidebarLog.scrollTop = sidebarLog.scrollHeight;
+    socket.on('chat message', (data: { room: string; message: string }) => {
+			// TEMP DISPLAY REGARDLESS OF ROOM 
+			mainLog.innerHTML += `<div>${data.message}</div>`;
+			mainLog.scrollTop = mainLog.scrollHeight;
+			sidebarLog.innerHTML += `<div>${data.message}</div>`;
+    	sidebarLog.scrollTop = sidebarLog.scrollHeight;
+//  	  	// Only display the message if it's for the current room
+//   		if (data.room === mainRoom) {
+//    			mainLog.innerHTML += `<div>${data.message}</div>`;
+//     		mainLog.scrollTop = mainLog.scrollHeight;
+//   	    sidebarLog.innerHTML += `<div>${msg}</div>`;
+//     	  sidebarLog.scrollTop = sidebarLog.scrollHeight;
+//   		}
     });
 
     const mainWidget = new MainAreaWidget({ content: mainContent });
-    mainWidget.id = 'jlab-ws-chat-main';
+    mainWidget.id = 'jlab-chat-ext-main';
     mainWidget.title.label = 'Chat';
     mainWidget.title.icon = chatIcon;
     mainWidget.title.closable = true;
 
     // Plain sidebar Lumino widget (not MainAreaWidget)
-    sidebarContent.id = 'jlab-ws-chat-sidebar';
+    sidebarContent.id = 'jlab-chat-ext-sidebar';
     sidebarContent.title.caption = 'Chat Sidebar';
     (sidebarContent.title as any).iconClass = 'jp-ChatIcon jp-SideBar-tabIcon';
 
     shell.add(sidebarContent, 'left', { rank: 800 });
 
-    const commandID = 'jlab-ws-chat:open-main';
+    const commandID = 'jlab-chat-ext:open-main';
 
     commands.addCommand(commandID, {
       label: 'Open Chat Widget',
