@@ -58,7 +58,8 @@
     "dependencies": {
         "@jupyterlab/application": "^4.0.0",
         "@jupyterlab/settingregistry": "^4.0.0",
-        "webpack": "^5.100.2",
+        "@jupyterlab/launcher": "^4.0.0", 
+        "socket.io-client": "^4.7.5",   
         "webpack-cli": "^6.0.1"
     },
     "devDependencies": {

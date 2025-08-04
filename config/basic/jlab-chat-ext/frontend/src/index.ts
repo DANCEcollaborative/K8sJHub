@@ -33,7 +33,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     launcher: ILauncher | null,
     restorer: ILayoutRestorer | null
   ) => {
-    console.log('✅ jlab-ws-chat-extension is loaded -- the real Chat extension, says Chas!');
+    console.log('✅ jlab-ws-chat-extension is loaded -- the real Chat extension!');
 
     const { commands, shell } = app;
     const wsURL = (window as any).CHAT_WS_URL || 'http://localhost:3001';
