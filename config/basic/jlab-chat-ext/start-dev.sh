@@ -5,6 +5,10 @@ set -e
 # Print the env var for debug
 echo "✅ CHAT_WS_URL at runtime is: $CHAT_WS_URL"
 
+export CHAT_WS_URL="${CHAT_WS_URL}"
+
+echo "✅ Exported CHAT_WS_URL as: $CHAT_WS_URL"
+
 # Start JupyterLab (non-blocking)
 start-notebook.py --collaborative --ServerApp.token='' --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin='*' &
 

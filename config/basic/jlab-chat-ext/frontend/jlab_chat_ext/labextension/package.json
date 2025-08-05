@@ -12,7 +12,7 @@
     "outputDir": "jlab_chat_ext/labextension",
     "schemaDir": "schema",
     "_build": {
-      "load": "static/remoteEntry.46b7ea57a84368c5affd.js",
+      "load": "static/remoteEntry.623c9312b80977cfbbb2.js",
       "extension": "./extension",
       "style": "./style"
     }
@@ -96,8 +96,10 @@
     "stylelint-config-standard": "^34.0.0",
     "stylelint-csstree-validator": "^3.0.0",
     "stylelint-prettier": "^4.0.0",
-    "typescript": "^5.8.3",
-    "yjs": "^13.5.0"
+    "ts-loader": "^9.5.2",
+    "typescript": "^5.9.2",
+    "yjs": "^13.5.0",
+    "raw-loader": "^4.0.2"
   },
   "sideEffects": [
     "style/*.css",

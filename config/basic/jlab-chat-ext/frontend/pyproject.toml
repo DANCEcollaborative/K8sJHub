@@ -22,8 +22,6 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-dependencies = [
-]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
 
 [tool.hatch.version]
@@ -61,6 +59,15 @@ build_cmd = "install:extension"
 npm = ["jlpm"]
 source_dir = "src"
 build_dir = "jlab_chat_ext/labextension"
+
+[tool.jupyter-packaging.metadata]
+name = "jlab-chat-ext"
+
+[tool.jupyter-packaging.options]
+server = true
+
+[tool.jupyter-packaging.server-extension]
+module = "serverextension"
 
 [tool.jupyter-releaser.options]
 version_cmd = "hatch version"

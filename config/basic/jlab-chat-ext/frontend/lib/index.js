@@ -1,7 +1,7 @@
 import { ILayoutRestorer } from '@jupyterlab/application';
 import { ICommandPalette, MainAreaWidget } from '@jupyterlab/apputils';
 import { ILauncher } from '@jupyterlab/launcher';
-import { PageConfig } from '@jupyterlab/coreutils';
+// import { PageConfig } from '@jupyterlab/coreutils';
 import { Widget } from '@lumino/widgets';
 import io from 'socket.io-client';
 import { LabIcon } from '@jupyterlab/ui-components';
@@ -11,23 +11,43 @@ export const chatIcon = new LabIcon({
     name: 'jlab-chat-ext:chat',
     svgstr: mySvg
 });
+// Fetch chat URL from Python backend
+async function getChatUrl() {
+    const response = await fetch('/chat-ext/wsurl');
+    const data = await response.json();
+    return data.chatUrl;
+}
+getChatUrl().then((url) => {
+    console.log("✅ CHAT_WS_URL from backend is:", url);
+});
 const plugin = {
     id: 'jlab-chat-ext',
     autoStart: true,
     requires: [ICommandPalette],
     optional: [ILauncher, ILayoutRestorer],
-    activate: (app, palette, launcher, restorer) => {
+    activate: async (app, palette, launcher, restorer) => {
         var _a, _b;
         console.log('✅ jlab-chat-ext is loaded');
         const { commands, shell } = app;
-        console.log('✅ About to attempt connection to CHAT_WS_URL');
-        // Get the URL from the page config injected by the server
-        const targetURL = PageConfig.getOption('chatServerUrl');
-        console.log('✅ targetURL === ' + targetURL + ' ===');
-        const wsURL = targetURL || 'http://${window.location.hostname}:3001';
-        //     const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
-        console.log('✅ Connecting to chat server at:', wsURL);
-        //     const socket = io(wsURL);
+        //     console.log('✅ About to attempt connection to CHAT_WS_URL');
+        //     // Get the URL from the page config injected by the server
+        //     const targetURL = PageConfig.getOption('chatServerUrl');
+        //     console.log('✅ targetURL === ' + targetURL + ' ===');
+        //     const wsURL = targetURL || 'http://${window.location.hostname}:3001';    
+        // //     const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
+        //     console.log('✅ Connecting to chat server at:', wsURL);
+        // //     const socket = io(wsURL);
+        // 🔥 Get the chat server URL from backend
+        let wsURL = '';
+        try {
+            wsURL = await getChatUrl();
+            console.log('✅ CHAT_WS_URL from backend is:', wsURL);
+        }
+        catch (err) {
+            console.log('❌ CHAT_WS_URL ERROR. Value: ', wsURL);
+            console.error('❌ Failed to fetch chat URL from backend:', err);
+            wsURL = `http://${window.location.hostname}:3001`; // fallback
+        }
         const socket = io(wsURL, {
             reconnectionAttempts: 5,
             timeout: 10000
@@ -67,6 +87,7 @@ const plugin = {
             const input = mainContent.node.querySelector('#mainChatInput');
             const msg = input.value.trim();
             if (msg) {
+                console.log('✅ Chat message: ' + msg);
                 socket.emit('chat message', { room: mainRoom, message: msg });
                 input.value = '';
             }

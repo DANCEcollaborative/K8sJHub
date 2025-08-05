@@ -23,8 +23,8 @@ RUN pip install --no-cache-dir --upgrade \
 ##############################
 COPY frontend /home/jovyan/frontend
 WORKDIR /home/jovyan/frontend
-RUN rm -rf node_modules yarn.lock
-RUN jlpm install && jlpm add typescript webpack webpack-cli && \
+RUN rm -rf node_modules package-lock.json yarn.lock
+RUN jlpm install && jlpm add typescript webpack webpack-cli ts-loader raw-loader && \
 	jlpm build && pip install .
 
 WORKDIR /home/jovyan

@@ -18,52 +18,70 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _jupyterlab_apputils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_apputils__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _jupyterlab_launcher__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @jupyterlab/launcher */ "webpack/sharing/consume/default/@jupyterlab/launcher");
 /* harmony import */ var _jupyterlab_launcher__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_launcher__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @jupyterlab/coreutils */ "webpack/sharing/consume/default/@jupyterlab/coreutils");
-/* harmony import */ var _jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _lumino_widgets__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @lumino/widgets */ "webpack/sharing/consume/default/@lumino/widgets");
-/* harmony import */ var _lumino_widgets__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_lumino_widgets__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! socket.io-client */ "webpack/sharing/consume/default/socket.io-client/socket.io-client");
-/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @jupyterlab/ui-components */ "webpack/sharing/consume/default/@jupyterlab/ui-components");
-/* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _lock_svg__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./lock.svg */ "./lib/lock.svg");
+/* harmony import */ var _lumino_widgets__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @lumino/widgets */ "webpack/sharing/consume/default/@lumino/widgets");
+/* harmony import */ var _lumino_widgets__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_lumino_widgets__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! socket.io-client */ "webpack/sharing/consume/default/socket.io-client/socket.io-client");
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @jupyterlab/ui-components */ "webpack/sharing/consume/default/@jupyterlab/ui-components");
+/* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _lock_svg__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lock.svg */ "./lib/lock.svg");
 
 
 
-
+// import { PageConfig } from '@jupyterlab/coreutils';
 
 
 
 
 // Define the chat icon
-const chatIcon = new _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_6__.LabIcon({
+const chatIcon = new _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__.LabIcon({
     name: 'jlab-chat-ext:chat',
-    svgstr: _lock_svg__WEBPACK_IMPORTED_MODULE_7__
+    svgstr: _lock_svg__WEBPACK_IMPORTED_MODULE_6__
+});
+// Fetch chat URL from Python backend
+async function getChatUrl() {
+    const response = await fetch('/chat-ext/wsurl');
+    const data = await response.json();
+    return data.chatUrl;
+}
+getChatUrl().then((url) => {
+    console.log("✅ CHAT_WS_URL from backend is:", url);
 });
 const plugin = {
     id: 'jlab-chat-ext',
     autoStart: true,
     requires: [_jupyterlab_apputils__WEBPACK_IMPORTED_MODULE_1__.ICommandPalette],
     optional: [_jupyterlab_launcher__WEBPACK_IMPORTED_MODULE_2__.ILauncher, _jupyterlab_application__WEBPACK_IMPORTED_MODULE_0__.ILayoutRestorer],
-    activate: (app, palette, launcher, restorer) => {
+    activate: async (app, palette, launcher, restorer) => {
         var _a, _b;
         console.log('✅ jlab-chat-ext is loaded');
         const { commands, shell } = app;
-        console.log('✅ About to attempt connection to CHAT_WS_URL');
-        // Get the URL from the page config injected by the server
-        const targetURL = _jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_3__.PageConfig.getOption('chatServerUrl');
-        console.log('✅ targetURL === ' + targetURL + ' ===');
-        const wsURL = targetURL || 'http://${window.location.hostname}:3001';
-        //     const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
-        console.log('✅ Connecting to chat server at:', wsURL);
-        //     const socket = io(wsURL);
-        const socket = socket_io_client__WEBPACK_IMPORTED_MODULE_5___default()(wsURL, {
+        //     console.log('✅ About to attempt connection to CHAT_WS_URL');
+        //     // Get the URL from the page config injected by the server
+        //     const targetURL = PageConfig.getOption('chatServerUrl');
+        //     console.log('✅ targetURL === ' + targetURL + ' ===');
+        //     const wsURL = targetURL || 'http://${window.location.hostname}:3001';    
+        // //     const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
+        //     console.log('✅ Connecting to chat server at:', wsURL);
+        // //     const socket = io(wsURL);
+        // 🔥 Get the chat server URL from backend
+        let wsURL = '';
+        try {
+            wsURL = await getChatUrl();
+            console.log('✅ CHAT_WS_URL from backend is:', wsURL);
+        }
+        catch (err) {
+            console.log('❌ CHAT_WS_URL ERROR. Value: ', wsURL);
+            console.error('❌ Failed to fetch chat URL from backend:', err);
+            wsURL = `http://${window.location.hostname}:3001`; // fallback
+        }
+        const socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(wsURL, {
             reconnectionAttempts: 5,
             timeout: 10000
         });
         console.log('✅ Attempted connection to wsURL');
         // --- Main Area Widget ---
-        const mainContent = new _lumino_widgets__WEBPACK_IMPORTED_MODULE_4__.Widget();
+        const mainContent = new _lumino_widgets__WEBPACK_IMPORTED_MODULE_3__.Widget();
         mainContent.node.innerHTML = `
       <div style="padding: 1em;">
         <h3>Main Chat Widget</h3>
@@ -96,6 +114,7 @@ const plugin = {
             const input = mainContent.node.querySelector('#mainChatInput');
             const msg = input.value.trim();
             if (msg) {
+                console.log('✅ Chat message: ' + msg);
                 socket.emit('chat message', { room: mainRoom, message: msg });
                 input.value = '';
             }
@@ -103,7 +122,7 @@ const plugin = {
         // -------------------------------
         // Sidebar Chat Widget
         // -------------------------------
-        const sidebarContent = new _lumino_widgets__WEBPACK_IMPORTED_MODULE_4__.Widget();
+        const sidebarContent = new _lumino_widgets__WEBPACK_IMPORTED_MODULE_3__.Widget();
         sidebarContent.node.innerHTML = `
       <div style="padding: 0.5em;">
         <h4>Sidebar Chat</h4>
@@ -173,4 +192,4 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" viewBox
 /***/ })
 
 }]);
-//# sourceMappingURL=lib_index_js.59c7e1efef332da05194.js.map
+//# sourceMappingURL=lib_index_js.e4ace55af62a11b00a58.js.map
