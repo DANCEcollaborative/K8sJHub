@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install -y curl gnupg git && \
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs tree && \
     npm install -g yarn
+#     apt-get install -y nodejs tree 
+#     apt-get install -y nodejs tree && \
+#     npm install -g yarn
 
 ##############################
 # Step 2: Install JupyterLab & core extensions
@@ -29,12 +32,12 @@ WORKDIR /home/jovyan
 # Copy and make the startup script executable inside the image
 COPY start-dev.sh .
 RUN chmod +x ./start-dev.sh
+RUN mkdir -p /home/jovyan/.jupyter
+COPY jupyter_server_config.py /home/jovyan/.jupyter/
+
+# Cleanup script
+COPY start-notebook.d/cleanup.sh /usr/local/bin/start-notebook.d/cleanup.sh
+RUN chmod +x /usr/local/bin/start-notebook.d/cleanup.sh
 
 # Expose the default JupyterLab port
 EXPOSE 8888
-
-# Command to run JupyterLab when the container starts
-# We use --allow-root because we're running as root inside the container (common for Docker)
-# --no-browser prevents it from trying to open a browser window inside the container
-# --ip=0.0.0.0 makes it accessible from outside the container
-# CMD ["jupyter", "lab", "--allow-root", "--no-browser", "--ip=0.0.0.0"]

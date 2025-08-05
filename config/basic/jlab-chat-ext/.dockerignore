@@ -1,0 +1,11 @@
+__MACOSX/
+*.DS_Store
+
+# Ignore node_modules folders
+**/node_modules
+
+# Ignore Docker and git files
+.git
+.gitignore
+Dockerfile
+.dockerignore

@@ -3,24 +3,22 @@ import {
   JupyterFrontEndPlugin,
   ILayoutRestorer
 } from '@jupyterlab/application';
-
 import {
   ICommandPalette,
   MainAreaWidget
 } from '@jupyterlab/apputils';
-
 import { ILauncher } from '@jupyterlab/launcher';
+import { PageConfig } from '@jupyterlab/coreutils';
 import { Widget } from '@lumino/widgets';
 import io from 'socket.io-client';
-
 import { LabIcon } from '@jupyterlab/ui-components';
 import mySvg from './lock.svg';
 
+// Define the chat icon
 export const chatIcon = new LabIcon({
   name: 'jlab-chat-ext:chat',
   svgstr: mySvg
 });
-
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jlab-chat-ext',
@@ -33,18 +31,24 @@ const plugin: JupyterFrontEndPlugin<void> = {
     launcher: ILauncher | null,
     restorer: ILayoutRestorer | null
   ) => {
-    console.log('✅ jlab-chat-ext is loaded!');
+    console.log('✅ jlab-chat-ext is loaded');
 
     const { commands, shell } = app;
     console.log('✅ About to attempt connection to CHAT_WS_URL');
-    const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
-    console.log('✅ wsURL === ' + wsURL + ' ===');
-    const socket = io(wsURL);
+    // Get the URL from the page config injected by the server
+    const targetURL = PageConfig.getOption('chatServerUrl');
+    console.log('✅ targetURL === ' + targetURL + ' ===');
+    const wsURL = targetURL || 'http://${window.location.hostname}:3001';    
+//     const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
+    console.log('✅ Connecting to chat server at:', wsURL);
+//     const socket = io(wsURL);
+    const socket = io(wsURL, {
+      reconnectionAttempts: 5,
+      timeout: 10000
+    });
     console.log('✅ Attempted connection to wsURL');
 
-    // -------------------------------
-    // Main Area Chat Widget
-    // -------------------------------
+    // --- Main Area Widget ---
     const mainContent = new Widget();
     mainContent.node.innerHTML = `
       <div style="padding: 1em;">
@@ -58,8 +62,9 @@ const plugin: JupyterFrontEndPlugin<void> = {
     `;
     let mainRoom = '';
     const mainLog = mainContent.node.querySelector('#mainChatLog')!;
+    
     mainContent.node.querySelector('#mainJoinBtn')?.addEventListener('click', () => {
-      const room = (mainContent.node.querySelector('#mainRoomInput') as HTMLInputElement).value;
+      const room = (mainContent.node.querySelector('#mainRoomInput') as HTMLInputElement).value.trim();
     	console.log('✅ Room is now === ' + room + ' ===');
       if (room) {
         if (mainRoom) socket.emit('leave', mainRoom);
@@ -68,20 +73,18 @@ const plugin: JupyterFrontEndPlugin<void> = {
         mainRoom = room;
     	  console.log('✅ Room is joined ?');
         mainLog.innerHTML += `<div><em>Joined room: ${room}</em></div>`;
+      } else {
+        mainLog.innerHTML += `<div><em>Please enter a room name.</em></div>`;
       }
     });
+
     mainContent.node.querySelector('#mainSendBtn')?.addEventListener('click', () => {
       const input = mainContent.node.querySelector('#mainChatInput') as HTMLInputElement;
-      const msg = input.value;    
-    	console.log('✅ Chat message: === ' + msg + ' ===');
-//       if (msg && mainRoom) {
-//         socket.emit('chat message', { room: mainRoom, message: msg });
-//         input.value = '';
-//       }
-      // TEMP: Emit regardless of room
-      socket.emit('chat message', { room: mainRoom, message: msg });  
-    	console.log('✅ Attempted to emit chat message: === ' + msg + ' ===');
-      input.value = '';
+      const msg = input.value.trim();
+      if (msg) {
+        socket.emit('chat message', { room: mainRoom, message: msg });
+        input.value = '';
+      }
     });
 
     // -------------------------------
@@ -102,7 +105,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
     });
 
     socket.on('chat message', (data: { room: string; message: string }) => {
-			// TEMP DISPLAY REGARDLESS OF ROOM 
+			// Show all messages for now — can filter by room if needed
 			mainLog.innerHTML += `<div>${data.message}</div>`;
 			mainLog.scrollTop = mainLog.scrollHeight;
 			sidebarLog.innerHTML += `<div>${data.message}</div>`;
@@ -116,21 +119,21 @@ const plugin: JupyterFrontEndPlugin<void> = {
 //   		}
     });
 
+    // --- Main Widget Setup ---
     const mainWidget = new MainAreaWidget({ content: mainContent });
     mainWidget.id = 'jlab-chat-ext-main';
     mainWidget.title.label = 'Chat';
     mainWidget.title.icon = chatIcon;
     mainWidget.title.closable = true;
 
-    // Plain sidebar Lumino widget (not MainAreaWidget)
+    // --- Sidebar Setup ---
     sidebarContent.id = 'jlab-chat-ext-sidebar';
     sidebarContent.title.caption = 'Chat Sidebar';
     (sidebarContent.title as any).iconClass = 'jp-ChatIcon jp-SideBar-tabIcon';
-
     shell.add(sidebarContent, 'left', { rank: 800 });
 
+    // --- Command Setup ---
     const commandID = 'jlab-chat-ext:open-main';
-
     commands.addCommand(commandID, {
       label: 'Open Chat Widget',
       caption: 'Open the collaborative chat widget in the main area',
@@ -143,14 +146,8 @@ const plugin: JupyterFrontEndPlugin<void> = {
     });
 
     palette.addItem({ command: commandID, category: 'Chat' });
-
-    if (launcher) {
-      launcher.add({ command: commandID, category: 'Other', rank: 1 });
-    }
-
-    if (restorer) {
-      restorer.add(mainWidget as any, mainWidget.id);
-    }
+    launcher?.add({ command: commandID, category: 'Other', rank: 1 });
+    restorer?.add(mainWidget as any, mainWidget.id);
   }
 };
 

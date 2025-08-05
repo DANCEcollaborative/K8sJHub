@@ -1,18 +1,20 @@
 #!/bin/sh
-# This script starts JupyterLab and then runs two commands in parallel.
-
-start-notebook.py --collaborative --ServerApp.token='' --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin='*' 
-
-# Exit the script if any command fails
+# Exit if any command fails
 set -e
 
-# Run the first command in the background (&)
-echo "Starting file watcher..."
+# Print the env var for debug
+echo "✅ CHAT_WS_URL at runtime is: $CHAT_WS_URL"
+
+# Start JupyterLab (non-blocking)
+start-notebook.py --collaborative --ServerApp.token='' --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin='*' &
+
+# Change to the frontend directory
+cd /home/jovyan/frontend
+
+# Watch frontend changes
+echo "✅ Starting file watcher..."
 npm run watch &
 
-# Run the second command in the foreground
-# This command keeps the container running
-echo "Starting development server..."
-npm run dev
-
-# The script will exit when 'npm run dev' exits.
+# Start the frontend dev server in foreground
+echo "✅ Starting development server..."
+exec npm run dev
