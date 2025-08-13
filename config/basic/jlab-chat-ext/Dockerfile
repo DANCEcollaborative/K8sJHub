@@ -1,43 +1,65 @@
 FROM jupyter/base-notebook:latest
 
 ##############################
-# Step 1: Install Node.js 22, npm, & Git
+# Step 1: Install system packages as root
 ##############################
 USER root
-RUN apt-get update && apt-get install -y curl gnupg git && \
+RUN apt-get update && \
+    apt-get install -y curl gnupg git && \
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs tree && \
-    npm install -g yarn
-#     apt-get install -y nodejs tree 
-#     apt-get install -y nodejs tree && \
-#     npm install -g yarn
+    npm install -g yarn webpack webpack-cli ts-loader raw-loader
 
 ##############################
-# Step 2: Install JupyterLab & core extensions
+# Step 2: Switch to jovyan user
 ##############################
-RUN pip install --no-cache-dir --upgrade \
-	jupyter-collaboration
-	
+USER jovyan
+WORKDIR /home/jovyan/jlab-chat-ext
+
 ##############################
-# Step 3: Copy frontend and build it
+# Step 3: Copy project files
 ##############################
-COPY frontend /home/jovyan/frontend
-WORKDIR /home/jovyan/frontend
+COPY --chown=jovyan:jovyan ./frontend ./frontend
+COPY --chown=jovyan:jovyan ./jlab_chat_ext ./jlab_chat_ext
+COPY --chown=jovyan:jovyan start-dev.sh .
+COPY --chown=jovyan:jovyan pyproject.toml .
+COPY --chown=jovyan:jovyan jupyter_server_config.py .jupyter/
+
+##############################
+# Step 4: Build frontend
+##############################
+WORKDIR /home/jovyan/jlab-chat-ext/frontend
 RUN rm -rf node_modules package-lock.json yarn.lock
-RUN jlpm install && jlpm add typescript webpack webpack-cli ts-loader raw-loader && \
-	jlpm build && pip install .
+RUN jlpm install && jlpm build
 
-WORKDIR /home/jovyan
+##############################
+# Step 5: Install Python package & enable server extension
+##############################
+WORKDIR /home/jovyan/jlab-chat-ext
+RUN pip install --user -e .
 
-# Copy and make the startup script executable inside the image
-COPY start-dev.sh .
-RUN chmod +x ./start-dev.sh
-RUN mkdir -p /home/jovyan/.jupyter
-COPY jupyter_server_config.py /home/jovyan/.jupyter/
+# Add JupyterLab real-time collaboration support
+RUN pip install --no-cache-dir \
+    jupyter-collaboration \
+    jupyterlab-link-share \
+    jupyter-server-ydoc \
+    jupyter-ydoc
 
-# Cleanup script
-COPY start-notebook.d/cleanup.sh /usr/local/bin/start-notebook.d/cleanup.sh
+RUN jupyter server extension enable --user jlab_chat_ext
+
+##############################
+# Step 6: Setup scripts
+##############################
+RUN chmod +x start-dev.sh
+COPY --chown=jovyan:jovyan start-notebook.d/cleanup.sh /usr/local/bin/start-notebook.d/cleanup.sh
 RUN chmod +x /usr/local/bin/start-notebook.d/cleanup.sh
 
-# Expose the default JupyterLab port
-EXPOSE 8888
+##############################
+# Step 7: Expose ports
+##############################
+EXPOSE 8888 3001
+
+##############################
+# Step 8: Default command
+##############################
+CMD ["./start-dev.sh"]

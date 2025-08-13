@@ -6,14 +6,25 @@ import { Widget } from '@lumino/widgets';
 import io from 'socket.io-client';
 import { LabIcon } from '@jupyterlab/ui-components';
 import mySvg from './lock.svg';
+import { PageConfig } from '@jupyterlab/coreutils';
 // Define the chat icon
 export const chatIcon = new LabIcon({
     name: 'jlab-chat-ext:chat',
     svgstr: mySvg
 });
 // Fetch chat URL from Python backend
+// async function getChatUrl(): Promise<string> {
+//   const response = await fetch('/chat-ext/wsurl');
+//   const data = await response.json();
+//   return data.chatUrl;
+// }
 async function getChatUrl() {
-    const response = await fetch('/chat-ext/wsurl');
+    // Always fetch relative to the actual Jupyter server
+    const baseUrl = PageConfig.getBaseUrl();
+    const response = await fetch(`${baseUrl}chat-ext/wsurl`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch chat URL: ${response.status} ${response.statusText}`);
+    }
     const data = await response.json();
     return data.chatUrl;
 }

@@ -21,5 +21,16 @@ module.exports = {
         use: 'raw-loader'
       }
     ]
-  }
+  },
+  devServer: {
+  port: 3001, // whatever your dev server runs on
+  proxy: {
+    '/chat-ext': {
+      target: 'http://localhost:8888', // Jupyter server
+      changeOrigin: true
+    }
+  },
+  hot: true
+}
+  
 };

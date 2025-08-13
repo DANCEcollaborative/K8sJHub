@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jlab_chat_ext"
+version = "0.1.0"
+description = "JupyterLab Chat Extension"
+authors = [{ name = "Robert Charles Murray" }]
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+dependencies = [
+    "jupyter_server>=2.0.0",
+    "jupyterlab>=4.0.0,<5",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["jlab_chat_ext*"]
+
+[tool.setuptools.package-data]
+"jlab_chat_ext" = ["labextension/**", "labextension/static/**"]

@@ -25,10 +25,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @jupyterlab/ui-components */ "webpack/sharing/consume/default/@jupyterlab/ui-components");
 /* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _lock_svg__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lock.svg */ "./lib/lock.svg");
+/* harmony import */ var _jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @jupyterlab/coreutils */ "webpack/sharing/consume/default/@jupyterlab/coreutils");
+/* harmony import */ var _jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_7__);
 
 
 
 // import { PageConfig } from '@jupyterlab/coreutils';
+
 
 
 
@@ -39,8 +42,18 @@ const chatIcon = new _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__.LabI
     svgstr: _lock_svg__WEBPACK_IMPORTED_MODULE_6__
 });
 // Fetch chat URL from Python backend
+// async function getChatUrl(): Promise<string> {
+//   const response = await fetch('/chat-ext/wsurl');
+//   const data = await response.json();
+//   return data.chatUrl;
+// }
 async function getChatUrl() {
-    const response = await fetch('/chat-ext/wsurl');
+    // Always fetch relative to the actual Jupyter server
+    const baseUrl = _jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_7__.PageConfig.getBaseUrl();
+    const response = await fetch(`${baseUrl}chat-ext/wsurl`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch chat URL: ${response.status} ${response.statusText}`);
+    }
     const data = await response.json();
     return data.chatUrl;
 }
@@ -192,4 +205,4 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" viewBox
 /***/ })
 
 }]);
-//# sourceMappingURL=lib_index_js.e4ace55af62a11b00a58.js.map
+//# sourceMappingURL=lib_index_js.30d8a1dfafa86d64bfab.js.map
