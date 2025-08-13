@@ -13,7 +13,7 @@ import { Widget } from '@lumino/widgets';
 import io from 'socket.io-client';
 import { LabIcon } from '@jupyterlab/ui-components';
 import mySvg from './lock.svg';
-import { PageConfig } from '@jupyterlab/coreutils';
+// import { PageConfig } from '@jupyterlab/coreutils';
 
 // Define the chat icon
 export const chatIcon = new LabIcon({
@@ -29,8 +29,9 @@ export const chatIcon = new LabIcon({
 // }
 async function getChatUrl(): Promise<string> {
   // Always fetch relative to the actual Jupyter server
-  const baseUrl = PageConfig.getBaseUrl();
-  const response = await fetch(`${baseUrl}chat-ext/wsurl`);
+//   const baseUrl = PageConfig.getBaseUrl();
+//   const response = await fetch(`${baseUrl}chat-ext/wsurl`);
+  const response = await fetch('/chat-ext/wsurl');
   
   if (!response.ok) {
     throw new Error(`Failed to fetch chat URL: ${response.status} ${response.statusText}`);
@@ -40,8 +41,14 @@ async function getChatUrl(): Promise<string> {
   return data.chatUrl;
 }
 
-getChatUrl().then((url) => {
-  console.log("✅ CHAT_WS_URL from backend is:", url);
+// getChatUrl().then((url) => {
+//   console.log("✅ CHAT_WS_URL from backend is:", url);
+// });
+getChatUrl().then(wsUrl => {
+    console.log("✅ CHAT_WS_URL from backend: ", wsUrl);
+    // Initialize your WebSocket/RTC connection with wsUrl
+}).catch(err => {
+    console.error("❌ Error fetching CHAT_WS_URL:", err);
 });
 
 const plugin: JupyterFrontEndPlugin<void> = {
