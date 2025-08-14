@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.5.0", "jupyterlab>=4.2.0,<5"]
+build-backend = "hatchling.build"
 
 [project]
 name = "jlab_chat_ext"
@@ -11,13 +11,12 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
 dependencies = [
-    "jupyter_server>=2.0.0",
-    "jupyterlab>=4.0.0,<5",
+    "jupyterlab>=4.2.0,<5"
 ]
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["jlab_chat_ext*"]
+[tool.hatch.build.targets.wheel]
+packages = ["jlab_chat_ext"]
 
-[tool.setuptools.package-data]
-"jlab_chat_ext" = ["labextension/**", "labextension/static/**"]
+[tool.hatch.build.targets.wheel.shared-data]
+"frontend/jlab_chat_ext/labextension" = "share/jupyter/labextensions/jlab-chat-ext"
+"frontend/install.json" = "share/jupyter/labextensions/jlab-chat-ext/install.json"

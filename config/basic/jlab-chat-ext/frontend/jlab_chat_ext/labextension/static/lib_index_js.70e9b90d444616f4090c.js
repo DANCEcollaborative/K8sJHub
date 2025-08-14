@@ -25,8 +25,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @jupyterlab/ui-components */ "webpack/sharing/consume/default/@jupyterlab/ui-components");
 /* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__);
 /* harmony import */ var _lock_svg__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lock.svg */ "./lib/lock.svg");
-/* harmony import */ var _jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @jupyterlab/coreutils */ "webpack/sharing/consume/default/@jupyterlab/coreutils");
-/* harmony import */ var _jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_7__);
 
 
 
@@ -35,7 +33,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
+// import { PageConfig } from '@jupyterlab/coreutils';
 // Define the chat icon
 const chatIcon = new _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__.LabIcon({
     name: 'jlab-chat-ext:chat',
@@ -49,17 +47,24 @@ const chatIcon = new _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__.LabI
 // }
 async function getChatUrl() {
     // Always fetch relative to the actual Jupyter server
-    const baseUrl = _jupyterlab_coreutils__WEBPACK_IMPORTED_MODULE_7__.PageConfig.getBaseUrl();
-    const response = await fetch(`${baseUrl}chat-ext/wsurl`);
+    //   const baseUrl = PageConfig.getBaseUrl();
+    //   const response = await fetch(`${baseUrl}chat-ext/wsurl`);
+    const response = await fetch('/chat-ext/wsurl');
     if (!response.ok) {
         throw new Error(`Failed to fetch chat URL: ${response.status} ${response.statusText}`);
     }
     const data = await response.json();
     return data.chatUrl;
 }
-getChatUrl().then((url) => {
-    console.log("✅ CHAT_WS_URL from backend is:", url);
-});
+// getChatUrl().then((url) => {
+//   console.log("✅ CHAT_WS_URL from backend is:", url);
+// });
+// getChatUrl().then(wsUrl => {
+//     console.log("✅ CHAT_WS_URL from backend: ", wsUrl);
+//     // Initialize your WebSocket/RTC connection with wsUrl
+// }).catch(err => {
+//     console.error("❌ Error fetching CHAT_WS_URL:", err);
+// });
 const plugin = {
     id: 'jlab-chat-ext',
     autoStart: true,
@@ -205,4 +210,4 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" viewBox
 /***/ })
 
 }]);
-//# sourceMappingURL=lib_index_js.30d8a1dfafa86d64bfab.js.map
+//# sourceMappingURL=lib_index_js.70e9b90d444616f4090c.js.map

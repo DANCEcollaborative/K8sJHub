@@ -44,12 +44,12 @@ async function getChatUrl(): Promise<string> {
 // getChatUrl().then((url) => {
 //   console.log("✅ CHAT_WS_URL from backend is:", url);
 // });
-getChatUrl().then(wsUrl => {
-    console.log("✅ CHAT_WS_URL from backend: ", wsUrl);
-    // Initialize your WebSocket/RTC connection with wsUrl
-}).catch(err => {
-    console.error("❌ Error fetching CHAT_WS_URL:", err);
-});
+// getChatUrl().then(wsUrl => {
+//     console.log("✅ CHAT_WS_URL from backend: ", wsUrl);
+//     // Initialize your WebSocket/RTC connection with wsUrl
+// }).catch(err => {
+//     console.error("❌ Error fetching CHAT_WS_URL:", err);
+// });
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jlab-chat-ext',
