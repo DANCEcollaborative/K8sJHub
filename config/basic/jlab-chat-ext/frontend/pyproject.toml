@@ -8,6 +8,9 @@ version = "0.1.0"
 readme = "README.md"
 requires-python = ">=3.9"
 
+[tool.hatch.build.targets.wheel]
+packages = ["jlab_chat_ext_frontend"]
+
 [tool.hatch.build.targets.wheel.shared-data]
 "frontend/jlab_chat_ext/labextension" = "share/jupyter/labextensions/jlab-chat-ext"
 "frontend/install.json" = "share/jupyter/labextensions/jlab-chat-ext/install.json"
