@@ -4,5 +4,20 @@
   "description": "jlab-chat-ext settings.",
   "type": "object",
   "properties": {},
+  "jupyter.lab.setting": {
+        "schema": {
+            "type": "object",
+            "properties": {
+                "chatURL": {
+                    "type": "string",
+                    "title": "Chat server URL",
+                    "default": "https://bree.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=505&id=1&username=Robbie&html=chat_mm"
+                }
+            },
+            "additionalProperties": false
+        },
+        "uiSchema": {},
+        "version": "1.0.0"
+    },
   "additionalProperties": false
 }

@@ -8,14 +8,10 @@ import {
   MainAreaWidget
 } from '@jupyterlab/apputils';
 import { ILauncher } from '@jupyterlab/launcher';
+import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { Widget } from '@lumino/widgets';
 import io from 'socket.io-client';
 import { LabIcon } from '@jupyterlab/ui-components';
-
-// ✅ Import helper for fetching chat URL
-import { getChatUrl } from './chatUrlHelper';
-
-// ✅ Import SVG icon using raw-loader
 import mySvg from '!!raw-loader!./lock.svg';
 
 // --- Chat icon ---
@@ -24,14 +20,16 @@ export const chatIcon = new LabIcon({
   svgstr: mySvg
 });
 
+// --- plugin ---
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jlab-chat-ext',
   autoStart: true,
-  requires: [ICommandPalette],
+  requires: [ICommandPalette, ISettingRegistry],
   optional: [ILauncher, ILayoutRestorer],
   activate: async (
     app: JupyterFrontEnd,
     palette: ICommandPalette,
+    settingRegistry: ISettingRegistry,
     launcher: ILauncher | null,
     restorer: ILayoutRestorer | null
   ) => {
@@ -39,20 +37,30 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     const { commands, shell } = app;
 
-    // --- Get the chat server URL from backend ---
-    let wsURL = '';
+    // --- Get chat URL from settings ---
+    let wsURL = `http://${window.location.hostname}:3001`; // fallback
+
     try {
-      wsURL = await getChatUrl();
-      console.log('✅ CHAT_WS_URL from backend is:', wsURL);
+      const settings = await settingRegistry.load(plugin.id);
+      wsURL = settings.get('chatURL').composite as string || wsURL;
+
+      // Listen for changes dynamically
+      settings.changed.connect(() => {
+        const newURL = settings.get('chatURL').composite as string;
+        if (newURL) {
+          wsURL = newURL;
+          console.log('🔄 Chat URL updated to:', wsURL);
+          // Optionally reconnect your socket here if needed
+        }
+      });
+
+      console.log('✅ CHAT_WS_URL from settings:', wsURL);
     } catch (err) {
-      console.error('❌ Failed to fetch chat URL from backend:', err);
-      wsURL = `http://${window.location.hostname}:3001`; // fallback
+      console.warn('❌ Could not load chatURL from settings, using fallback: ', wsURL);
     }
 
-    const socket = io(wsURL, {
-      reconnectionAttempts: 5,
-      timeout: 10000
-    });
+    // --- Connect Socket.IO ---
+    const socket = io(wsURL, { reconnectionAttempts: 5, timeout: 10000 });
     console.log('✅ Attempted connection to wsURL');
 
     socket.on('connect', () => {

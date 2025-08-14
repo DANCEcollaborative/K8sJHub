@@ -75,8 +75,9 @@ RUN pip install --no-cache-dir -e . && \
 # Step 9: Prepopulate JupyterLab settings with default chatURL
 ##############################
 RUN mkdir -p /home/jovyan/.jupyter/lab/user-settings/@my-org/jlab-chat-ext && \
-    echo '{"chatURL":"https://bree.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=505&id=1&username=Robbie&html=chat_mm"}' \
-        > /home/jovyan/.jupyter/lab/user-settings/@my-org/jlab-chat-ext/plugin.json
+    echo '{"chatURL": "https://bree.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=505&id=1&username=Robbie&html=chat_mm"}' \
+        > /home/jovyan/.jupyter/lab/user-settings/@my-org/jlab-chat-ext/plugin.json && \
+    chown -R jovyan:users /home/jovyan/.jupyter/lab/user-settings
 
 ##############################
 # Step 10: Fix line endings & permissions
