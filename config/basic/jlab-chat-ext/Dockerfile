@@ -46,15 +46,21 @@ RUN mkdir -p /home/jovyan/jlab-chat-ext/shared && \
     echo "c.ServerApp.root_dir = '/home/jovyan/jlab-chat-ext/shared'" >> .jupyter/jupyter_server_config.py
 
 ##############################
-# Step 7: Build frontend (dev mode)
+# Step 7: Build frontend (dev mode) with aligned versions
 ##############################
 WORKDIR /home/jovyan/jlab-chat-ext/frontend
 RUN rm -rf node_modules package-lock.json yarn.lock && \
     jlpm install && \
+    jlpm add raw-loader@^4.0.2 --dev && \
     jlpm build
 
+# Copy the built labextension into the Python package
+RUN mkdir -p /home/jovyan/jlab-chat-ext/jlab_chat_ext/labextension && \
+    cp -r /home/jovyan/jlab-chat-ext/frontend/lib/* \
+          /home/jovyan/jlab-chat-ext/jlab_chat_ext/labextension/
+
 ##############################
-# Step 8: Install Python package & enable extensions
+# Step 8: Install Python package & enable server extension
 ##############################
 WORKDIR /home/jovyan/jlab-chat-ext
 RUN pip install --no-cache-dir -e . && \
@@ -63,10 +69,17 @@ RUN pip install --no-cache-dir -e . && \
         jupyterlab-link-share \
         jupyter-server-ydoc \
         jupyter-ydoc && \
-    jupyter server extension enable jlab_chat_ext 
+    jupyter server extension enable jlab_chat_ext
 
 ##############################
-# Step 9: Fix line endings & permissions
+# Step 9: Prepopulate JupyterLab settings with default chatURL
+##############################
+RUN mkdir -p /home/jovyan/.jupyter/lab/user-settings/@my-org/jlab-chat-ext && \
+    echo '{"chatURL":"https://bree.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=505&id=1&username=Robbie&html=chat_mm"}' \
+        > /home/jovyan/.jupyter/lab/user-settings/@my-org/jlab-chat-ext/plugin.json
+
+##############################
+# Step 10: Fix line endings & permissions
 ##############################
 USER root
 RUN dos2unix start-dev.sh /usr/local/bin/start-notebook.d/cleanup.sh && \
@@ -74,11 +87,11 @@ RUN dos2unix start-dev.sh /usr/local/bin/start-notebook.d/cleanup.sh && \
 USER jovyan
 
 ##############################
-# Step 10: Expose ports
+# Step 11: Expose ports
 ##############################
 EXPOSE 8888 3001
 
 ##############################
-# Step 11: Default command
+# Step 12: Default command
 ##############################
 CMD ["./start-dev.sh"]

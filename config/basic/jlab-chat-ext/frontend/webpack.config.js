@@ -1,10 +1,13 @@
 const path = require('path');
 
 module.exports = {
-  entry: './src/index.ts', // Webpack uses the transpiled output
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
+  entry: './src/index.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    libraryTarget: 'amd', // Required for JupyterLab extensions
+    publicPath: ''
   },
   resolve: {
     extensions: ['.js', '.ts']
@@ -22,15 +25,18 @@ module.exports = {
       }
     ]
   },
+  externals: [
+    /^@jupyterlab\/.+/,
+    /^@lumino\/.+/
+  ],
   devServer: {
-  port: 3001, // whatever your dev server runs on
-  proxy: {
-    '/chat-ext': {
-      target: 'http://localhost:8888', // Jupyter server
-      changeOrigin: true
-    }
-  },
-  hot: true
-}
-  
+    port: 3001,
+    proxy: {
+      '/chat-ext': {
+        target: 'http://localhost:8888',
+        changeOrigin: true
+      }
+    },
+    hot: true
+  }
 };
