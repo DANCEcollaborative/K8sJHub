@@ -27,7 +27,7 @@ COPY --chown=jovyan:jovyan LICENSE .
 ##############################
 # Step 4: Install Python dependencies
 ##############################
-RUN pip install --no-cache-dir --upgrade pip setuptools wheel build jupyterlab==4.2.5
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel build jupyterlab==4.4.6
 
 ##############################
 # Step 5: Copy remaining source files
