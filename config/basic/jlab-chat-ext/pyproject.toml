@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling>=1.5.0", "jupyterlab>=4.2.0,<5"]
+requires = ["hatchling>=1.5.0", "jupyterlab~=4.2.5", "hatch-jupyter-builder>=0.5.0"]
 build-backend = "hatchling.build"
 
 [project]
@@ -11,15 +11,23 @@ readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.9"
 dependencies = [
-    "jupyterlab>=4.2.0,<5"
+    "jupyterlab~=4.2.5"
 ]
 
-[tool.setuptools.package-data]
-jlab_chat_ext = ["schema/*.json"]
-
-[tool.hatch.build.targets.wheel]
-packages = ["jlab_chat_ext"]
-
 [tool.hatch.build.targets.wheel.shared-data]
-"frontend/jlab_chat_ext/labextension" = "share/jupyter/labextensions/jlab-chat-ext"
-"frontend/install.json" = "share/jupyter/labextensions/jlab-chat-ext/install.json"
+"frontend/jlab_chat_ext/labextension" = "jlab_chat_ext/labextension"
+"install.json" = "share/jupyter/labextensions/jlab-chat-ext/install.json"
+
+[tool.hatch.build.hooks.jupyter-builder]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "frontend/jlab_chat_ext/labextension/package.json",
+    "frontend/install.json"
+]
+install-pre-commit-hook = false
+skip-if-exists = ["frontend/jlab_chat_ext/labextension/package.json"]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+build_cmd = "build:prod"
+npm = "jlpm"
+path = "frontend"
