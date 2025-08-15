@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "id": "@my-org/jlab-chat-ext:plugin",
+  "jupyter.lab.setting-icon": "ui-components:chat",
+  "jupyter.lab.setting-icon-label": "Chat Extension",
+  "title": "Chat Extension Settings",
+  "description": "Settings for the JupyterLab Chat Extension.",
+  "type": "object",
+  "properties": {
+    "chatURL": {
+      "type": "string",
+      "title": "Chat WebSocket URL",
+      "description": "The WebSocket endpoint used for chat connections.",
+      "default": "https://bree.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=505&id=1&username=Robbie&html=chat_mm"
+    }
+  },
+  "additionalProperties": false
+}

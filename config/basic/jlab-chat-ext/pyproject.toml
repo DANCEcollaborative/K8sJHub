@@ -14,6 +14,9 @@ dependencies = [
     "jupyterlab>=4.2.0,<5"
 ]
 
+[tool.setuptools.package-data]
+jlab_chat_ext = ["schema/*.json"]
+
 [tool.hatch.build.targets.wheel]
 packages = ["jlab_chat_ext"]
 

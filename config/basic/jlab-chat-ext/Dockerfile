@@ -57,8 +57,11 @@ RUN rm -rf node_modules package-lock.json yarn.lock && \
 # Copy the built labextension into the Python package
 RUN mkdir -p /home/jovyan/jlab-chat-ext/jlab_chat_ext/labextension && \
     cp -r /home/jovyan/jlab-chat-ext/frontend/lib/* \
-          /home/jovyan/jlab-chat-ext/jlab_chat_ext/labextension/
-
+          /home/jovyan/jlab-chat-ext/jlab_chat_ext/labextension/ && \
+    mkdir -p /home/jovyan/jlab-chat-ext/jlab_chat_ext/labextension/schemas && \
+    cp -r /home/jovyan/jlab-chat-ext/frontend/schema/* \
+          /home/jovyan/jlab-chat-ext/jlab_chat_ext/labextension/schemas/
+          
 ##############################
 # Step 8: Install Python package & enable server extension
 ##############################

@@ -1,6 +1,8 @@
 # jlab_chat_ext/serverextension.py
-def _jupyter_server_extension_paths():
+from .plugin import ChatExtension
+
+def _jupyter_server_extension_points():
     return [{"module": "jlab_chat_ext"}]
 
-def load_jupyter_server_extension(nbapp):
-    print("Jupyter server extension jlab_chat_ext loaded")
+def load_jupyter_server_extension(nb_server_app):
+    ChatExtension().initialize(nb_server_app)

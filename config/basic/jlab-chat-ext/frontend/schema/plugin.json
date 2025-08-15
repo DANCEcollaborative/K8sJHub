@@ -6,8 +6,9 @@
   "properties": {
     "chatURL": {
       "type": "string",
+      "title": "Chat Server URL",
       "default": "https://bree.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=505&id=1&username=Robbie&html=chat_mm",
-      "description": "The URL of the chat server"
+      "description": "The WebSocket URL of the chat server"
     }
   }
 }
