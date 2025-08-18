@@ -14,9 +14,13 @@ dependencies = [
     "jupyterlab~=4.2.5"
 ]
 
+# This new section explicitly tells the builder where the Python code is.
+[tool.hatch.build.sources]
+"jlab_chat_ext" = "jlab_chat_ext"
+
 [tool.hatch.build.targets.wheel.shared-data]
 "frontend/jlab_chat_ext/labextension" = "jlab_chat_ext/labextension"
-"install.json" = "share/jupyter/labextensions/jlab-chat-ext/install.json"
+"frontend/install.json" = "share/jupyter/labextensions/jlab-chat-ext/install.json"
 
 [tool.hatch.build.hooks.jupyter-builder]
 build-function = "hatch_jupyter_builder.npm_builder"
