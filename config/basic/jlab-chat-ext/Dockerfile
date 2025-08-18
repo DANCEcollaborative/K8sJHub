@@ -40,7 +40,8 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel build && \
 # Step 5: Copy remaining source files
 ##############################
 COPY --chown=jovyan:jovyan ./frontend ./frontend
-COPY --chown=jovyan:jovyan ./jlab_chat_ext ./jlab_chat_ext
+# COPY --chown=jovyan:jovyan ./jlab_chat_ext ./jlab_chat_ext
+COPY --chown=jovyan:jovyan ./src ./src
 COPY --chown=jovyan:jovyan start-dev.sh .
 COPY --chown=jovyan:jovyan jupyter_server_config.py .jupyter/
 COPY --chown=jovyan:jovyan start-notebook.d/cleanup.sh /usr/local/bin/start-notebook.d/cleanup.sh

@@ -1,37 +1,4 @@
+# pyproject.toml
 [build-system]
-requires = ["hatchling>=1.5.0", "jupyterlab~=4.2.5", "hatch-jupyter-builder>=0.5.0"]
-build-backend = "hatchling.build"
-
-[project]
-name = "jlab_chat_ext"
-version = "0.1.0"
-description = "JupyterLab Chat Extension"
-authors = [{ name = "Robert Charles Murray" }]
-readme = "README.md"
-license = { file = "LICENSE" }
-requires-python = ">=3.9"
-dependencies = [
-    "jupyterlab~=4.2.5"
-]
-
-# This new section explicitly tells the builder where the Python code is.
-[tool.hatch.build.sources]
-"jlab_chat_ext" = "jlab_chat_ext"
-
-[tool.hatch.build.targets.wheel.shared-data]
-"frontend/jlab_chat_ext/labextension" = "jlab_chat_ext/labextension"
-"frontend/install.json" = "share/jupyter/labextensions/jlab-chat-ext/install.json"
-
-[tool.hatch.build.hooks.jupyter-builder]
-build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = [
-    "frontend/jlab_chat_ext/labextension/package.json",
-    "frontend/install.json"
-]
-install-pre-commit-hook = false
-skip-if-exists = ["frontend/jlab_chat_ext/labextension/package.json"]
-
-[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
-build_cmd = "build:prod"
-npm = "jlpm"
-path = "frontend"
+requires = ["setuptools>=61", "jupyter_packaging>=0.12.0"]
+build-backend = "setuptools.build_meta"
