@@ -12,7 +12,7 @@
     "outputDir": "jlab_chat_ext/labextension",
     "schemaDir": "schema",
     "_build": {
-      "load": "static/remoteEntry.623c9312b80977cfbbb2.js",
+      "load": "static/remoteEntry.838bb6b40108663a5a6c.js",
       "extension": "./extension",
       "style": "./style"
     }

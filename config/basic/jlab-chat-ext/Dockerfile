@@ -8,9 +8,6 @@ RUN apt-get update && apt-get install -y curl gnupg git && \
     curl -fsSL https://deb.nodesource.com/setup_22.x | bash - && \
     apt-get install -y nodejs tree && \
     npm install -g yarn
-#     apt-get install -y nodejs tree 
-#     apt-get install -y nodejs tree && \
-#     npm install -g yarn
 
 ##############################
 # Step 2: Install JupyterLab & core extensions
@@ -24,8 +21,13 @@ RUN pip install --no-cache-dir --upgrade \
 COPY frontend /home/jovyan/frontend
 WORKDIR /home/jovyan/frontend
 RUN rm -rf node_modules package-lock.json yarn.lock
-RUN jlpm install && jlpm add typescript webpack webpack-cli ts-loader raw-loader && \
-	jlpm build && pip install .
+RUN jlpm install && \
+    jlpm add lib0@0.2.55 && \
+    jlpm add webpack@^5.91.0 webpack-cli@^6.0.1 typescript ts-loader raw-loader && \
+    jlpm dedupe && \
+    jlpm build && \
+    pip install .
+
 
 WORKDIR /home/jovyan
 
