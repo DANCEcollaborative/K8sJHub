@@ -57,3 +57,17 @@ cd
 pwd
 ls -al
 exit
+jupyter labextension list
+ls -al
+./start-notebook.py --collaborative --ServerApp.token='' --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin='*' &
+echo $SHELL
+ls -al
+which start-notebook
+ls -al frontend/
+start-notebook.py --collaborative --ServerApp.token='' --ServerApp.disable_check_xsrf=True --ServerApp.allow_origin='*' &
+exit
+pwd
+ls -al
+juypter labextension list
+jupyter labextension list
+exit
