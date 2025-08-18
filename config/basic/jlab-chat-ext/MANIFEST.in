@@ -1,12 +1,1 @@
-# Include README and license
-include README.md
-include LICENSE
-
-# Include Python package
-recursive-include jlab_chat_ext *
-
-# Include frontend build output
-recursive-include jlab_chat_ext/labextension *
-
-# Include JSON schemas if any
-recursive-include jlab_chat_ext/schemas *
+graft src/jlab_chat_ext/labextension

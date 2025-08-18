@@ -54,42 +54,40 @@ RUN mkdir -p /home/jovyan/jlab-chat-ext/shared && \
     echo "c.ServerApp.root_dir = '/home/jovyan/jlab-chat-ext/shared'" >> .jupyter/jupyter_server_config.py
 
 ##############################
-# Step 7: Install Frontend Dependencies and Install Python Package
+# Step 7: Explicitly Build the Frontend
 ##############################
+WORKDIR /home/jovyan/jlab-chat-ext/frontend
 
 # First, install the frontend dependencies
 WORKDIR /home/jovyan/jlab-chat-ext/frontend
-RUN rm -rf node_modules package-lock.json yarn.lock && \
-    jlpm install
+RUN rm -rf node_modules package-lock.json yarn.lock 
+RUN jlpm install && jlpm run build:prod
     
 # Second, navigate back to the root and clean all JupyterLab caches
 WORKDIR /home/jovyan/jlab-chat-ext
+
+# Clean any old JupyterLab assets before installing
 RUN jupyter lab clean --all
 
-# Third, install the Python package in editable mode.
-# The pyproject.toml ensures the freshly built frontend assets are linked correctly.
+# Install your extension in editable mode. It will find the pre-built assets.
+# Then, install all other Python dependencies.
 RUN pip install -e . && \
     pip install \
         jupyter-collaboration \
         jupyterlab-link-share \
         jupyter-server-ydoc \
         jupyter-ydoc \
-        "httpx<0.26.0" && \
-    # Enable server extension
-    jupyter server extension enable jlab_chat_ext && \
-    # Finally, rebuild the core JupyterLab assets with the extension included
-    jupyter lab build --minimize=False
-    
-##############################
-# Step 8: Prepopulate JupyterLab settings with default chatURL
-##############################
-RUN mkdir -p /home/jovyan/.jupyter/lab/user-settings/@my-org/jlab-chat-ext && \
-    echo '{"chatURL": "https://bree.lti.cs.cmu.edu/bazaar/login?roomName=regex&roomId=505&id=1&username=Robbie&html=chat_mm"}' \
-        > /home/jovyan/.jupyter/lab/user-settings/@my-org/jlab-chat-ext/plugin.json && \
-    chown -R jovyan:users /home/jovyan/.jupyter/lab/user-settings
+        "httpx<0.26.0"
 
 ##############################
-# Step 9: Fix line endings & permissions
+# Step 9: Enable Server Extension and Build Final JupyterLab App
+##############################
+# This must be the final build step.
+RUN jupyter server extension enable jlab_chat_ext --py --sys-prefix && \
+    jupyter lab build --minimize=False
+
+##############################
+# Step 10: Fix line endings & permissions
 ##############################
 WORKDIR /home/jovyan/jlab-chat-ext
 USER root
@@ -98,11 +96,11 @@ RUN dos2unix start-dev.sh /usr/local/bin/start-notebook.d/cleanup.sh && \
 USER jovyan
 
 ##############################
-# Step 10: Expose ports
+# Step 11: Expose ports
 ##############################
 EXPOSE 8888 3001
 
 ##############################
-# Step 11: Default command
+# Step 12: Default command
 ##############################
 # CMD ["./start-dev.sh"]
