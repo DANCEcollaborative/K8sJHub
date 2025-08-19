@@ -71,3 +71,6 @@ ls -al
 juypter labextension list
 jupyter labextension list
 exit
+jupyter server extension list
+curl http://localhost:8888/chat-ext/wsurl
+exit
