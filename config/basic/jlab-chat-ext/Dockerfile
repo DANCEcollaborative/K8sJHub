@@ -16,39 +16,42 @@ RUN apt-get update && apt-get install -y curl gnupg git tree && \
 RUN pip install --no-cache-dir --upgrade jupyterlab jupyter-collaboration
 
 ##############################
-# Step 3: Copy extension source (frontend + server)
+# Step 3: Copy frontend + serverextension
 ##############################
 WORKDIR /home/jovyan
 COPY frontend /home/jovyan/frontend
 COPY serverextension /home/jovyan/serverextension
 
 ##############################
-# Step 4: Install serverextension (Python)
+# Step 4: Build frontend first
+##############################
+WORKDIR /home/jovyan/frontend
+RUN rm -rf node_modules yarn.lock && \
+    jlpm install && \
+    jlpm build
+
+##############################
+# Step 5: Copy built labextension into serverextension
+##############################
+RUN mkdir -p /home/jovyan/serverextension/src/jlab_chat_ext/labextension && \
+    cp -r jlab_chat_ext/labextension/* /home/jovyan/serverextension/src/jlab_chat_ext/labextension/
+
+##############################
+# Step 6: Install serverextension
 ##############################
 WORKDIR /home/jovyan/serverextension
-RUN pip install --no-cache-dir -e .
-RUN jupyter server extension list && \
+RUN pip install --no-cache-dir -e . && \
     jupyter server extension enable jlab_chat_ext
 
 ##############################
-# Step 5: Build & install frontend extension
+# Step 7: Build & install frontend extension for JupyterLab
 ##############################
 WORKDIR /home/jovyan/frontend
-
-RUN rm -rf /opt/conda/share/jupyter/lab/staging && \
-    rm -rf /opt/conda/share/jupyter/labextensions/jlab-chat-ext && \
-    rm -rf node_modules yarn.lock && \
-    jlpm install && \
-    jlpm build && \
-    jupyter labextension install . --no-build && \
+RUN jupyter labextension install . --no-build && \
     jupyter lab build
 
-# Copy built labextension into serverextension
-RUN mkdir -p /home/jovyan/serverextension/src/jlab_chat_ext/labextension && \
-    cp -r /home/jovyan/frontend/jlab_chat_ext/labextension/* /home/jovyan/serverextension/src/jlab_chat_ext/labextension/
-
 ##############################
-# Step 6: Dev startup scripts
+# Step 8: Dev startup scripts
 ##############################
 WORKDIR /home/jovyan
 COPY start-dev.sh .
@@ -61,10 +64,7 @@ COPY start-notebook.d/cleanup.sh /usr/local/bin/start-notebook.d/cleanup.sh
 RUN chmod +x /usr/local/bin/start-notebook.d/cleanup.sh
 
 ##############################
-# Step 7: Expose Jupyter port
+# Step 9: Expose Jupyter port
 ##############################
 EXPOSE 8888
 WORKDIR /home/jovyan
-
-# Default command
-CMD ["./start-dev.sh"]
