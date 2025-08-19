@@ -1,7 +1,7 @@
 from jupyter_server.base.handlers import APIHandler
 from jupyter_server.utils import url_path_join
-import os
 import tornado.web
+import os
 import json
 
 class ChatWSUrlHandler(APIHandler):
@@ -14,8 +14,7 @@ class ChatWSUrlHandler(APIHandler):
         )
         self.finish(json.dumps({"ws_url": chat_url}))
 
-
-def setup_handlers(web_app):
+def setup_handlers(server_app):
     host_pattern = ".*$"
-    route_pattern = url_path_join(web_app.settings['base_url'], "chat-ext/wsurl")
-    web_app.add_handlers(host_pattern, [(route_pattern, ChatWSUrlHandler)])
+    route_pattern = url_path_join(server_app.web_app.settings['base_url'], "chat-ext/wsurl")
+    server_app.web_app.add_handlers(host_pattern, [(route_pattern, ChatWSUrlHandler)])

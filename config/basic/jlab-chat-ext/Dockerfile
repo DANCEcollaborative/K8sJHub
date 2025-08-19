@@ -40,13 +40,16 @@ RUN mkdir -p /home/jovyan/serverextension/src/jlab_chat_ext/labextension && \
 # Step 6: Install serverextension
 ##############################
 WORKDIR /home/jovyan/serverextension
+# Install editable package; entry point in pyproject.toml registers server extension
 RUN pip install --no-cache-dir -e . && \
-    jupyter server extension enable jlab_chat_ext
+    jupyter server extension enable jlab_chat_ext && \
+    jupyter server extension list
 
 ##############################
-# Step 7: Build & install frontend extension for JupyterLab
+# Step 7: Install frontend extension in JupyterLab
 ##############################
 WORKDIR /home/jovyan/frontend
+# Install without rebuilding (already built), then build Lab once
 RUN jupyter labextension install . --no-build && \
     jupyter lab build
 

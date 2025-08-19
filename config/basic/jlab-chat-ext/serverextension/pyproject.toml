@@ -1,23 +1,15 @@
 [build-system]
-requires = ["hatchling>=1.21.0", "jupyterlab>=4.0.0,<5"]
+requires = ["hatchling>=1.21.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "jlab-chat-ext"
+name = "jlab_chat_ext"
 version = "0.1.0"
 description = "Chat extension for JupyterLab"
-authors = [
-  { name = "Robert Charles Murray", email = "rcmurray@andrew.cmu.edu" }
-]
+authors = [{name = "Robert Charles Murray", email = "rcmurray@andrew.cmu.edu"}]
 readme = "README.md"
 requires-python = ">=3.8"
-dependencies = [
-  "jupyterlab>=4.0.0,<5",
-]
+dependencies = ["jupyterlab>=4.0.0,<5"]
 
-[tool.jupyterlab]
-# This must point to where we copy the frontend build
-labextensions = { "jlab-chat-ext" = "jlab_chat_ext/labextension" }
-
-[tool.hatch.build.targets.wheel.shared-data]
-"jlab_chat_ext/labextension" = "share/jupyter/labextensions/jlab-chat-ext"
+[project.entry-points."jupyter.server"]
+"jlab_chat_ext" = "jlab_chat_ext.__init__:load_jupyter_server_extension"

@@ -80,3 +80,5 @@ jupyter server extension list | grep jlab-chat-ext
 jupyter labextension list
 curl http://localhost:8888/chat-ext/wsurl
 exit
+echo $CHAT_WS_URL
+exit

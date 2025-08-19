@@ -21,9 +21,15 @@ export const chatIcon = new LabIcon({
 
 // Fetch chat URL from Python backend
 async function getSocketUrl(): Promise<string> {
-  const response = await fetch('/chat-ext/wsurl');
-  const data = await response.json();
-  return data.ws_url;
+    try {
+        const baseUrl = (window as any).JupyterServer?.base_url || '';
+        const resp = await fetch(`${baseUrl}chat-ext/wsurl`);
+        const data = await resp.json();
+        return data.ws_url;
+    } catch (err) {
+        console.error("Failed to fetch chat URL from backend:", err);
+        return "ws://localhost:3001"; // fallback
+    }
 }
 
 const plugin: JupyterFrontEndPlugin<void> = {
