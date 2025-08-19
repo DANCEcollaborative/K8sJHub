@@ -28,7 +28,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// import { PageConfig } from '@jupyterlab/coreutils';
 
 
 
@@ -56,14 +55,6 @@ const plugin = {
         var _a, _b;
         console.log('✅ jlab-chat-ext is loaded');
         const { commands, shell } = app;
-        //     console.log('✅ About to attempt connection to CHAT_WS_URL');
-        //     // Get the URL from the page config injected by the server
-        //     const targetURL = PageConfig.getOption('chatServerUrl');
-        //     console.log('✅ targetURL === ' + targetURL + ' ===');
-        //     const wsURL = targetURL || 'http://${window.location.hostname}:3001';    
-        // //     const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
-        //     console.log('✅ Connecting to chat server at:', wsURL);
-        // //     const socket = io(wsURL);
         // 🔥 Get the chat server URL from backend
         let wsURL = '';
         try {
@@ -192,4 +183,4 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" viewBox
 /***/ })
 
 }]);
-//# sourceMappingURL=lib_index_js.e4ace55af62a11b00a58.js.map
+//# sourceMappingURL=lib_index_js.dc193ae7b4bf0c4faf28.js.map

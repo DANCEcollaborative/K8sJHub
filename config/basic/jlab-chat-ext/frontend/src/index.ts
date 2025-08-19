@@ -8,7 +8,6 @@ import {
   MainAreaWidget
 } from '@jupyterlab/apputils';
 import { ILauncher } from '@jupyterlab/launcher';
-// import { PageConfig } from '@jupyterlab/coreutils';
 import { Widget } from '@lumino/widgets';
 import io from 'socket.io-client';
 import { LabIcon } from '@jupyterlab/ui-components';
@@ -45,14 +44,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
     console.log('✅ jlab-chat-ext is loaded');
 
     const { commands, shell } = app;
-//     console.log('✅ About to attempt connection to CHAT_WS_URL');
-//     // Get the URL from the page config injected by the server
-//     const targetURL = PageConfig.getOption('chatServerUrl');
-//     console.log('✅ targetURL === ' + targetURL + ' ===');
-//     const wsURL = targetURL || 'http://${window.location.hostname}:3001';    
-// //     const wsURL = (window as any).CHAT_WS_URL || 'http://${window.location.hostname}:3001';
-//     console.log('✅ Connecting to chat server at:', wsURL);
-// //     const socket = io(wsURL);
 
     // 🔥 Get the chat server URL from backend
     let wsURL = '';
