@@ -9,7 +9,7 @@ import {
 } from '@jupyterlab/apputils';
 import { ILauncher } from '@jupyterlab/launcher';
 import { Widget } from '@lumino/widgets';
-import io from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { LabIcon } from '@jupyterlab/ui-components';
 import mySvg from './lock.svg';
 
@@ -20,15 +20,11 @@ export const chatIcon = new LabIcon({
 });
 
 // Fetch chat URL from Python backend
-async function getChatUrl(): Promise<string> {
+async function getSocketUrl(): Promise<string> {
   const response = await fetch('/chat-ext/wsurl');
   const data = await response.json();
-  return data.chatUrl;
+  return data.ws_url;
 }
-
-getChatUrl().then((url) => {
-  console.log("✅ CHAT_WS_URL from backend is:", url);
-});
 
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jlab-chat-ext',
@@ -48,15 +44,16 @@ const plugin: JupyterFrontEndPlugin<void> = {
     // 🔥 Get the chat server URL from backend
     let wsURL = '';
     try {
-      wsURL = await getChatUrl();
+      wsURL = await getSocketUrl();
       console.log('✅ CHAT_WS_URL from backend is:', wsURL);
     } catch (err) {
       console.log('❌ CHAT_WS_URL ERROR. Value: ', wsURL);
       console.error('❌ Failed to fetch chat URL from backend:', err);
-      wsURL = `http://${window.location.hostname}:3001`; // fallback
+      // Optional fallback
+      wsURL = `http://${window.location.hostname}:3001`;
     }
 
-    const socket = io(wsURL, {
+    const socket: Socket = io(wsURL, {
       reconnectionAttempts: 5,
       timeout: 10000
     });
@@ -79,10 +76,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     mainContent.node.querySelector('#mainJoinBtn')?.addEventListener('click', () => {
       const room = (mainContent.node.querySelector('#mainRoomInput') as HTMLInputElement).value.trim();
-    	console.log('✅ Room is now === ' + room + ' ===');
+      console.log('✅ Room is now === ' + room + ' ===');
       if (room) {
         if (mainRoom) socket.emit('leave', mainRoom);
-    	  console.log('✅ Emitting join');
+        console.log('✅ Emitting join');
         socket.emit('join', room);
         mainRoom = room;
     	  console.log('✅ Room is joined ?');
@@ -96,7 +93,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       const input = mainContent.node.querySelector('#mainChatInput') as HTMLInputElement;
       const msg = input.value.trim();
       if (msg) {
-      	console.log('✅ Chat message: ' + msg);
+        console.log('✅ Chat message: ' + msg);
         socket.emit('chat message', { room: mainRoom, message: msg });
         input.value = '';
       }
@@ -120,18 +117,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
     });
 
     socket.on('chat message', (data: { room: string; message: string }) => {
-			// Show all messages for now — can filter by room if needed
-			mainLog.innerHTML += `<div>${data.message}</div>`;
-			mainLog.scrollTop = mainLog.scrollHeight;
-			sidebarLog.innerHTML += `<div>${data.message}</div>`;
-    	sidebarLog.scrollTop = sidebarLog.scrollHeight;
-//  	  	// Only display the message if it's for the current room
-//   		if (data.room === mainRoom) {
-//    			mainLog.innerHTML += `<div>${data.message}</div>`;
-//     		mainLog.scrollTop = mainLog.scrollHeight;
-//   	    sidebarLog.innerHTML += `<div>${msg}</div>`;
-//     	  sidebarLog.scrollTop = sidebarLog.scrollHeight;
-//   		}
+      mainLog.innerHTML += `<div>${data.message}</div>`;
+      mainLog.scrollTop = mainLog.scrollHeight;
+      sidebarLog.innerHTML += `<div>${data.message}</div>`;
+      sidebarLog.scrollTop = sidebarLog.scrollHeight;
     });
 
     // --- Main Widget Setup ---

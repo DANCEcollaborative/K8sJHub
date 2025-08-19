@@ -1,14 +1,41 @@
-import { ILayoutRestorer } from '@jupyterlab/application';
-import { ICommandPalette, MainAreaWidget } from '@jupyterlab/apputils';
-import { ILauncher } from '@jupyterlab/launcher';
-import { Widget } from '@lumino/widgets';
-import { io } from 'socket.io-client';
-import { LabIcon } from '@jupyterlab/ui-components';
-import mySvg from './lock.svg';
+"use strict";
+(self["webpackChunkjlab_chat_ext"] = self["webpackChunkjlab_chat_ext"] || []).push([["lib_index_js"],{
+
+/***/ "./lib/index.js":
+/*!**********************!*\
+  !*** ./lib/index.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   chatIcon: () => (/* binding */ chatIcon),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _jupyterlab_application__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @jupyterlab/application */ "webpack/sharing/consume/default/@jupyterlab/application");
+/* harmony import */ var _jupyterlab_application__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_application__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _jupyterlab_apputils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @jupyterlab/apputils */ "webpack/sharing/consume/default/@jupyterlab/apputils");
+/* harmony import */ var _jupyterlab_apputils__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_apputils__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _jupyterlab_launcher__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @jupyterlab/launcher */ "webpack/sharing/consume/default/@jupyterlab/launcher");
+/* harmony import */ var _jupyterlab_launcher__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_launcher__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _lumino_widgets__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @lumino/widgets */ "webpack/sharing/consume/default/@lumino/widgets");
+/* harmony import */ var _lumino_widgets__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_lumino_widgets__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! socket.io-client */ "webpack/sharing/consume/default/socket.io-client/socket.io-client");
+/* harmony import */ var socket_io_client__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(socket_io_client__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @jupyterlab/ui-components */ "webpack/sharing/consume/default/@jupyterlab/ui-components");
+/* harmony import */ var _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _lock_svg__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./lock.svg */ "./lib/lock.svg");
+
+
+
+
+
+
+
 // Define the chat icon
-export const chatIcon = new LabIcon({
+const chatIcon = new _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__.LabIcon({
     name: 'jlab-chat-ext:chat',
-    svgstr: mySvg
+    svgstr: _lock_svg__WEBPACK_IMPORTED_MODULE_6__
 });
 // Fetch chat URL from Python backend
 async function getSocketUrl() {
@@ -19,8 +46,8 @@ async function getSocketUrl() {
 const plugin = {
     id: 'jlab-chat-ext',
     autoStart: true,
-    requires: [ICommandPalette],
-    optional: [ILauncher, ILayoutRestorer],
+    requires: [_jupyterlab_apputils__WEBPACK_IMPORTED_MODULE_1__.ICommandPalette],
+    optional: [_jupyterlab_launcher__WEBPACK_IMPORTED_MODULE_2__.ILauncher, _jupyterlab_application__WEBPACK_IMPORTED_MODULE_0__.ILayoutRestorer],
     activate: async (app, palette, launcher, restorer) => {
         var _a, _b;
         console.log('✅ jlab-chat-ext is loaded');
@@ -37,13 +64,13 @@ const plugin = {
             // Optional fallback
             wsURL = `http://${window.location.hostname}:3001`;
         }
-        const socket = io(wsURL, {
+        const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_4__.io)(wsURL, {
             reconnectionAttempts: 5,
             timeout: 10000
         });
         console.log('✅ Attempted connection to wsURL');
         // --- Main Area Widget ---
-        const mainContent = new Widget();
+        const mainContent = new _lumino_widgets__WEBPACK_IMPORTED_MODULE_3__.Widget();
         mainContent.node.innerHTML = `
       <div style="padding: 1em;">
         <h3>Main Chat Widget</h3>
@@ -84,7 +111,7 @@ const plugin = {
         // -------------------------------
         // Sidebar Chat Widget
         // -------------------------------
-        const sidebarContent = new Widget();
+        const sidebarContent = new _lumino_widgets__WEBPACK_IMPORTED_MODULE_3__.Widget();
         sidebarContent.node.innerHTML = `
       <div style="padding: 0.5em;">
         <h4>Sidebar Chat</h4>
@@ -103,7 +130,7 @@ const plugin = {
             sidebarLog.scrollTop = sidebarLog.scrollHeight;
         });
         // --- Main Widget Setup ---
-        const mainWidget = new MainAreaWidget({ content: mainContent });
+        const mainWidget = new _jupyterlab_apputils__WEBPACK_IMPORTED_MODULE_1__.MainAreaWidget({ content: mainContent });
         mainWidget.id = 'jlab-chat-ext-main';
         mainWidget.title.label = 'Chat';
         mainWidget.title.icon = chatIcon;
@@ -130,5 +157,20 @@ const plugin = {
         restorer === null || restorer === void 0 ? void 0 : restorer.add(mainWidget, mainWidget.id);
     }
 };
-export default plugin;
-//# sourceMappingURL=index.js.map
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (plugin);
+
+
+/***/ }),
+
+/***/ "./lib/lock.svg":
+/*!**********************!*\
+  !*** ./lib/lock.svg ***!
+  \**********************/
+/***/ ((module) => {
+
+module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" viewBox=\"0 0 24 23\">\n  <path fill=\"#333\" d=\"M12 17a2 2 0 0 0 2-2 2 2 0 0 0-2-2 2 2 0 0 0-2 2 2 2 0 0 0 2 2m6-9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V10a2 2 0 0 1 2-2h1V6a5 5 0 0 1 5-5 5 5 0 0 1 5 5v2zm-6-5a3 3 0 0 0-3 3v2h6V6a3 3 0 0 0-3-3\" class=\"jp-icon4\"/>\n</svg>\n";
+
+/***/ })
+
+}]);
+//# sourceMappingURL=lib_index_js.a8f3784b0bb10935371f.js.map

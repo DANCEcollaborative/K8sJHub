@@ -1,0 +1,8 @@
+{
+  "jupyter.lab.shortcuts": [],
+  "title": "jlab-chat-ext",
+  "description": "jlab-chat-ext settings.",
+  "type": "object",
+  "properties": {},
+  "additionalProperties": false
+}

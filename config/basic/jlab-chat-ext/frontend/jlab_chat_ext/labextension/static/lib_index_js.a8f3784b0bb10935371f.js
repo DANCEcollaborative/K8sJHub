@@ -38,14 +38,11 @@ const chatIcon = new _jupyterlab_ui_components__WEBPACK_IMPORTED_MODULE_5__.LabI
     svgstr: _lock_svg__WEBPACK_IMPORTED_MODULE_6__
 });
 // Fetch chat URL from Python backend
-async function getChatUrl() {
+async function getSocketUrl() {
     const response = await fetch('/chat-ext/wsurl');
     const data = await response.json();
-    return data.chatUrl;
+    return data.ws_url;
 }
-getChatUrl().then((url) => {
-    console.log("✅ CHAT_WS_URL from backend is:", url);
-});
 const plugin = {
     id: 'jlab-chat-ext',
     autoStart: true,
@@ -58,15 +55,16 @@ const plugin = {
         // 🔥 Get the chat server URL from backend
         let wsURL = '';
         try {
-            wsURL = await getChatUrl();
+            wsURL = await getSocketUrl();
             console.log('✅ CHAT_WS_URL from backend is:', wsURL);
         }
         catch (err) {
             console.log('❌ CHAT_WS_URL ERROR. Value: ', wsURL);
             console.error('❌ Failed to fetch chat URL from backend:', err);
-            wsURL = `http://${window.location.hostname}:3001`; // fallback
+            // Optional fallback
+            wsURL = `http://${window.location.hostname}:3001`;
         }
-        const socket = socket_io_client__WEBPACK_IMPORTED_MODULE_4___default()(wsURL, {
+        const socket = (0,socket_io_client__WEBPACK_IMPORTED_MODULE_4__.io)(wsURL, {
             reconnectionAttempts: 5,
             timeout: 10000
         });
@@ -126,18 +124,10 @@ const plugin = {
             sidebarLog.innerHTML += `<div><em>Connected</em></div>`;
         });
         socket.on('chat message', (data) => {
-            // Show all messages for now — can filter by room if needed
             mainLog.innerHTML += `<div>${data.message}</div>`;
             mainLog.scrollTop = mainLog.scrollHeight;
             sidebarLog.innerHTML += `<div>${data.message}</div>`;
             sidebarLog.scrollTop = sidebarLog.scrollHeight;
-            //  	  	// Only display the message if it's for the current room
-            //   		if (data.room === mainRoom) {
-            //    			mainLog.innerHTML += `<div>${data.message}</div>`;
-            //     		mainLog.scrollTop = mainLog.scrollHeight;
-            //   	    sidebarLog.innerHTML += `<div>${msg}</div>`;
-            //     	  sidebarLog.scrollTop = sidebarLog.scrollHeight;
-            //   		}
         });
         // --- Main Widget Setup ---
         const mainWidget = new _jupyterlab_apputils__WEBPACK_IMPORTED_MODULE_1__.MainAreaWidget({ content: mainContent });
@@ -183,4 +173,4 @@ module.exports = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" viewBox
 /***/ })
 
 }]);
-//# sourceMappingURL=lib_index_js.dc193ae7b4bf0c4faf28.js.map
+//# sourceMappingURL=lib_index_js.a8f3784b0bb10935371f.js.map
