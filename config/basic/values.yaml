@@ -16,14 +16,6 @@ singleuser:
   cpu:
     limit: 2
     guarantee: 0.5
-  storage:
-    extraVolumes:
-      - name: jupyterhub-shared
-        persistentVolumeClaim:
-          claimName: jupyterhub-shared-pvc
-    extraVolumeMounts:
-      - name: jupyterhub-shared
-        mountPath: /home/jovyan/shared
   defaultUrl: "/lab"
   extraFiles:
     start-chat:
