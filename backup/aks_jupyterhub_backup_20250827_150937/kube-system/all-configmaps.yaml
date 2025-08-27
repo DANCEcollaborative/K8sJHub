@@ -1,0 +1,361 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    ip-masq-agent-reconciled: |
+      MasqLinkLocal: true
+      NonMasqueradeCIDRs:
+      - 10.240.0.0/16
+      - 10.0.0.0/16
+      - 10.0.0.0/8
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: "2025-07-15T09:17:40Z"
+    labels:
+      app.kubernetes.io/managed-by: Eno
+      component: ip-masq-agent
+    name: azure-ip-masq-agent-config-reconciled
+    namespace: kube-system
+    resourceVersion: "55361386"
+    uid: 357b0be9-1658-42dc-a019-2541e5d1172b
+- apiVersion: v1
+  data:
+    azure-npm.json: |
+      {
+          "ResyncPeriodInMinutes":        15,
+          "ListeningPort":                10091,
+          "ListeningAddress":             "0.0.0.0",
+          "ApplyIntervalInMilliseconds":  500,
+          "ApplyMaxBatches":              100,
+          "MaxBatchedACLsPerPod":         30,
+          "NetPolInvervalInMilliseconds": 500,
+          "MaxPendingNetPols":            100,
+          "Toggles": {
+              "EnablePrometheusMetrics": true,
+              "EnablePprof":             false,
+              "EnableHTTPDebugAPI":      true,
+              "EnableV2NPM":             true,
+              "PlaceAzureChainFirst":    false,
+              "ApplyInBackground":       true,
+              "NetPolInBackground":      true
+          },
+          "LogLevel": "info"
+      }
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"azure-npm.json":"{\n    \"ResyncPeriodInMinutes\":        15,\n    \"ListeningPort\":                10091,\n    \"ListeningAddress\":             \"0.0.0.0\",\n    \"ApplyIntervalInMilliseconds\":  500,\n    \"ApplyMaxBatches\":              100,\n    \"MaxBatchedACLsPerPod\":         30,\n    \"NetPolInvervalInMilliseconds\": 500,\n    \"MaxPendingNetPols\":            100,\n    \"Toggles\": {\n        \"EnablePrometheusMetrics\": true,\n        \"EnablePprof\":             false,\n        \"EnableHTTPDebugAPI\":      true,\n        \"EnableV2NPM\":             true,\n        \"PlaceAzureChainFirst\":    false,\n        \"ApplyInBackground\":       true,\n        \"NetPolInBackground\":      true\n    },\n    \"LogLevel\": \"info\"\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile"},"name":"azure-npm-config","namespace":"kube-system"}}
+    creationTimestamp: "2025-02-27T20:26:00Z"
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+    name: azure-npm-config
+    namespace: kube-system
+    resourceVersion: "17127381"
+    uid: fa97c58d-acfc-46f1-9143-176d836e22e8
+- apiVersion: v1
+  data:
+    status: |
+      time: 2025-08-27 19:09:42.710585997 +0000 UTC
+      autoscalerStatus: Running
+      clusterWide:
+        health:
+          status: Healthy
+          nodeCounts:
+            registered:
+              total: 2
+              ready: 2
+              notStarted: 0
+            longUnregistered: 0
+            unregistered: 0
+          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastTransitionTime: "2025-08-20T10:19:28.836445592Z"
+        scaleUp:
+          status: NoActivity
+          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastTransitionTime: "2025-08-27T15:59:33.072213306Z"
+        scaleDown:
+          status: NoCandidates
+          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastTransitionTime: "2025-08-27T02:41:46.172982077Z"
+      nodeGroups:
+      - name: aks-nodepool1-36606989-vmss
+        health:
+          status: Healthy
+          nodeCounts:
+            registered:
+              total: 2
+              ready: 2
+              notStarted: 0
+            longUnregistered: 0
+            unregistered: 0
+          cloudProviderTarget: 2
+          minSize: 1
+          maxSize: 25
+          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastTransitionTime: "2025-08-20T10:19:28.836445592Z"
+        scaleUp:
+          status: NoActivity
+          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastTransitionTime: "2025-08-27T15:59:33.072213306Z"
+        scaleDown:
+          status: NoCandidates
+          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastTransitionTime: "2025-08-27T02:41:46.172982077Z"
+  kind: ConfigMap
+  metadata:
+    annotations:
+      cluster-autoscaler.kubernetes.io/last-updated: 2025-08-27 19:09:42.710585997
+        +0000 UTC
+    creationTimestamp: "2025-08-20T10:19:15Z"
+    name: cluster-autoscaler-status
+    namespace: kube-system
+    resourceVersion: "73776272"
+    uid: a1437275-c997-4842-bc08-d9e207531cd3
+- apiVersion: v1
+  data:
+    Corefile: |
+      .:53 {
+          errors
+          ready
+          health {
+            lameduck 5s
+          }
+          kubernetes cluster.local in-addr.arpa ip6.arpa {
+            pods insecure
+            fallthrough in-addr.arpa ip6.arpa
+            ttl 30
+          }
+          prometheus :9153
+          forward . /etc/resolv.conf
+          cache 30
+          loop
+          reload
+          loadbalance
+          import custom/*.override
+          template ANY ANY internal.cloudapp.net {
+            match "^(?:[^.]+\.){4,}internal\.cloudapp\.net\.$"
+            rcode NXDOMAIN
+            fallthrough
+          }
+          template ANY ANY reddog.microsoft.com {
+            rcode NXDOMAIN
+          }
+      }
+      import custom/*.server
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"Corefile":".:53 {\n    errors\n    ready\n    health {\n      lameduck 5s\n    }\n    kubernetes cluster.local in-addr.arpa ip6.arpa {\n      pods insecure\n      fallthrough in-addr.arpa ip6.arpa\n      ttl 30\n    }\n    prometheus :9153\n    forward . /etc/resolv.conf\n    cache 30\n    loop\n    reload\n    loadbalance\n    import custom/*.override\n    template ANY ANY internal.cloudapp.net {\n      match \"^(?:[^.]+\\.){4,}internal\\.cloudapp\\.net\\.$\"\n      rcode NXDOMAIN\n      fallthrough\n    }\n    template ANY ANY reddog.microsoft.com {\n      rcode NXDOMAIN\n    }\n}\nimport custom/*.server\n"},"kind":"ConfigMap","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","k8s-app":"kube-dns","kubernetes.io/cluster-service":"true"},"name":"coredns","namespace":"kube-system"}}
+    creationTimestamp: "2025-02-27T20:26:01Z"
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: kube-dns
+      kubernetes.io/cluster-service: "true"
+    name: coredns
+    namespace: kube-system
+    resourceVersion: "440"
+    uid: fbad3c9a-4832-4c5b-b648-6c2231073b16
+- apiVersion: v1
+  data:
+    ladder: '{"coresToReplicas":[[1,2],[512,3],[1024,4],[2048,5]],"nodesToReplicas":[[1,2],[8,3],[16,4],[32,5]]}'
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: "2025-02-27T20:26:59Z"
+    name: coredns-autoscaler
+    namespace: kube-system
+    resourceVersion: "1211"
+    uid: 0e4022f2-70ba-45cf-bb8c-902a67059bce
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: "2025-02-27T20:25:53Z"
+    labels:
+      addonmanager.kubernetes.io/mode: EnsureExists
+      k8s-app: kube-dns
+      kubernetes.io/cluster-service: "true"
+    name: coredns-custom
+    namespace: kube-system
+    resourceVersion: "357"
+    uid: 012f6625-497f-42ae-bfca-55bdd120457d
+- apiVersion: v1
+  data:
+    client-ca-file: |
+      -----BEGIN CERTIFICATE-----
+      MIIE6TCCAtGgAwIBAgIRAK9eLEQNMAa05csL/IpgQ80wDQYJKoZIhvcNAQELBQAw
+      DTELMAkGA1UEAxMCY2EwIBcNMjUwMjI3MjAxNDI3WhgPMjA1NTAyMjcyMDI0Mjda
+      MA0xCzAJBgNVBAMTAmNhMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
+      qud0Ve+yQsuceQ6ivc0XTBSicTQQc6BVEcUJ1dXr5Viy1Ec20W8AwzkFp4OI83vc
+      1trpZ33FW/Degbxst1xuU4IkWZGzK8nQJ3jOnmPFwEP+CEJFDnA98XTIiCImp/U5
+      fQf2pno/HRgmQ/joQuiFFDQD1v39sNP26tCOCc9Y1pNkS/8bxAQkbxanw13ttWvu
+      SSVW0vPKOYHuC+UBbuOqW45LFOVgF9ea4NRWoq3CN2VgsZ5KM0ffBWVy8VNQlZk/
+      ZQM+2woQfEEyjyBo3c5+ohiQ6lVmK+6HnpzE5+I3rrLR71S4NvwYDMfCibX6pOfx
+      lrTOgGSD0LhxvmH5SkQbvmBiaTNiMeLLU4YzVcRIEoS01P+1gvNPBLag+EVDNiV5
+      q8Ve0lprKdlwT4hLuA10G+WVDishkkCgs47QyQP4iQ4D3FKu/SOllOVgriq96Hvt
+      JvAOFb96R+QnXoeUqxG46KLsIxMD5+EcQPQ82MocEqkmn8sZfF12t4St28jvA7GJ
+      +TJTh0tcqYB5/MYOt8Nu2TzX2dtfnB8FyIljuFkPQdHGSGBAkuaqInhsQlT5QMj+
+      wLSr0or3CDsjZq59vwbB1yRUCRUSkx3YlJVzTnmp/0G/j3WaYJ77Au9OKJ8YZuqs
+      aNs/tsFymFeL9suuw/4lBbxPBDDh2oGnF62naX7izBECAwEAAaNCMEAwDgYDVR0P
+      AQH/BAQDAgKkMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFPTPVfOfE2dguNB6
+      8gOzEwObreynMA0GCSqGSIb3DQEBCwUAA4ICAQBkms77+5i6UNYugDuZRpgtLUFD
+      6XknQv8KtddeqiThXnv6AGXFQVIEsHfTKm22t54bqb3CPZn1whwZ715flQX+pLjE
+      vlMlvtPmGvMOEVha4fjKX2PtFkMzJE+XLedMRPA+rckD9b9THHzyZ0Go6nyXSswr
+      BwlD0Mr6mzk2Ativ3edNASqW/6gqQOy92S3rBFJhzg5EKux7/k6af6DJh/B2Td06
+      dg6EERQLflYEmM2XtuFl/5wod9wKbzU07FfnljRhQVgR8tEAZp/cPKwKYMqk+vmr
+      qBteVGAqJftsp/9RMG93aFLvINszU79J8XXopQPIhy0aHZCPz/HYMkUEFoSfvRID
+      1pvyylJMSxcfCyLDWbemBhnw8wuXodHqmHsmotSqV/En6+XSVnk5vQ4qwH/3NaP4
+      UYXNt5clZtMeU7Jtdc1k/nrmeQf4quzzWojooorcXmmHWUhhx45qTIc6zG2pPzdI
+      0kl2hRcmboORVocgWlHKmgT4fHrt3jNLzYtAB+042oUGuUVOZo5/Q0NUIpzxyOrH
+      4cJ6I7bTE1htibvsQ6ybFrU+/h8LZc4FKsXVJpyqCPegHwIDHS3TL58VMP1ZkCAu
+      bnhqgAjiwa1AZ5kzxInU2FKUvTrljQpYnYepZZZDhv8TU7PqPkbxghS424uocK9I
+      G7hhqO18XhuII7Nldw==
+      -----END CERTIFICATE-----
+    requestheader-allowed-names: '[]'
+    requestheader-client-ca-file: |
+      -----BEGIN CERTIFICATE-----
+      MIIE8DCCAtigAwIBAgIQcJ78ZMkV7CDyFcjABkbixDANBgkqhkiG9w0BAQsFADAR
+      MQ8wDQYDVQQDEwZhZ2ctY2EwIBcNMjUwMjI3MjAxNDI3WhgPMjA1NTAyMjcyMDI0
+      MjdaMBExDzANBgNVBAMTBmFnZy1jYTCCAiIwDQYJKoZIhvcNAQEBBQADggIPADCC
+      AgoCggIBANPJD96JJg65P4DlfAVSWJHSel8mNqwMzICMPSXDYKzQVGVpYOt52M0L
+      HOyjPNb9zSliOh3P/7RE23PkTxEz2KCgB2lvm9z6UnyNQBrsvyYbE2p5Q+SwHthj
+      Ao9StLTZEOxFqlXyuLsfjnj66ahi+utapH5DouNuvkRCigozdpV+VaunOf3uVdp7
+      4Cgisgv7ZVuFi3JK1cSdahJvodGNsdYe/MdBRgllHfwkDO73GVWscsWFE41WMGRu
+      p05yJ1U7Tfws4hRIsbi4tNoOjULGHvIzEHd0U+tt8n8vvzw92046tNCCoX1+VE2L
+      9PPjZzBlZbtYR3KtlSA6pZC0TS5KBlOZL4yu93rvQcL9Coc8lNUYyHtK87WH+XpF
+      iPHCqv/lAPcqMlglY+2eXwRsqQ3mkPol8rzEEpnSFsEsb8n3tDP6FL4hOJMv7Ywg
+      vUhkKkD8kS+qaKIf9fYnqGGYUEHlBP5jbmxFcvrylZxWmXuRCDlprLj2WsT6sSZ4
+      kZCMyzshjgRMuSC9BoeNw00rMs/8rH1rk7F9UrF50PpMh66luZ/KjgU2pA7uxtdG
+      D9W/dbjkmaAsNTSgaFPPyGEmmGDK3Hf9F+Kd5ag+M5QEy72SFY+TrwxjKD07isXj
+      bHuw9D2yE6KgAhhOIPTaNLYEbFv3J/FNJU29djNdX7/eITpH9AgtAgMBAAGjQjBA
+      MA4GA1UdDwEB/wQEAwICpDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBRJJcn2
+      BGmEwavwumakiRPZwGw+QDANBgkqhkiG9w0BAQsFAAOCAgEAfgeNvKhKVUkQAzz6
+      PS0dCx+OYSAU1Wlyd3e7U94X+1vEfJYs9SJ9i+nORHF7DhjZMw39YqhD7rhPSUcR
+      z+IyjyG0vF/R3FessSxSi83OO0D3GgDbMtQ28GMy8wAwnvi6Gyiaqi1ErEQmA4H5
+      YYJDJGqVVS1WpC0HGT/DJv0kBdWaBUSbEwPsp4JZ8mJVKcFYYjn8c5F80BI2W4eL
+      fmggk80+b06FRRAMyEsQKPSnNB+2yzfCh+qRYu6PdXB1lUZaG5k/5tmfEZaS+OUX
+      rGrn1qQ7R+oRuZzIZWLjHsu0b/P3oMWSeuiUkVGdXWPgPlbF1CxfIt8dsLF7zuRB
+      9eHgoGpq57ygJ9efnmqlyK0hJ/ryJaqjOpOBPrmBm49Tw//xJfj6/gpwMeGnhXvl
+      5Q3dXiF+9sYRAPwdQUdkaXdE02b4VuVzK/nF2Dvp71R8nWesaJSBhrCJJWDkk/xA
+      /h3KN85KhF3+oax3pKuBNbnLPw2z3CJXj29GOCppSsmBkZm0zusEaa6ts3ghMIwc
+      qBVFX7cqejkdLbPFgYklwMj4hIVp1OlE6+Z90RdJklun4R3O2HeJ7sA5emWtXFlh
+      uyxEfKdNHFuBQga3urPCZAAgGtWeBEtwlEFMUIfR5VM1wmhj5MLSlLwwHtRi3ihz
+      Cezhytf4kyeDLg5NztTIhI3c8qA=
+      -----END CERTIFICATE-----
+    requestheader-extra-headers-prefix: '["X-Remote-Extra-"]'
+    requestheader-group-headers: '["X-Remote-Group"]'
+    requestheader-username-headers: '["X-Remote-User"]'
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: "2025-02-27T20:25:31Z"
+    name: extension-apiserver-authentication
+    namespace: kube-system
+    resourceVersion: "32"
+    uid: cb310c40-a236-43f4-9551-64e609363ca4
+- apiVersion: v1
+  data:
+    ladder: |-
+      {
+        "coresToReplicas": [],
+        "nodesToReplicas":
+        [
+          [1, 2],
+          [100, 3],
+          [250, 4],
+          [500, 5],
+          [1000, 6],
+          [1500, 7],
+          [2000, 8],
+          [5000, 10]
+        ]
+      }
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: "2025-04-04T09:43:11Z"
+    labels:
+      addonmanager.kubernetes.io/mode: EnsureExists
+      app: konnectivity-agent-autoscaler
+      kubernetes.io/cluster-service: "true"
+    name: konnectivity-agent-autoscaler
+    namespace: kube-system
+    resourceVersion: "13381003"
+    uid: 1bd10fcc-b6e9-421e-b335-f07e04805a88
+- apiVersion: v1
+  data:
+    since: "2025-02-27"
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: "2025-02-27T20:25:31Z"
+    name: kube-apiserver-legacy-service-account-token-tracking
+    namespace: kube-system
+    resourceVersion: "59"
+    uid: ab77450b-5370-4e91-be54-2cc75401cab2
+- apiVersion: v1
+  data:
+    ca.crt: |
+      -----BEGIN CERTIFICATE-----
+      MIIE6TCCAtGgAwIBAgIRAK9eLEQNMAa05csL/IpgQ80wDQYJKoZIhvcNAQELBQAw
+      DTELMAkGA1UEAxMCY2EwIBcNMjUwMjI3MjAxNDI3WhgPMjA1NTAyMjcyMDI0Mjda
+      MA0xCzAJBgNVBAMTAmNhMIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA
+      qud0Ve+yQsuceQ6ivc0XTBSicTQQc6BVEcUJ1dXr5Viy1Ec20W8AwzkFp4OI83vc
+      1trpZ33FW/Degbxst1xuU4IkWZGzK8nQJ3jOnmPFwEP+CEJFDnA98XTIiCImp/U5
+      fQf2pno/HRgmQ/joQuiFFDQD1v39sNP26tCOCc9Y1pNkS/8bxAQkbxanw13ttWvu
+      SSVW0vPKOYHuC+UBbuOqW45LFOVgF9ea4NRWoq3CN2VgsZ5KM0ffBWVy8VNQlZk/
+      ZQM+2woQfEEyjyBo3c5+ohiQ6lVmK+6HnpzE5+I3rrLR71S4NvwYDMfCibX6pOfx
+      lrTOgGSD0LhxvmH5SkQbvmBiaTNiMeLLU4YzVcRIEoS01P+1gvNPBLag+EVDNiV5
+      q8Ve0lprKdlwT4hLuA10G+WVDishkkCgs47QyQP4iQ4D3FKu/SOllOVgriq96Hvt
+      JvAOFb96R+QnXoeUqxG46KLsIxMD5+EcQPQ82MocEqkmn8sZfF12t4St28jvA7GJ
+      +TJTh0tcqYB5/MYOt8Nu2TzX2dtfnB8FyIljuFkPQdHGSGBAkuaqInhsQlT5QMj+
+      wLSr0or3CDsjZq59vwbB1yRUCRUSkx3YlJVzTnmp/0G/j3WaYJ77Au9OKJ8YZuqs
+      aNs/tsFymFeL9suuw/4lBbxPBDDh2oGnF62naX7izBECAwEAAaNCMEAwDgYDVR0P
+      AQH/BAQDAgKkMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFPTPVfOfE2dguNB6
+      8gOzEwObreynMA0GCSqGSIb3DQEBCwUAA4ICAQBkms77+5i6UNYugDuZRpgtLUFD
+      6XknQv8KtddeqiThXnv6AGXFQVIEsHfTKm22t54bqb3CPZn1whwZ715flQX+pLjE
+      vlMlvtPmGvMOEVha4fjKX2PtFkMzJE+XLedMRPA+rckD9b9THHzyZ0Go6nyXSswr
+      BwlD0Mr6mzk2Ativ3edNASqW/6gqQOy92S3rBFJhzg5EKux7/k6af6DJh/B2Td06
+      dg6EERQLflYEmM2XtuFl/5wod9wKbzU07FfnljRhQVgR8tEAZp/cPKwKYMqk+vmr
+      qBteVGAqJftsp/9RMG93aFLvINszU79J8XXopQPIhy0aHZCPz/HYMkUEFoSfvRID
+      1pvyylJMSxcfCyLDWbemBhnw8wuXodHqmHsmotSqV/En6+XSVnk5vQ4qwH/3NaP4
+      UYXNt5clZtMeU7Jtdc1k/nrmeQf4quzzWojooorcXmmHWUhhx45qTIc6zG2pPzdI
+      0kl2hRcmboORVocgWlHKmgT4fHrt3jNLzYtAB+042oUGuUVOZo5/Q0NUIpzxyOrH
+      4cJ6I7bTE1htibvsQ6ybFrU+/h8LZc4FKsXVJpyqCPegHwIDHS3TL58VMP1ZkCAu
+      bnhqgAjiwa1AZ5kzxInU2FKUvTrljQpYnYepZZZDhv8TU7PqPkbxghS424uocK9I
+      G7hhqO18XhuII7Nldw==
+      -----END CERTIFICATE-----
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubernetes.io/description: Contains a CA bundle that can be used to verify the
+        kube-apiserver when using internal endpoints such as the internal service
+        IP or kubernetes.default.svc. No other usage is guaranteed across distributions
+        of Kubernetes clusters.
+    creationTimestamp: "2025-02-27T20:25:46Z"
+    name: kube-root-ca.crt
+    namespace: kube-system
+    resourceVersion: "306"
+    uid: 823abd7e-f2a6-4cc4-af15-73b9118172bc
+- apiVersion: v1
+  data:
+    ccpEtag: f3cc2f18-a54c-456c-a9db-1a4e0f6366b9
+    isSLA: "false"
+    lastUpgradeTime: 2025-08-27 09:44:08.295279588 +0000 UTC
+    overlaymgrversionGoal: 'Version: unset - Branch: unset - git SHA: unset - Build
+      date / time: unset'
+  kind: ConfigMap
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: aks-managed-overlay-upgrade-data
+      meta.helm.sh/release-namespace: kube-system
+    creationTimestamp: "2025-02-27T20:27:18Z"
+    labels:
+      app.kubernetes.io/managed-by: Helm
+      helm.toolkit.fluxcd.io/name: overlay-upgrade-data-adapter-helmrelease
+      helm.toolkit.fluxcd.io/namespace: 67c0c9ec836efe000106da0e
+      k8s-app: overlay-upgrade
+    name: overlay-upgrade-data
+    namespace: kube-system
+    resourceVersion: "73606948"
+    uid: 048af45a-f626-40ae-89a5-57a11685ee29
+kind: List
+metadata:
+  resourceVersion: ""

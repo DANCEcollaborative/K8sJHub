@@ -1,0 +1,39 @@
+name: AKS JupyterHub Backup
+
+on:
+  schedule:
+    - cron: '0 2 * * *'  # Runs daily at 2 AM UTC
+  workflow_dispatch:
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install Azure CLI
+        run: |
+          curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+
+      - name: Install kubectl and helm
+        run: |
+          sudo snap install kubectl --classic
+          sudo snap install helm --classic
+
+      - name: Set up kubeconfig
+        run: |
+          echo "${{ secrets.KUBECONFIG }}" | base64 -d > $HOME/.kube/config
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Run extended backup script
+        run: python aks_jupyterhub_backup.py

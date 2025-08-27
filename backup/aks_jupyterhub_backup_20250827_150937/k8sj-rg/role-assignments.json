@@ -1,0 +1,22 @@
+[
+  {
+    "condition": null,
+    "conditionVersion": null,
+    "createdBy": "61107f5c-8cf8-411f-8c4b-af1138cfb8ec",
+    "createdOn": "2025-02-28T20:10:37.887822+00:00",
+    "delegatedManagedIdentityResourceId": null,
+    "description": null,
+    "id": "/subscriptions/08c48056-8282-44b4-ad4b-425d1639605c/resourceGroups/k8sj-rg/providers/Microsoft.Authorization/roleAssignments/533e874b-28a3-44b4-81a8-b473bba350d8",
+    "name": "533e874b-28a3-44b4-81a8-b473bba350d8",
+    "principalId": "4fd37350-8820-44a1-b370-cfe9b443400b",
+    "principalName": "https://identity.azure.net/cqtp/ECpggtrnDKOvzkbe7sSfmckyKsOueN1ZYsC32A=",
+    "principalType": "ServicePrincipal",
+    "resourceGroup": "k8sj-rg",
+    "roleDefinitionId": "/subscriptions/08c48056-8282-44b4-ad4b-425d1639605c/providers/Microsoft.Authorization/roleDefinitions/acdd72a7-3385-48ef-bd42-f606fba81ae7",
+    "roleDefinitionName": "Reader",
+    "scope": "/subscriptions/08c48056-8282-44b4-ad4b-425d1639605c/resourceGroups/k8sj-rg",
+    "type": "Microsoft.Authorization/roleAssignments",
+    "updatedBy": "61107f5c-8cf8-411f-8c4b-af1138cfb8ec",
+    "updatedOn": "2025-02-28T20:10:37.887822+00:00"
+  }
+]
