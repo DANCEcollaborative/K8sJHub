@@ -39,7 +39,12 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Run backup script
-        run: python aks_jupyterhub_backup.py ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}
+        run: |
+          if [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            python aks_jupyterhub_backup.py --dry-run
+          else
+            python aks_jupyterhub_backup.py
+          fi
         env:
           GITHUB_ACTIONS: true
 
