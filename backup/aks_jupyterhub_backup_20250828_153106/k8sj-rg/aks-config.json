@@ -14,7 +14,7 @@
     {
       "availabilityZones": null,
       "capacityReservationGroupId": null,
-      "count": 2,
+      "count": 1,
       "creationData": null,
       "currentOrchestratorVersion": "1.31.9",
       "eTag": null,

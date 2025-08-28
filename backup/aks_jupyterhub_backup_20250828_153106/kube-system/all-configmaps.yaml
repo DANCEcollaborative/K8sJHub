@@ -56,61 +56,61 @@ items:
 - apiVersion: v1
   data:
     status: |
-      time: 2025-08-27 19:09:42.710585997 +0000 UTC
+      time: 2025-08-28 19:31:12.588022382 +0000 UTC
       autoscalerStatus: Running
       clusterWide:
         health:
           status: Healthy
           nodeCounts:
             registered:
-              total: 2
-              ready: 2
+              total: 1
+              ready: 1
               notStarted: 0
             longUnregistered: 0
             unregistered: 0
-          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastProbeTime: "2025-08-28T19:31:12.588022382Z"
           lastTransitionTime: "2025-08-20T10:19:28.836445592Z"
         scaleUp:
           status: NoActivity
-          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastProbeTime: "2025-08-28T19:31:12.588022382Z"
           lastTransitionTime: "2025-08-27T15:59:33.072213306Z"
         scaleDown:
           status: NoCandidates
-          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
-          lastTransitionTime: "2025-08-27T02:41:46.172982077Z"
+          lastProbeTime: "2025-08-28T19:31:12.588022382Z"
+          lastTransitionTime: "2025-08-28T00:11:50.478966842Z"
       nodeGroups:
       - name: aks-nodepool1-36606989-vmss
         health:
           status: Healthy
           nodeCounts:
             registered:
-              total: 2
-              ready: 2
+              total: 1
+              ready: 1
               notStarted: 0
             longUnregistered: 0
             unregistered: 0
-          cloudProviderTarget: 2
+          cloudProviderTarget: 1
           minSize: 1
           maxSize: 25
-          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastProbeTime: "2025-08-28T19:31:12.588022382Z"
           lastTransitionTime: "2025-08-20T10:19:28.836445592Z"
         scaleUp:
           status: NoActivity
-          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
+          lastProbeTime: "2025-08-28T19:31:12.588022382Z"
           lastTransitionTime: "2025-08-27T15:59:33.072213306Z"
         scaleDown:
           status: NoCandidates
-          lastProbeTime: "2025-08-27T19:09:42.710585997Z"
-          lastTransitionTime: "2025-08-27T02:41:46.172982077Z"
+          lastProbeTime: "2025-08-28T19:31:12.588022382Z"
+          lastTransitionTime: "2025-08-28T00:11:50.478966842Z"
   kind: ConfigMap
   metadata:
     annotations:
-      cluster-autoscaler.kubernetes.io/last-updated: 2025-08-27 19:09:42.710585997
+      cluster-autoscaler.kubernetes.io/last-updated: 2025-08-28 19:31:12.588022382
         +0000 UTC
     creationTimestamp: "2025-08-20T10:19:15Z"
     name: cluster-autoscaler-status
     namespace: kube-system
-    resourceVersion: "73776272"
+    resourceVersion: "74212103"
     uid: a1437275-c997-4842-bc08-d9e207531cd3
 - apiVersion: v1
   data:
@@ -338,7 +338,7 @@ items:
   data:
     ccpEtag: f3cc2f18-a54c-456c-a9db-1a4e0f6366b9
     isSLA: "false"
-    lastUpgradeTime: 2025-08-27 09:44:08.295279588 +0000 UTC
+    lastUpgradeTime: 2025-08-28 09:58:28.042955501 +0000 UTC
     overlaymgrversionGoal: 'Version: unset - Branch: unset - git SHA: unset - Build
       date / time: unset'
   kind: ConfigMap
@@ -354,7 +354,7 @@ items:
       k8s-app: overlay-upgrade
     name: overlay-upgrade-data
     namespace: kube-system
-    resourceVersion: "73606948"
+    resourceVersion: "74042095"
     uid: 048af45a-f626-40ae-89a5-57a11685ee29
 kind: List
 metadata:
