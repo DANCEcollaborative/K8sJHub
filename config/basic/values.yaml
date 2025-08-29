@@ -29,7 +29,7 @@ singleuser:
   extraEnv:
     JUPYTER_ENABLE_LAB_RTC: "1"
     JUPYTERHUB_SINGLEUSER_APP: jupyter_server.serverapp.ServerApp
-  lifecycleHooks:
+#   lifecycleHooks:
 #     postStart:
 #       exec:
 #         command: ["/bin/bash", "/home/jovyan/backend/server.js"]
