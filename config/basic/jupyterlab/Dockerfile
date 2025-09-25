@@ -91,7 +91,14 @@ COPY ./dist/jupyter_opechat-0.1.0-py3-none-any.whl /tmp/
 RUN pip install /tmp/jupyter_opechat-0.1.0-py3-none-any.whl
 
 # Install additional Python packages
-RUN pip install plotly ipywidgets grpcio-tools jupyter_collaboration jupyterlab
+# RUN pip install plotly ipywidgets grpcio-tools jupyter_collaboration jupyterlab
+RUN pip install \
+    plotly \
+    ipywidgets \
+    grpcio-tools \
+    jupyter_collaboration \
+    jupyterlab \
+    "jupyterhub==4.1.*"
 
 RUN chmod +x /usr/local/bin/start-notebook.sh
 RUN chmod +x /usr/local/bin/start-singleuser.sh
