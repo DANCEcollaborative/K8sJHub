@@ -9,22 +9,8 @@ hub:
 singleuser:
   image:
     name: k8sjacr.azurecr.io/jupyterhub-rtc-20
-    tag: "0.9" 
+    tag: "0.11" 
   cmd: ["start-notebook.sh"]
-#     cmd: ["sleep"]
-#     args: ["infinity"]
-#     defaultUrl: ""
-#     cmd: ["/bin/bash"]
-#     args: ["-c", "tail -f /dev/null"]
-#     cmd: ["/bin/bash", "tail -f /dev/null"]
-#     command: ["/bin/bash"]
-#     args: ["-c", "tail -f /dev/null"]
-#   cmd: ["sleep infinity"]
-#   cmd: ["start-notebook.sh"]
-#   cmd: ["start.sh", "start-singleuser.py --ip=0.0.0.0 --collaborative=rtc"]
-#   cmd: ["start.sh", "start-notebook.sh --ip=0.0.0.0 --collaborative=rtc"]
-#   cmd: ["start.sh", "--collaborative=rtc"]
-#   cmd: ["start-notebook.sh", "--collaborative=rtc"]
   memory:
     limit: 2G
     guarantee: 1G
