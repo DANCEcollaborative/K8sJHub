@@ -4,6 +4,8 @@
 
 set -e
 
+echo "Entering start-notebook.sh"
+
 # The Jupyter command to launch
 # JupyterLab by default
 DOCKER_STACKS_JUPYTER_CMD="${DOCKER_STACKS_JUPYTER_CMD:=lab}"

@@ -8,9 +8,23 @@ hub:
 
 singleuser:
   image:
-    name: k8sjacr.azurecr.io/jupyterhub-rtc-7
-    tag: latest
-  cmd: ["start-notebook.py", "--collaborative=rtc"]
+    name: k8sjacr.azurecr.io/jupyterhub-rtc-20
+    tag: "0.8" 
+  cmd: ["start-notebook.sh"]
+#     cmd: ["sleep"]
+#     args: ["infinity"]
+#     defaultUrl: ""
+#     cmd: ["/bin/bash"]
+#     args: ["-c", "tail -f /dev/null"]
+#     cmd: ["/bin/bash", "tail -f /dev/null"]
+#     command: ["/bin/bash"]
+#     args: ["-c", "tail -f /dev/null"]
+#   cmd: ["sleep infinity"]
+#   cmd: ["start-notebook.sh"]
+#   cmd: ["start.sh", "start-singleuser.py --ip=0.0.0.0 --collaborative=rtc"]
+#   cmd: ["start.sh", "start-notebook.sh --ip=0.0.0.0 --collaborative=rtc"]
+#   cmd: ["start.sh", "--collaborative=rtc"]
+#   cmd: ["start-notebook.sh", "--collaborative=rtc"]
   memory:
     limit: 2G
     guarantee: 1G
@@ -27,6 +41,7 @@ singleuser:
         mountPath: /home/jovyan/shared
   defaultUrl: "/lab"
   extraEnv:
+    DEBUG_MODE: "1"   # enable for debugging, remove for normal runs
     JUPYTER_ENABLE_LAB_RTC: "1"
     JUPYTERHUB_SINGLEUSER_APP: jupyter_server.serverapp.ServerApp
 #   lifecycleHooks:
