@@ -9,7 +9,7 @@ hub:
 singleuser:
   image:
     name: k8sjacr.azurecr.io/jupyterhub-rtc-20
-    tag: "0.11" 
+    tag: "0.16" 
   cmd: ["start-notebook.sh"]
   memory:
     limit: 2G

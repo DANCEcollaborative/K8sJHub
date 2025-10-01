@@ -38,6 +38,10 @@ copy:
 	cp $(OPECHAT_DIR)/dist/jupyter_opechat-*.whl $(TARGET_DIST)
 	@echo "Wheel copied to $(TARGET_DIST)"
 
+# Build frontend-wheel-copy
+.PHONY: frontend-wheel-copy
+frontend-wheel-copy: frontend wheel copy
+
 # Full rebuild
 .PHONY: rebuild
 rebuild: clean all
