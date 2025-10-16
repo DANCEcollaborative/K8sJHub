@@ -1,15 +1,51 @@
 hub:
+  image:
+    name:  k8sjacr.azurecr.io/jupyterhub-rtc-20
+    tag: "0.28"
+
   config:
     JupyterHub:
       authenticator_class: dummy
+
+      # Explicitly define the services list as a YAML array of dicts.
+      # This MUST be a list so role assignments work correctly.
+      services:
+        - name: jupyterhub-idle-culler
+          # allow it to do admin operations if needed
+          admin: true
+          command: ["python3", "-m", "jupyterhub_idle_culler", "--timeout=3600"]
+        - name: chat-bazaar-proxy
+          # This will create the oauth client for the service and make it available at /services/<name>
+          url: "http://chat-bazaar-proxy.default.svc.cluster.local:50051"
+          api_token: "super-secret-token"
+
   extraConfig:
     rtc-config: |
-      c.LabApp.collaborative = True
+      # Configure single-user environment
+      c.Spawner.image = "jupyterhub-rtc-20:0.28"
+      c.Spawner.cmd = ["jupyter-labhub"]
+      c.Spawner.args = ["--ServerApp.allow_origin=*"]
+      c.Spawner.default_url = "/lab"
+
+  extraEnv:
+    CHAT_PROXY_URL: "http://chat-bazaar-proxy:50051"
+    CHAT_PROXY_TOKEN: "super-secret-token"
+
+prePuller:
+  hook:
+    enabled: false
+  continuous:
+    enabled: false
+
+proxy:
+  service:
+    type: ClusterIP
 
 singleuser:
   image:
-    name: k8sjacr.azurecr.io/jupyterhub-rtc-20
-    tag: "0.16" 
+    name:  k8sjacr.azurecr.io/jupyterhub-rtc-20
+    tag: "0.28"
+  defaultUrl: "/lab"
   cmd: ["start-notebook.sh"]
   memory:
     limit: 2G
@@ -25,13 +61,13 @@ singleuser:
     extraVolumeMounts:
       - name: jupyterhub-shared
         mountPath: /home/jovyan/shared
-  defaultUrl: "/lab"
   extraEnv:
-    DEBUG_MODE: "1"   # enable for debugging, remove for normal runs
+    # DEBUG_MODE: "1"   # enable for debugging, remove for normal runs
     JUPYTER_ENABLE_LAB_RTC: "1"
     JUPYTERHUB_SINGLEUSER_APP: jupyter_server.serverapp.ServerApp
-#   lifecycleHooks:
-#     postStart:
-#       exec:
-#         command: ["/bin/bash", "/home/jovyan/backend/server.js"]
-# #         command: ["/bin/bash", "/etc/profile.d/start-chat.sh"]
+
+# (Optional) Culler settings
+cull:
+  enabled: true
+  timeout: 3600
+  every: 600

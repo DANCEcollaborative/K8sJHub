@@ -43,7 +43,7 @@ RUN apt-get update --yes && \
     gcc && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-    RUN set -x && \
+RUN set -x && \
     julia_version=1.11.6 && \
     julia_arch=$(uname -m) && \
     julia_short_arch="$julia_arch" && \
@@ -98,7 +98,14 @@ RUN pip install \
     grpcio-tools \
     jupyter_collaboration \
     jupyterlab \
-    "jupyterhub==4.1.*"
+    "jupyterhub==4.1.*" \
+    kubernetes_asyncio \
+    jupyterhub-kubespawner
+
+RUN apt-get update && \
+    apt-get install -y libcurl4-openssl-dev libssl-dev && \
+    pip install pycurl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN chmod +x /usr/local/bin/start-notebook.sh
 RUN chmod +x /usr/local/bin/start-singleuser.sh
@@ -109,6 +116,9 @@ EXPOSE 8888
 
 # Set the container's default command to run Jupyter
 CMD ["start-notebook.sh"]
+
+# Optional: add a command for hub variant
+RUN echo '#!/bin/bash\nexec jupyterhub --config /usr/local/etc/jupyterhub/jupyterhub_config.py' > /usr/local/bin/start-hub.sh && chmod +x /usr/local/bin/start-hub.sh
 
 # Set user to non-root
 USER ${NB_USER}
